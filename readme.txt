@@ -2,7 +2,7 @@
 Contributors: bristleconeit
 Tags: markdown, editor, writing, comments, gutenberg
 Requires at least: 6.4
-Tested up to: 6.8
+Tested up to: 7.1
 Requires PHP: 8.1
 Stable tag: 1.0.0
 License: GPLv2 or later
@@ -61,7 +61,7 @@ YAML keys such as `title`, `excerpt`, `tags`, `categories`, and `slug` are mappe
 
 = Footnotes =
 
-Footnote IDs are namespaced with the post ID (`bits-fn-{id}-…`) so archives and the core Footnotes block are less likely to clash. Footnote markup can still be sensitive to theme CSS and to `wpautop` on classic (non-block) content; we disable `wpautop` for document-mode Markdown posts. If a theme styles `sup` unusually, footnotes may need a CSS tweak.
+Footnote IDs are namespaced with the post ID (`bits-fn-{id}-…`) so archives and the core Footnotes block are less likely to clash. New posts are converted again after insert so those IDs are not left as a placeholder. Footnote markup can still be sensitive to theme CSS and to `wpautop` on classic (non-block) content; we disable `wpautop` for document-mode Markdown posts. If a theme styles `sup` unusually, footnotes may need a CSS tweak. Footnote lists still render on archive views for each post that contains them.
 
 == Installation ==
 

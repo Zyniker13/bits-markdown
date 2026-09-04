@@ -18,6 +18,11 @@ final class Storage {
 	/** @var array<int, true> */
 	private array $pending = array();
 
+	/** @var array<int, true> */
+	private array $rewrite_ids = array();
+
+	private bool $skip_conversion = false;
+
 	/** @var array<string, mixed>|null */
 	private ?array $last_front_matter = null;
 
@@ -50,6 +55,10 @@ final class Storage {
 	 * @return array<string, mixed>
 	 */
 	public function filter_insert_post_data( array $data, array $postarr ): array {
+		if ( $this->skip_conversion ) {
+			return $data;
+		}
+
 		$post_id   = isset( $postarr['ID'] ) ? (int) $postarr['ID'] : 0;
 		$post_type = (string) ( $data['post_type'] ?? 'post' );
 
@@ -86,6 +95,9 @@ final class Storage {
 		$result                        = $this->transform_and_map( $unslashed, $post_id );
 		$data['post_content']          = wp_slash( $result->html );
 		$this->pending[ $post_id ]     = true;
+		if ( 0 === $post_id ) {
+			$this->rewrite_ids[0] = true;
+		}
 
 		return $data;
 	}
@@ -95,7 +107,8 @@ final class Storage {
 			return;
 		}
 
-		unset( $this->pending[ $post_id ], $this->pending[0] );
+		$rewrite = isset( $this->rewrite_ids[ $post_id ] ) || isset( $this->rewrite_ids[0] );
+		unset( $this->pending[ $post_id ], $this->pending[0], $this->rewrite_ids[ $post_id ], $this->rewrite_ids[0] );
 
 		update_post_meta( $post_id, self::META_KEY, 1 );
 
@@ -103,6 +116,22 @@ final class Storage {
 			FrontMatterMapper::instance()->apply( $post_id, $this->last_front_matter );
 			update_post_meta( $post_id, self::META_FRONT_MATTER, $this->last_front_matter );
 			$this->last_front_matter = null;
+		}
+
+		if ( $rewrite && $post_id > 0 ) {
+			$stored = get_post( $post_id );
+			$source = $stored instanceof \WP_Post ? (string) $stored->post_content_filtered : '';
+			if ( $source !== '' && ! has_blocks( (string) $stored->post_content ) ) {
+				$result                = $this->convert( $source, array( 'id' => (string) $post_id ) );
+				$this->skip_conversion = true;
+				wp_update_post(
+					array(
+						'ID'           => $post_id,
+						'post_content' => $result->html,
+					)
+				);
+				$this->skip_conversion = false;
+			}
 		}
 	}
 

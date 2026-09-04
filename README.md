@@ -28,7 +28,9 @@ Document-mode posts (Classic Editor, REST API, iA Writer) store HTML in `post_co
 
 ## Footnotes
 
-Footnote IDs are namespaced as `bits-fn-{postId}-…` so archive pages and WordPress’s core Footnotes block are less likely to collide. `wpautop` is disabled for document-mode Markdown posts because it can scramble footnote markup. Themes that restyle `sup` may still need a small CSS tweak. Footnote lists still appear on archives for every excerpted/full post that contains them.
+Footnote IDs are namespaced as `bits-fn-{postId}-…` so archive pages and WordPress’s core Footnotes block are less likely to collide. New posts are converted a second time after insert so those IDs use the real post ID rather than a placeholder.
+
+`wpautop` is disabled for document-mode Markdown posts because it can scramble footnote markup. Themes that restyle `sup` may still need a small CSS tweak. Footnote lists still appear on archives for every excerpted/full post that contains them. Inline footnotes (`[^text with spaces.]`) work alongside named `[^1]` definitions. The core Footnotes block is a separate feature; IDs do not overlap, but a post could contain both.
 
 ## Content Blocks
 
