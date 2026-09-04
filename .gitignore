@@ -1,0 +1,7 @@
+.phpunit.cache
+.phpunit.result.cache
+/node_modules/
+/tests/wordpress/
+/tmp/
+*.tgz
+.DS_Store
