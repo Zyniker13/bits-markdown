@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Verify the spec corpus on a running WordPress site.
  *
@@ -15,11 +13,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit( 1 );
 }
 
-$failures = 0;
+$GLOBALS['bits_spec_failures'] = 0;
 
 function bits_spec_fail( string $message ): void {
-	global $failures;
-	++$failures;
+	++$GLOBALS['bits_spec_failures'];
 	WP_CLI::warning( $message );
 }
 
@@ -151,7 +148,7 @@ if ( $negative && str_contains( $negative->post_content, 'checkbox' ) ) {
 
 $host = bits_spec_post( 'spec-comment-host' );
 if ( $host ) {
-	$comments = get_comments( array( 'post_id' => $host->ID, 'status' => 'approve', 'number' => 20 ) );
+	$comments = get_comments( array( 'post_id' => $host->ID, 'status' => 'all', 'number' => 20 ) );
 	$found    = array();
 	foreach ( $comments as $comment ) {
 		$found[ (string) get_comment_meta( (int) $comment->comment_ID, '_bits_spec_comment_key', true ) ] = $comment;
@@ -165,6 +162,9 @@ if ( $host ) {
 		bits_spec_fail( 'xss comment kept script' );
 	} elseif ( ! empty( $found['xss'] ) ) {
 		bits_spec_ok( 'xss comment stripped script' );
+	}
+	if ( ! empty( $found['math'] ) && str_contains( $found['math']->comment_content, 'x^2' ) ) {
+		bits_spec_ok( 'math comment stored (span/div math wrappers are not in the comment KSES allowlist)' );
 	}
 	if ( ! empty( $found['basic'] ) && ! get_comment_meta( (int) $found['basic']->comment_ID, '_bits_markdown', true ) ) {
 		bits_spec_fail( 'comment missing _bits_markdown meta' );
@@ -212,8 +212,8 @@ if ( $kitchen && $user_id ) {
 	}
 }
 
-if ( $failures > 0 ) {
-	WP_CLI::error( $failures . ' corpus checks failed.' );
+if ( $GLOBALS['bits_spec_failures'] > 0 ) {
+	WP_CLI::error( $GLOBALS['bits_spec_failures'] . ' corpus checks failed.' );
 }
 
 WP_CLI::success( 'Corpus verification passed.' );

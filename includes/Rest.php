@@ -130,16 +130,6 @@ final class Rest {
 	}
 
 	private function wrap_markdown_block( string $markdown ): string {
-		return serialize_block(
-			array(
-				'blockName'    => 'bits/markdown',
-				'attrs'        => array(
-					'markdown' => $markdown,
-				),
-				'innerBlocks'  => array(),
-				'innerHTML'    => '',
-				'innerContent' => array(),
-			)
-		);
+		return Block::serialize_source( $markdown );
 	}
 }

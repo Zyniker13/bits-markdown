@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Corpus manifest for the live WordPress test instance.
  *

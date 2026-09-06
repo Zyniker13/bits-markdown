@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Idempotent publisher for the BITS Markdown spec corpus.
  *
@@ -76,10 +74,13 @@ WP_CLI::log( 'yaml-does-not-clobber title=' . ( $clobber ? $clobber->post_title 
 $comment_post = bits_spec_upsert( 'post', 'spec-comment-host', 'Comment host', "Host for spec comments.\n\nLeave a note.", 'document', 'publish' );
 wp_update_post(
 	array(
-		'ID'              => $comment_post,
-		'comment_status'  => 'open',
+		'ID'             => $comment_post,
+		'comment_status' => 'open',
 	)
 );
+
+add_filter( 'comment_flood_filter', '__return_false', 99 );
+add_filter( 'duplicate_comment_id', '__return_false' );
 
 foreach ( $manifest['comments'] as $item ) {
 	$content = bits_spec_read( $comments . '/' . $item['file'] );
@@ -130,18 +131,7 @@ function bits_spec_upsert( string $type, string $slug, string $title, string $ma
 	$existing = bits_spec_find( $type, $slug );
 	$content  = $markdown;
 	if ( 'block' === $mode ) {
-		$content = serialize_block(
-			array(
-				'blockName'    => 'bits/markdown',
-				'attrs'        => array(
-					'markdown' => $markdown,
-					'html'     => '',
-				),
-				'innerBlocks'  => array(),
-				'innerHTML'    => '',
-				'innerContent' => array(),
-			)
-		);
+		$content = \Bristlecone\BitsMarkdown\Block::serialize_source( $markdown );
 	}
 
 	$data = array(
@@ -242,5 +232,6 @@ function bits_spec_upsert_comment( int $post_id, string $key, string $content ):
 		WP_CLI::error( $cid->get_error_message() );
 	}
 	update_comment_meta( (int) $cid, '_bits_spec_comment_key', $key );
+	wp_set_comment_status( (int) $cid, 'approve' );
 	return (int) $cid;
 }

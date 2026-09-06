@@ -8,6 +8,7 @@
 	"description": "Write formatted content in Markdown. Syntax is aligned with iA Writer.",
 	"keywords": [ "markdown", "md", "writing", "ia writer" ],
 	"textdomain": "bits-markdown",
+	"editorScript": "bits-markdown-block",
 	"attributes": {
 		"markdown": {
 			"type": "string",

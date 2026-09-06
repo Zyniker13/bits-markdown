@@ -57,6 +57,23 @@ final class Block {
 		);
 	}
 
+	public static function serialize_source( string $markdown, string $html = '' ): string {
+		$inner = '<div class="wp-block-bits-markdown bits-markdown">' . $html . '</div>';
+
+		return serialize_block(
+			array(
+				'blockName'    => 'bits/markdown',
+				'attrs'        => array(
+					'markdown' => $markdown,
+					'html'     => $html,
+				),
+				'innerBlocks'  => array(),
+				'innerHTML'    => $inner,
+				'innerContent' => array( $inner ),
+			)
+		);
+	}
+
 	/**
 	 * @param array<string, mixed> $attributes
 	 */
