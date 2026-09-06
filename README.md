@@ -18,9 +18,11 @@ The Gutenberg block is plain `wp.*` JavaScript (no build step).
 
 ## WordPress.org
 
-This directory is the plugin root. The directory `readme.txt` is the file WordPress.org uses. Set `Contributors:` to the WordPress.org username that owns the Bristlecone IT Services account before submitting.
+This directory is the plugin root. `readme.txt` is the file WordPress.org uses. The directory contributor is `bristleconeit` (Bristlecone IT Services).
 
 Do not include Jetpack in directory tags.
+
+WordPress.org assets (icon, banner, screenshots) belong in the plugin’s SVN `/assets` directory after approval, not in this zip.
 
 ## Storage
 
@@ -38,8 +40,10 @@ iA Writer Content Blocks transclude files from a local library WordPress cannot 
 
 ## Release zip
 
-WordPress.org should receive production Composer dependencies only:
+Build a production zip (single root folder `bits-markdown`, Composer `--no-dev`):
 
 ```bash
-composer install --no-dev --optimize-autoloader
+composer release
 ```
+
+The zip is written to `dist/bits-markdown-1.0.0.zip`. Upload that file at [Add Your Plugin](https://wordpress.org/plugins/developers/add/). After approval, tag updates go through WordPress.org SVN; this GitHub repository stays the development tree.

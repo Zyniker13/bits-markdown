@@ -16,8 +16,6 @@ final class Plugin {
 	}
 
 	public function init(): void {
-		load_plugin_textdomain( 'bits-markdown', false, dirname( plugin_basename( BITS_MARKDOWN_FILE ) ) . '/languages' );
-
 		Settings::instance()->register();
 		AdminNotices::instance()->register();
 		JetpackCompat::instance()->register();

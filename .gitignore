@@ -3,5 +3,7 @@
 /node_modules/
 /tests/wordpress/
 /tmp/
+/dist/
 *.tgz
+*.zip
 .DS_Store

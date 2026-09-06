@@ -33,7 +33,10 @@ final class JetpackCompat {
 	}
 
 	public function handle_disable_module(): void {
-		if ( empty( $_GET['bits_markdown_disable_jetpack'] ) ) {
+		$requested = isset( $_GET['bits_markdown_disable_jetpack'] )
+			? sanitize_text_field( wp_unslash( $_GET['bits_markdown_disable_jetpack'] ) )
+			: '';
+		if ( '1' !== $requested ) {
 			return;
 		}
 
@@ -47,7 +50,9 @@ final class JetpackCompat {
 			\Jetpack::deactivate_module( 'markdown' );
 		}
 
-		wp_safe_redirect( add_query_arg( 'bits_markdown_jetpack_disabled', '1', admin_url( 'options-general.php?page=bits-markdown' ) ) );
+		set_transient( 'bits_markdown_jetpack_disabled_' . get_current_user_id(), '1', MINUTE_IN_SECONDS );
+
+		wp_safe_redirect( admin_url( 'options-general.php?page=bits-markdown' ) );
 		exit;
 	}
 
@@ -73,7 +78,9 @@ final class JetpackCompat {
 	}
 
 	public function render_settings_notice(): void {
-		if ( isset( $_GET['bits_markdown_jetpack_disabled'] ) ) {
+		$notice_key = 'bits_markdown_jetpack_disabled_' . get_current_user_id();
+		if ( get_transient( $notice_key ) ) {
+			delete_transient( $notice_key );
 			echo '<div class="notice notice-success is-dismissible"><p>';
 			echo esc_html__( 'Jetpack Markdown has been disabled. BITS Markdown will now convert posts and comments, including existing Jetpack Markdown documents.', 'bits-markdown' );
 			echo '</p></div>';
