@@ -33,7 +33,7 @@ final class FrontMatterMapper {
 
 		if ( ! empty( $map['title'] ) && is_scalar( $map['title'] ) ) {
 			$title = (string) $map['title'];
-			if ( $post && in_array( $post->post_title, array( '', 'Auto Draft', __( 'Auto Draft' ) ), true ) ) {
+			if ( $post && in_array( $post->post_title, array( '', 'Auto Draft', __( 'Auto Draft', 'default' ) ), true ) ) {
 				$update['post_title'] = $title;
 			}
 		}

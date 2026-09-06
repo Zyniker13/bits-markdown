@@ -1,9 +1,26 @@
+# VCS and editor
 .git
 .gitattributes
 .gitignore
-.phpunit.cache
+.distignore
 .cursor
+.github
+.DS_Store
+Thumbs.db
+
+# Tests and PHPUnit
 tests
+phpunit.xml
 phpunit.xml.dist
+.phpunit.cache
+.phpunit.result.cache
+
+# Build output and tooling
+bin
+dist
 node_modules
+*.zip
 *.tgz
+
+# Reinstalled production-only in the release zip
+vendor

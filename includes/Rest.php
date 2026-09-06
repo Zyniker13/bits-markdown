@@ -33,8 +33,15 @@ final class Rest {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( $this, 'preview' ),
-				'permission_callback' => static function () {
-					return current_user_can( 'edit_posts' );
+				'permission_callback' => static function ( $request ) {
+					if ( ! current_user_can( 'edit_posts' ) ) {
+						return false;
+					}
+					$post_id = (int) $request->get_param( 'post_id' );
+					if ( $post_id > 0 && ! current_user_can( 'edit_post', $post_id ) ) {
+						return false;
+					}
+					return true;
 				},
 				'args'                => array(
 					'markdown' => array(

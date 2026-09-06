@@ -66,7 +66,8 @@ final class Storage {
 			return $data;
 		}
 
-		if ( isset( $_POST['_inline_edit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$inline_edit = isset( $_POST['_inline_edit'] ) ? sanitize_text_field( wp_unslash( $_POST['_inline_edit'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( $inline_edit !== '' ) {
 			return $data;
 		}
 

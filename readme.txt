@@ -87,9 +87,15 @@ No. KaTeX and the highlighter are bundled. There is no tracking and no remote co
 == Changelog ==
 
 = 1.0.0 =
-* Initial release.
+* Initial public release.
+* Markdown block in the block editor, with source and preview tabs that use the same PHP parser as publish.
+* Whole-document Markdown for the Classic Editor, the REST API, and iA Writer’s Publish command.
+* Optional Markdown in comments.
+* iA Writer-aligned extras: highlight, footnotes, heading permalinks and cross-references, table of contents, YAML front matter, math (KaTeX), super/subscript, page breaks, unpublished comments, and citations.
+* Server-side highlighting for fenced code blocks (no extra JavaScript).
+* Jetpack Markdown coexistence: skip conversion while that module is active, then adopt existing Markdown posts.
 
 == Upgrade Notice ==
 
 = 1.0.0 =
-Initial release of BITS Markdown.
+Initial public release of BITS Markdown.
