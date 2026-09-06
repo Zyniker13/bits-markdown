@@ -1,0 +1,9 @@
+.git
+.gitattributes
+.gitignore
+.phpunit.cache
+.cursor
+tests
+phpunit.xml.dist
+node_modules
+*.tgz

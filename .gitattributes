@@ -1,0 +1,12 @@
+/tests export-ignore
+/phpunit.xml.dist export-ignore
+/.gitignore export-ignore
+/.gitattributes export-ignore
+/.distignore export-ignore
+/.phpunit.cache export-ignore
+/vendor/phpunit export-ignore
+/vendor/sebastian export-ignore
+/vendor/phar-io export-ignore
+/vendor/theseer export-ignore
+/vendor/myclabs export-ignore
+/vendor/nikic export-ignore
