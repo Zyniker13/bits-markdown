@@ -32,8 +32,13 @@ final class FrontMatterMapper {
 		$post   = get_post( $post_id );
 
 		if ( ! empty( $map['title'] ) && is_scalar( $map['title'] ) ) {
-			$title = (string) $map['title'];
-			if ( $post && in_array( $post->post_title, array( '', 'Auto Draft', __( 'Auto Draft', 'default' ) ), true ) ) {
+			$title             = (string) $map['title'];
+			$auto_draft_titles = array( '', 'Auto Draft' );
+			$auto_draft_status = get_post_status_object( 'auto-draft' );
+			if ( $auto_draft_status && is_string( $auto_draft_status->label ) && $auto_draft_status->label !== '' ) {
+				$auto_draft_titles[] = $auto_draft_status->label;
+			}
+			if ( $post && in_array( $post->post_title, $auto_draft_titles, true ) ) {
 				$update['post_title'] = $title;
 			}
 		}
