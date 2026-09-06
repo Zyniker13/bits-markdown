@@ -52,7 +52,7 @@ If Jetpack Markdown is still active, BITS Markdown **does not** convert posts or
 
 In iA Writer you can publish drafts to WordPress 5.6+ over the REST API as Markdown. BITS Markdown converts that body on save and returns Markdown source to non-Gutenberg clients on edit.
 
-YAML keys such as `title`, `excerpt`, `tags`, `categories`, and `slug` are mapped onto the WordPress post when present. Other keys are stored and available for `[%key]` interpolation.
+YAML keys such as `title`, `excerpt`, `tags`, `categories`, and `slug` are mapped onto the WordPress post when present. If `title` is applied to an auto-draft and `slug` is omitted, the permalink is generated from the title. Other keys are stored and available for `[%key]` interpolation.
 
 = Intentionally not converted =
 

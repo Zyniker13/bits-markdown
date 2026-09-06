@@ -46,6 +46,8 @@ final class FrontMatterMapper {
 
 		if ( ! empty( $map['slug'] ) && is_scalar( $map['slug'] ) ) {
 			$update['post_name'] = sanitize_title( (string) $map['slug'] );
+		} elseif ( ! empty( $update['post_title'] ) && $post && in_array( $post->post_name, array( '', 'auto-draft' ), true ) ) {
+			$update['post_name'] = sanitize_title( $update['post_title'] );
 		}
 
 		if ( count( $update ) > 1 ) {
