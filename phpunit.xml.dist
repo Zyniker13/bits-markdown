@@ -8,7 +8,10 @@
 >
 	<testsuites>
 		<testsuite name="parser">
-			<directory>tests</directory>
+			<directory suffix="Test.php">tests</directory>
+			<exclude>tests/integration</exclude>
+			<exclude>tests/Support</exclude>
+			<exclude>tests/fixtures</exclude>
 		</testsuite>
 	</testsuites>
 </phpunit>

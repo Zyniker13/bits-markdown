@@ -21,7 +21,10 @@ final class SubscriptParser implements InlineParserInterface {
 			return false;
 		}
 
-		$matched = $cursor->match( '/^~(?:([A-Za-z0-9]+)(?!~)|([^~\n]+)~)/' );
+		$matched = $cursor->match( '/^~([A-Za-z0-9]+)(?:~|(?![A-Za-z0-9]))/' );
+		if ( $matched === null ) {
+			$matched = $cursor->match( '/^~([^~\n]+)~/' );
+		}
 		if ( $matched === null ) {
 			return false;
 		}

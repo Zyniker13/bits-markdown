@@ -136,7 +136,7 @@ final class Parser {
 		$environment->addExtension( new FootnoteExtension() );
 		$environment->addExtension( new HeadingPermalinkExtension() );
 		$environment->addExtension( new TableOfContentsExtension() );
-		$environment->addExtension( new BitsMarkdownExtension() );
+		$environment->addExtension( new BitsMarkdownExtension( (bool) ( $context['math'] ?? true ) ) );
 
 		if ( $context['highlight'] ?? true ) {
 			$environment->addRenderer( FencedCode::class, new FencedCodeRenderer() );

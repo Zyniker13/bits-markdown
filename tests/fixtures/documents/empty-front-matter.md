@@ -1,0 +1,4 @@
+---
+---
+
+Only empty front matter.

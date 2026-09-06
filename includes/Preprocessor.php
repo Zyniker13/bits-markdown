@@ -14,7 +14,7 @@ final class Preprocessor {
 	 */
 	public function process( string $markdown ): array {
 		$citations = array();
-		$lines     = preg_split( '/\R/', $markdown ) ?: array();
+		$lines     = $this->split_lines( $markdown );
 		$in_fence  = false;
 		$fence     = '';
 		$kept      = array();
@@ -82,7 +82,7 @@ final class Preprocessor {
 	}
 
 	private function inject_heading_references( string $markdown ): string {
-		$lines    = preg_split( '/\R/', $markdown ) ?: array();
+		$lines    = $this->split_lines( $markdown );
 		$in_fence = false;
 		$fence    = '';
 		$used     = array();
@@ -97,27 +97,45 @@ final class Preprocessor {
 
 			if ( ! $in_fence && preg_match( '/^(#{1,6})\s+(.+?)\s*$/', $line, $match ) ) {
 				$hashes = $match[1];
-				$rest   = rtrim( $match[2], " \t#" );
+				$rest   = rtrim( $match[2], " \t" );
 				$label  = null;
 				$attr   = '';
 
 				if ( preg_match( '/^(.*)\s+\{([^}]*)\}\s*$/', $rest, $attr_match ) ) {
-					$rest = rtrim( $attr_match[1] );
+					$rest = rtrim( $attr_match[1], " \t" );
 					$attr = '{' . $attr_match[2] . '}';
 				}
 
 				if ( preg_match( '/^(.*)\s+\[([^\]]+)\]\s*$/', $rest, $label_match ) ) {
-					$rest  = rtrim( $label_match[1] );
+					$rest  = rtrim( $label_match[1], " \t" );
 					$label = $label_match[2];
 				}
 
-				$slug = $this->unique_slug( $rest, $used );
+				// CommonMark only treats trailing hashes as a closing sequence when
+				// they are preceded by whitespace, or when the content is only hashes.
+				if ( preg_match( '/^(.*?)\s+#+$/', $rest, $close ) ) {
+					$rest = rtrim( $close[1], " \t" );
+				} elseif ( preg_match( '/^#+$/', $rest ) ) {
+					$rest = '';
+				}
+
+				$explicit_id = null;
+				if ( $attr !== '' && preg_match( '/#([^\s}.]+)/', $attr, $id_match ) ) {
+					$explicit_id = $id_match[1];
+				}
+
+				$slug = is_string( $explicit_id ) ? $explicit_id : $this->unique_slug( $rest, $used );
+				if ( is_string( $explicit_id ) ) {
+					$used[ $explicit_id ] = 1;
+				}
 				if ( $attr === '' ) {
 					$attr = '{#' . $slug . '}';
 				}
 
-				$line           = $hashes . ' ' . $rest . ' ' . $attr;
-				$refs[ $rest ]  = $slug;
+				$line = $hashes . ' ' . $rest . ' ' . $attr;
+				if ( $rest !== '' ) {
+					$refs[ $rest ] = $slug;
+				}
 				if ( is_string( $label ) && $label !== '' ) {
 					$refs[ $label ] = $slug;
 				}
@@ -188,6 +206,20 @@ final class Preprocessor {
 			$out .= $inside ? $part : $callback( $part );
 		}
 		return $out;
+	}
+
+	/**
+	 * Split on CommonMark line endings only (CR, LF, CRLF).
+	 *
+	 * PCRE `\R` also matches NEL (U+0085) as a raw 0x85 byte when the
+	 * pattern is not UTF-8 mode, which splits characters such as "Å" (C3 85)
+	 * and Greek "υ" (CF 85).
+	 *
+	 * @return list<string>
+	 */
+	private function split_lines( string $markdown ): array {
+		$markdown = str_replace( array( "\r\n", "\r" ), "\n", $markdown );
+		return explode( "\n", $markdown );
 	}
 
 	private function toggle_fence( string $line, bool &$in_fence, string &$fence ): bool {
