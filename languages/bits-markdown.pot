@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-06T06:30:22+00:00\n"
+"POT-Creation-Date: 2026-09-09T18:01:10+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: bits-markdown\n"
@@ -24,9 +24,8 @@ msgid "BITS Markdown"
 msgstr ""
 
 #. Plugin URI of the plugin
-#. Author URI of the plugin
 #: bits-markdown.php
-msgid "https://bristleconeit.com"
+msgid "https://github.com/Zyniker13/wordpress-plugin-markdown"
 msgstr ""
 
 #. Description of the plugin
@@ -39,6 +38,11 @@ msgstr ""
 msgid "Bristlecone IT Services"
 msgstr ""
 
+#. Author URI of the plugin
+#: bits-markdown.php
+msgid "https://bristleconeit.com"
+msgstr ""
+
 #: bits-markdown.php:40
 msgid "BITS Markdown is missing its Composer dependencies. Run composer install in the plugin directory."
 msgstr ""
@@ -47,15 +51,15 @@ msgstr ""
 msgid "BITS Markdown detected another Markdown-related plugin. Disable the extra Markdown conversion to avoid double-processing:"
 msgstr ""
 
-#: includes/JetpackCompat.php:72
+#: includes/JetpackCompat.php:74
 msgid "Jetpack Markdown is still active. BITS Markdown will not convert posts or comments until Jetpack Markdown is turned off, so existing content is not processed twice."
 msgstr ""
 
-#: includes/JetpackCompat.php:74
+#: includes/JetpackCompat.php:76
 msgid "Disable Jetpack Markdown"
 msgstr ""
 
-#: includes/JetpackCompat.php:84
+#: includes/JetpackCompat.php:85
 msgid "Jetpack Markdown has been disabled. BITS Markdown will now convert posts and comments, including existing Jetpack Markdown documents."
 msgstr ""
 
