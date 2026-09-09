@@ -14,7 +14,7 @@ Write in Markdown without Jetpack. Block editor, Classic Editor, comments, and i
 
 BITS Markdown lets you write WordPress content in Markdown and keep the source for later edits. It is a self-contained replacement for Jetpack’s Markdown features, and its syntax is aligned with [iA Writer](https://ia.net/writer) (Markdown support only, not the rest of the iA Writer app).
 
-The plugin is developed by [Bristlecone IT Services](https://bristleconeit.com).
+The plugin is developed by [Bristlecone IT Services](https://bristleconeit.com). Source and issues are on [GitHub](https://github.com/Zyniker13/wordpress-plugin-markdown).
 
 = Writing surfaces =
 
