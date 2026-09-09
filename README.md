@@ -2,6 +2,8 @@
 
 WordPress plugin by [Bristlecone IT Services](https://bristleconeit.com). Write in Markdown without Jetpack, with syntax aligned to iA Writer.
 
+Plugin homepage: [https://bristleconeit.com/bits-markdown](https://bristleconeit.com/bits-markdown).
+
 ## Requirements
 
 - WordPress 6.4+
@@ -18,11 +20,13 @@ The Gutenberg block is plain `wp.*` JavaScript (no build step).
 
 ## WordPress.org
 
-This directory is the plugin root. `readme.txt` is the file WordPress.org uses. The directory contributor is `bristleconeit` (Bristlecone IT Services).
+This directory is the plugin root. `readme.txt` is the file WordPress.org uses. The directory contributor is `bristleconeit` (Bristlecone IT Services). Plugin URI is `https://bristleconeit.com/bits-markdown`; Author URI is `https://bristleconeit.com`.
 
 Do not include Jetpack in directory tags.
 
 WordPress.org assets (icon, banner, screenshots) belong in the plugin’s SVN `/assets` directory after approval, not in this zip.
+
+The public plugin page is `https://bristleconeit.com/bits-markdown`. Copy and standards notes for that page live in `docs/plugin-home.md` (not shipped in the WordPress.org zip).
 
 ## Storage
 

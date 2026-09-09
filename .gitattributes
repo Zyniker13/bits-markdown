@@ -6,6 +6,7 @@
 /.phpunit.cache export-ignore
 /bin export-ignore
 /dist export-ignore
+/docs export-ignore
 /tests export-ignore
 /phpunit.xml export-ignore
 /phpunit.xml.dist export-ignore
