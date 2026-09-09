@@ -16,7 +16,7 @@ Use this document to generate the public plugin page. It is the source of truth 
 | **License** | GPL-2.0-or-later (GNU GPL v2 or later) |
 | **Price** | Fully free. No paid tier, no phone-home, no account. |
 | **WordPress.org listing** | In submission. Do not claim it is listed until it is. A “Download” control may say it will be available on WordPress.org, with GitHub as the current source. |
-| **Source / issues** | `https://github.com/Zyniker13/wordpress-plugin-markdown` |
+| **Source / issues** | `https://github.com/Zyniker13/bits-markdown` |
 
 ### Tone
 
@@ -286,7 +286,7 @@ Only Jetpack Markdown. Leave Jetpack installed if you use other Jetpack modules.
 No.
 
 **Where do I get it?**  
-WordPress.org (once listed) and [GitHub](https://github.com/Zyniker13/wordpress-plugin-markdown).
+WordPress.org (once listed) and [GitHub](https://github.com/Zyniker13/bits-markdown).
 
 ---
 
@@ -294,7 +294,7 @@ WordPress.org (once listed) and [GitHub](https://github.com/Zyniker13/wordpress-
 
 - Plugin homepage (this page): https://bristleconeit.com/bits-markdown
 - Company: https://bristleconeit.com
-- GitHub: https://github.com/Zyniker13/wordpress-plugin-markdown
+- GitHub: https://github.com/Zyniker13/bits-markdown
 - CommonMark 0.31.2: https://spec.commonmark.org/0.31.2/
 - league/commonmark: https://commonmark.thephpleague.com/
 - iA Writer: https://ia.net/writer

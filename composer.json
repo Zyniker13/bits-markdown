@@ -3,6 +3,11 @@
   "description": "Markdown for WordPress without Jetpack, with iA Writer-aligned syntax.",
   "type": "wordpress-plugin",
   "license": "GPL-2.0-or-later",
+  "homepage": "https://bristleconeit.com/bits-markdown",
+  "support": {
+    "issues": "https://github.com/Zyniker13/bits-markdown/issues",
+    "source": "https://github.com/Zyniker13/bits-markdown"
+  },
   "require": {
     "php": ">=8.1",
     "league/commonmark": "^2.7",
