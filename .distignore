@@ -18,6 +18,7 @@ phpunit.xml.dist
 # Build output and tooling
 bin
 dist
+docs
 node_modules
 *.zip
 *.tgz

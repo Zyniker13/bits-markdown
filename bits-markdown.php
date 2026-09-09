@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: BITS Markdown
- * Plugin URI: https://github.com/Zyniker13/wordpress-plugin-markdown
+ * Plugin URI: https://bristleconeit.com/bits-markdown
  * Description: Markdown for WordPress without Jetpack. Write in the block editor, Classic Editor, comments, or from iA Writer, with syntax aligned to iA Writer.
  * Version: 1.0.0
  * Requires at least: 6.4
