@@ -1,4 +1,4 @@
-# BITS Markdown — plugin homepage brief
+# Bristlecone Markdown — plugin homepage brief
 
 Use this document to generate the public plugin page. It is the source of truth for copy, features, and standards claims. Do not invent features, partnerships, or compatibility that are not listed here.
 
@@ -6,11 +6,11 @@ Use this document to generate the public plugin page. It is the source of truth 
 
 | Item | Value |
 | --- | --- |
-| **Canonical URL** | `https://bristleconeit.com/bits-markdown` |
+| **Canonical URL** | `https://bristleconeit.com/bristlecone-markdown` |
 | **Page purpose** | Dedicated homepage for this WordPress plugin (WordPress.org **Plugin URI**) |
 | **Author / company site** | `https://bristleconeit.com` (WordPress.org **Author URI** — must remain a different URL than the plugin page) |
-| **Product name** | BITS Markdown |
-| **Slug** | `bits-markdown` |
+| **Product name** | Bristlecone Markdown |
+| **Slug** | `bristlecone-markdown` |
 | **Vendor** | Bristlecone IT Services |
 | **Version described** | 1.0.0 |
 | **License** | GPL-2.0-or-later (GNU GPL v2 or later) |
@@ -20,7 +20,7 @@ Use this document to generate the public plugin page. It is the source of truth 
 
 ### Tone
 
-Professional, precise, and short. Company site for Bristlecone IT Services — not a SaaS landing page. Prefer statements of behavior over slogans. Use “BITS Markdown” on first reference in a section; “the plugin” is fine after that.
+Professional, precise, and short. Company site for Bristlecone IT Services — not a SaaS landing page. Prefer statements of behavior over slogans. Use “Bristlecone Markdown” on first reference in a section; “the plugin” is fine after that.
 
 ### Must not claim
 
@@ -30,7 +30,7 @@ Professional, precise, and short. Company site for Bristlecone IT Services — n
 - Task-list conversion (`- [ ]` / `- [x]`). Those stay as text.
 - File transclusion / iA Writer Content Blocks. WordPress cannot see the local library; authors must compile in iA Writer first.
 - Tracking, analytics, or a remote conversion API. Parsing runs on the WordPress site. KaTeX and syntax highlighting are bundled.
-- Compatibility below **WordPress 6.4** or **PHP 8.1**. iA Writer’s Publish command needs WordPress 5.6+ Application Passwords; the plugin itself requires 6.4+.
+- Compatibility below **WordPress 6.4** or **PHP 8.4**. iA Writer’s Publish command needs WordPress 5.6+ Application Passwords; the plugin itself requires 6.4+.
 - “100% identical to the CommonMark dingus” for the *production* parser. Production enables extras and HTML restrictions (see Standards). The test suite includes the full CommonMark 0.31.2 spec against a core-only converter, plus a production ledger for expected deviations.
 - The directory tag `jetpack` on WordPress.org.
 
@@ -50,7 +50,7 @@ Professional, precise, and short. Company site for Bristlecone IT Services — n
 12. License / source
 13. Footer: Bristlecone IT Services, plugin URL, GitHub
 
-Visuals are optional. If you generate screenshots, they must match real UI: Settings → BITS Markdown; block editor Markdown block with source/preview; front-end of a Markdown post. Heading permalinks render as a `#` before the heading text (that is intentional).
+Visuals are optional. If you generate screenshots, they must match real UI: Settings → Bristlecone Markdown; block editor Markdown block with source/preview; front-end of a Markdown post. Heading permalinks render as a `#` before the heading text (that is intentional).
 
 ---
 
@@ -58,7 +58,7 @@ Visuals are optional. If you generate screenshots, they must match real UI: Sett
 
 ### Title
 
-BITS Markdown
+Bristlecone Markdown
 
 ### One-sentence pitch
 
@@ -66,7 +66,7 @@ Write WordPress posts, pages, comments, and iA Writer drafts in Markdown — wit
 
 ### Lead
 
-BITS Markdown is a free WordPress plugin from [Bristlecone IT Services](https://bristleconeit.com). It converts Markdown to HTML on the server, keeps the Markdown source for later edits, and stores HTML so the site still displays if the plugin is deactivated.
+Bristlecone Markdown is a free WordPress plugin from [Bristlecone IT Services](https://bristleconeit.com). It converts Markdown to HTML on the server, keeps the Markdown source for later edits, and stores HTML so the site still displays if the plugin is deactivated.
 
 It is a self-contained replacement for **Jetpack’s Markdown module only**, not the rest of Jetpack. Syntax is aligned with [iA Writer](https://ia.net/writer) Markdown (highlight, footnotes, YAML, math, and related extras). It does not reproduce iA Writer the application.
 
@@ -75,8 +75,8 @@ It is a self-contained replacement for **Jetpack’s Markdown module only**, not
 | Requirement | Version |
 | --- | --- |
 | WordPress | 6.4 or later (tested up to 7.1) |
-| PHP | 8.1 or later |
-| Block editor | Gutenberg Markdown block (`bits/markdown`) |
+| PHP | 8.4 or later |
+| Block editor | Gutenberg Markdown block (`bristlecone/markdown`) |
 | Classic Editor / REST / iA Writer | Whole-document Markdown for selected post types |
 | iA Writer Publish | WordPress Application Passwords (WordPress 5.6+) |
 
@@ -86,7 +86,7 @@ It is a self-contained replacement for **Jetpack’s Markdown module only**, not
 
 ### Writing surfaces
 
-**Markdown block (block editor).** Insert a Markdown block, edit source, and preview with the same PHP parser used on publish (`POST /bits-markdown/v1/preview`). Saved block markup includes HTML so the content still renders if the plugin is deactivated.
+**Markdown block (block editor).** Insert a Markdown block, edit source, and preview with the same PHP parser used on publish (`POST /bristlecone-markdown/v1/preview`). Saved block markup includes HTML so the content still renders if the plugin is deactivated.
 
 **Whole-document Markdown.** Classic Editor, the REST API, and iA Writer’s Publish command send a Markdown body. The plugin converts on save for post types enabled in settings (posts and pages by default; other public types are a checklist, not auto-enabled).
 
@@ -100,23 +100,23 @@ For document-mode posts:
 
 - HTML in `post_content` (what themes display)
 - Markdown source in `post_content_filtered`
-- Flag meta `_bits_markdown`
-- YAML front matter in `_bits_markdown_front_matter` when present
+- Flag meta `_bristlecone_markdown` (legacy `_bits_markdown` is still recognized)
+- YAML front matter in `_bristlecone_markdown_front_matter` when present (legacy `_bits_markdown_front_matter`)
 
 Existing Jetpack Markdown posts that use `_wpcom_markdown` and `post_content_filtered` are adopted automatically once Jetpack Markdown is off.
 
-If you deactivate BITS Markdown, published HTML remains. You cannot edit those posts as Markdown until the plugin is active again.
+If you deactivate Bristlecone Markdown, published HTML remains. You cannot edit those posts as Markdown until the plugin is active again.
 
-### Settings (Settings → BITS Markdown)
+### Settings (Settings → Bristlecone Markdown)
 
 - **Post types** — which types get whole-document Markdown (Classic, REST, iA Writer). The Markdown block is always available in the block editor.
 - **Comments** — allow Markdown in comments.
-- **Code highlighting** — server-side highlighting of fenced code (no extra JavaScript). Output uses `hljs` CSS classes. Themes may override `.hljs` or dequeue `bits-markdown-highlight`.
+- **Code highlighting** — server-side highlighting of fenced code (no extra JavaScript). Output uses `hljs` CSS classes. Themes may override `.hljs` or dequeue `bristlecone-markdown-highlight`.
 - **Mathematics** — render `$inline$` and `$$block$$` with bundled KaTeX, enqueued only when a post contains math.
 
 ### iA Writer Publish
 
-In iA Writer, publish to WordPress over the REST API as Markdown. BITS Markdown:
+In iA Writer, publish to WordPress over the REST API as Markdown. Bristlecone Markdown:
 
 - Converts the body on save
 - Returns Markdown source to non-Gutenberg clients on edit (so iA Writer round-trips source, not HTML)
@@ -128,13 +128,13 @@ Gutenberg’s editor is detected separately so the block editor still receives a
 
 ### Jetpack Markdown coexistence
 
-If Jetpack’s Markdown module is still active, BITS Markdown **does not** convert posts or comments, so content is not processed twice. An admin notice offers a one-click control to disable that Jetpack module. After it is off, existing Jetpack Markdown documents are adopted.
+If Jetpack’s Markdown module is still active, Bristlecone Markdown **does not** convert posts or comments, so content is not processed twice. An admin notice offers a one-click control to disable that Jetpack module. After it is off, existing Jetpack Markdown documents are adopted.
 
 If another Markdown plugin is active, an admin notice warns about double-processing.
 
 ### Footnotes and archives
 
-Footnote IDs are namespaced with the post ID (`bits-fn-{id}-…`) so archive pages and WordPress’s core Footnotes block are less likely to clash. New posts are converted again after insert so those IDs are not left as a placeholder. `wpautop` is disabled for document-mode Markdown posts because it can scramble footnote markup. Footnote lists still render on archives for each post that contains them. Themes that restyle `sup` may need a small CSS tweak.
+Footnote IDs are namespaced with the post ID (`bristlecone-markdown-fn-{id}-…`) so archive pages and WordPress’s core Footnotes block are less likely to clash. New posts are converted again after insert so those IDs are not left as a placeholder. `wpautop` is disabled for document-mode Markdown posts because it can scramble footnote markup. Footnote lists still render on archives for each post that contains them. Themes that restyle `sup` may need a small CSS tweak.
 
 ### Privacy and assets
 
@@ -227,7 +227,7 @@ Bibliography/citation markers follow MultiMarkdown convention (`[locator][#Key]`
 
 ### YAML
 
-Front matter is parsed as YAML (Symfony YAML 6.4). Invalid YAML is left in the document rather than aborting the save. Mapped WordPress fields are listed under iA Writer Publish above.
+Front matter is parsed as YAML (Symfony YAML 8.1). Invalid YAML is left in the document rather than aborting the save. Mapped WordPress fields are listed under iA Writer Publish above.
 
 ### TeX / KaTeX
 
@@ -250,19 +250,19 @@ This is defense in depth, not a claim of a formal security certification.
 | Interface | Role |
 | --- | --- |
 | Plugin API | Bootstrap, settings, notices, uninstall |
-| Block API (block.json v3) | `bits/markdown` block, PHP `render_callback` |
-| REST API | Document publish/edit for iA Writer; `bits-markdown/v1/preview` for the editor |
+| Block API (block.json v3) | `bristlecone/markdown` block, PHP `render_callback` |
+| REST API | Document publish/edit for iA Writer; `bristlecone-markdown/v1/preview` for the editor |
 | Application Passwords | iA Writer (and other REST clients) on WordPress 5.6+ |
 | `post_content` / `post_content_filtered` | Same split Jetpack Markdown used |
 | `wpautop` | Disabled for document-mode Markdown posts and Markdown comments so footnote and block HTML stay intact |
 
-Requires WordPress **6.4+**, PHP **8.1+**. Tested up to WordPress **7.1**.
+Requires WordPress **6.4+**, PHP **8.4+**. Tested up to WordPress **7.1**.
 
 ### Licensing of the plugin and bundled libraries
 
 | Component | License (as bundled / depended) |
 | --- | --- |
-| BITS Markdown | GPL-2.0-or-later |
+| Bristlecone Markdown | GPL-2.0-or-later |
 | league/commonmark and related PHP packages | MIT (and other GPL-compatible OSI licenses as shipped by Composer) |
 | KaTeX | MIT |
 | highlight.php | BSD-3-Clause |
@@ -274,13 +274,13 @@ The distributed plugin is GPL-2.0-or-later as a WordPress plugin. Third-party no
 ## FAQ (for the page)
 
 **Will posts break if I deactivate the plugin?**  
-Published HTML stays in `post_content`. The site still displays. You cannot edit those posts as Markdown until BITS Markdown is active again.
+Published HTML stays in `post_content`. The site still displays. You cannot edit those posts as Markdown until Bristlecone Markdown is active again.
 
 **Can I use the block editor and Classic Editor together?**  
 Yes. Use the Markdown block in Gutenberg. Classic / REST / iA Writer posts are whole-document Markdown.
 
 **Does it replace Jetpack?**  
-Only Jetpack Markdown. Leave Jetpack installed if you use other Jetpack modules. Turn off the Markdown module so BITS Markdown can convert.
+Only Jetpack Markdown. Leave Jetpack installed if you use other Jetpack modules. Turn off the Markdown module so Bristlecone Markdown can convert.
 
 **Does it phone home?**  
 No.
@@ -292,7 +292,7 @@ WordPress.org (once listed) and [GitHub](https://github.com/Zyniker13/bits-markd
 
 ## Links to put on the page
 
-- Plugin homepage (this page): https://bristleconeit.com/bits-markdown
+- Plugin homepage (this page): https://bristleconeit.com/bristlecone-markdown
 - Company: https://bristleconeit.com
 - GitHub: https://github.com/Zyniker13/bits-markdown
 - CommonMark 0.31.2: https://spec.commonmark.org/0.31.2/
@@ -306,7 +306,7 @@ WordPress.org (once listed) and [GitHub](https://github.com/Zyniker13/bits-markd
 
 ## Meta (for `<title>` / description)
 
-- **Title:** BITS Markdown — WordPress Markdown without Jetpack | Bristlecone IT Services
+- **Title:** Bristlecone Markdown — WordPress Markdown without Jetpack | Bristlecone IT Services
 - **Meta description:** Free WordPress plugin for Markdown in the block editor, Classic Editor, comments, and iA Writer. CommonMark 0.31.2 plus iA Writer-aligned extras. GPL-2.0-or-later.
-- **H1:** BITS Markdown
-- **Canonical:** https://bristleconeit.com/bits-markdown
+- **H1:** Bristlecone Markdown
+- **Canonical:** https://bristleconeit.com/bristlecone-markdown

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown\Tests;
+namespace Bristlecone\Markdown\Tests;
 
-use Bristlecone\BitsMarkdown\Parser;
+use Bristlecone\Markdown\Parser;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -38,10 +38,10 @@ final class DocumentFixtureTest extends TestCase {
 		$this->assertSame( 'Spec kitchen sink', $result->front_matter['title'] ?? null );
 		$this->assertSame( 'spec-kitchen-sink', $result->front_matter['slug'] ?? null );
 		$this->assertStringContainsString( 'Bob Loblaw', $html );
-		$this->assertStringContainsString( 'bits-markdown-toc', $html );
-		$this->assertStringContainsString( 'bits-markdown-heading-permalink', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-toc', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-heading-permalink', $html );
 		$this->assertStringContainsString( 'id="explicit-sink-three"', $html );
-		$this->assertStringContainsString( 'bits-fn-sink-', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-fn-sink-', $html );
 		$this->assertStringContainsString( '<em>', $html );
 		$this->assertStringContainsString( '<strong>', $html );
 		$this->assertStringContainsString( '<del>', $html );
@@ -49,14 +49,14 @@ final class DocumentFixtureTest extends TestCase {
 		$this->assertStringContainsString( '<table>', $html );
 		$this->assertStringContainsString( 'hljs', $html );
 		$this->assertStringContainsString( 'unlabeled fence with **bold**', $html );
-		$this->assertStringContainsString( 'bits-markdown-math-inline', $html );
-		$this->assertStringContainsString( 'bits-markdown-math-display', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-math-inline', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-math-display', $html );
 		$this->assertStringContainsString( '$12.00$', $html );
 		$this->assertStringContainsString( '<sup>2</sup>', $html );
-		$this->assertStringContainsString( 'bits-markdown-page-break', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-page-break', $html );
 		$this->assertStringNotContainsString( 'this writer comment must not appear', $html );
-		$this->assertStringContainsString( 'bits-markdown-citation', $html );
-		$this->assertStringContainsString( 'bits-markdown-bibliography', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-citation', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-bibliography', $html );
 		$this->assertStringContainsString( '<span class="ok">there</span>', $html );
 		$this->assertStringNotContainsString( '<script>', $html );
 		$this->assertStringContainsString( '[ ] not a task', $html );
@@ -94,7 +94,7 @@ final class DocumentFixtureTest extends TestCase {
 
 	public function test_footnotes_document_ids_are_namespaced(): void {
 		$html = $this->parser->convert( $this->read( 'footnotes.md' ), array( 'id' => '77' ) )->html;
-		$this->assertStringContainsString( 'bits-fn-77-', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-fn-77-', $html );
 		$this->assertStringContainsString( 'Named footnote', $html );
 		$this->assertStringContainsString( 'this is inline', $html );
 	}

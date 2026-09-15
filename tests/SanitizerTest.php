@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown\Tests;
+namespace Bristlecone\Markdown\Tests;
 
-use Bristlecone\BitsMarkdown\Sanitizer;
+use Bristlecone\Markdown\Sanitizer;
 use PHPUnit\Framework\TestCase;
 
 final class SanitizerTest extends TestCase {
@@ -31,7 +31,7 @@ final class SanitizerTest extends TestCase {
 	}
 
 	public function test_post_passthrough_without_wp(): void {
-		$raw = '<div class="bits-markdown"><script>alert(1)</script></div>';
+		$raw = '<div class="bristlecone-markdown"><script>alert(1)</script></div>';
 		$this->assertSame( $raw, $this->sanitizer->sanitize_post( $raw ) );
 	}
 

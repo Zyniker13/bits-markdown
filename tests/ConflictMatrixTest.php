@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown\Tests;
+namespace Bristlecone\Markdown\Tests;
 
-use Bristlecone\BitsMarkdown\Parser;
+use Bristlecone\Markdown\Parser;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -22,12 +22,12 @@ final class ConflictMatrixTest extends TestCase {
 	public static function matrix(): \Generator {
 		yield 'currency and math' => array(
 			'Price $12.00 and formula $x$.',
-			array( 'bits-markdown-math', '$12.00' ),
+			array( 'bristlecone-markdown-math', '$12.00' ),
 			array(),
 		);
 		yield 'footnote and superscript' => array(
 			"See [^1] and 100m^2\n\n[^1]: Note.\n",
-			array( 'bits-markdown-footnote', '<sup>2</sup>' ),
+			array( 'bristlecone-markdown-footnote', '<sup>2</sup>' ),
 			array( '<sup>1</sup>' ),
 		);
 		yield 'strike and subscript' => array(
@@ -38,26 +38,26 @@ final class ConflictMatrixTest extends TestCase {
 		yield 'autolink not writer comment' => array(
 			'Visit https://example.com/path',
 			array( 'https://example.com/path' ),
-			array( 'bits-markdown-page-break' ),
+			array( 'bristlecone-markdown-page-break' ),
 		);
 		yield 'page break vs thematic breaks' => array(
 			"+++\n\n---\n\n***\n",
-			array( 'bits-markdown-page-break', '<hr />' ),
+			array( 'bristlecone-markdown-page-break', '<hr />' ),
 			array(),
 		);
 		yield 'citation in fenced code vs real citation' => array(
 			"A claim[p. 1][#K]\n\n```\n[p. 1][#K]\n```\n\n[#K]: Book.\n",
-			array( 'bits-markdown-citation', '[p. 1][#K]' ),
+			array( 'bristlecone-markdown-citation', '[p. 1][#K]' ),
 			array(),
 		);
 		yield 'toc in fence' => array(
 			"```\n{{TOC}}\n```\n\n## One\n",
 			array( '{{TOC}}' ),
-			array( 'bits-markdown-toc' ),
+			array( 'bristlecone-markdown-toc' ),
 		);
 		yield 'math caret not extra sup' => array(
 			'$x^2$',
-			array( 'bits-markdown-math', 'x^2' ),
+			array( 'bristlecone-markdown-math', 'x^2' ),
 			array( '<sup>' ),
 		);
 		yield 'task list not checkbox' => array(
@@ -77,13 +77,13 @@ final class ConflictMatrixTest extends TestCase {
 		);
 		yield 'quote table footnote' => array(
 			"> | H |\n> | --- |\n> | cell[^1] |\n\n[^1]: Note in quote context.\n",
-			array( '<table>', 'bits-markdown-footnote' ),
+			array( '<table>', 'bristlecone-markdown-footnote' ),
 			array(),
 		);
 		yield 'triple plus plus plus not break' => array(
 			'++++',
 			array( '++++' ),
-			array( 'bits-markdown-page-break' ),
+			array( 'bristlecone-markdown-page-break' ),
 		);
 		yield 'http autolink' => array(
 			'http://example.com',
@@ -110,13 +110,13 @@ final class ConflictMatrixTest extends TestCase {
 	public function test_kitchen_sink_has_toc_footnotes_and_citations(): void {
 		$markdown = (string) file_get_contents( dirname( __DIR__ ) . '/tests/fixtures/documents/kitchen-sink.md' );
 		$html     = $this->parser->convert( $markdown, array( 'id' => 'sink' ) )->html;
-		$this->assertStringContainsString( 'bits-markdown-toc', $html );
-		$this->assertStringContainsString( 'bits-markdown-footnotes', $html );
-		$this->assertStringContainsString( 'bits-markdown-bibliography', $html );
-		$this->assertStringContainsString( 'bits-fn-sink-', $html );
-		$this->assertStringContainsString( 'bits-fn-sink-', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-toc', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-footnotes', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-bibliography', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-fn-sink-', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-fn-sink-', $html );
 		$this->assertNotEquals(
-			substr_count( $html, 'bits-fn-sink-' ),
+			substr_count( $html, 'bristlecone-markdown-fn-sink-' ),
 			0
 		);
 	}

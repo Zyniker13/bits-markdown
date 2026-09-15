@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown;
+namespace Bristlecone\Markdown;
 
 /**
  * Gutenberg Markdown block.
@@ -20,11 +20,11 @@ final class Block {
 	}
 
 	public function register_block(): void {
-		$block_js = BITS_MARKDOWN_DIR . 'assets/js/block.js';
+		$block_js = BRISTLECONE_MARKDOWN_DIR . 'assets/js/block.js';
 
 		wp_register_script(
-			'bits-markdown-block',
-			BITS_MARKDOWN_URL . 'assets/js/block.js',
+			'bristlecone-markdown-block',
+			BRISTLECONE_MARKDOWN_URL . 'assets/js/block.js',
 			array(
 				'wp-blocks',
 				'wp-element',
@@ -34,35 +34,35 @@ final class Block {
 				'wp-api-fetch',
 				'wp-data',
 			),
-			file_exists( $block_js ) ? (string) filemtime( $block_js ) : BITS_MARKDOWN_VERSION,
+			file_exists( $block_js ) ? (string) filemtime( $block_js ) : BRISTLECONE_MARKDOWN_VERSION,
 			true
 		);
 
-		wp_set_script_translations( 'bits-markdown-block', 'bits-markdown' );
+		wp_set_script_translations( 'bristlecone-markdown-block', 'bristlecone-markdown' );
 
 		wp_localize_script(
-			'bits-markdown-block',
-			'bitsMarkdownBlock',
+			'bristlecone-markdown-block',
+			'bristleconeMarkdownBlock',
 			array(
-				'previewUrl' => esc_url_raw( rest_url( 'bits-markdown/v1/preview' ) ),
+				'previewUrl' => esc_url_raw( rest_url( 'bristlecone-markdown/v1/preview' ) ),
 			)
 		);
 
 		register_block_type(
-			BITS_MARKDOWN_DIR . 'blocks/markdown',
+			BRISTLECONE_MARKDOWN_DIR . 'blocks/markdown',
 			array(
-				'editor_script'   => 'bits-markdown-block',
+				'editor_script'   => 'bristlecone-markdown-block',
 				'render_callback' => array( $this, 'render' ),
 			)
 		);
 	}
 
 	public static function serialize_source( string $markdown, string $html = '' ): string {
-		$inner = '<div class="wp-block-bits-markdown bits-markdown">' . $html . '</div>';
+		$inner = '<div class="wp-block-bristlecone-markdown bristlecone-markdown">' . $html . '</div>';
 
 		return serialize_block(
 			array(
-				'blockName'    => 'bits/markdown',
+				'blockName'    => 'bristlecone/markdown',
 				'attrs'        => array(
 					'markdown' => $markdown,
 					'html'     => $html,
@@ -82,8 +82,10 @@ final class Block {
 			? $attributes['markdown']
 			: '';
 
+		$sanitizer = new Sanitizer();
+
 		if ( $markdown === '' ) {
-			return $content;
+			return $sanitizer->sanitize_post( $content );
 		}
 
 		$post_id = get_the_ID();
@@ -96,10 +98,10 @@ final class Block {
 
 		$wrapper = get_block_wrapper_attributes(
 			array(
-				'class' => 'wp-block-bits-markdown bits-markdown',
+				'class' => 'wp-block-bristlecone-markdown bristlecone-markdown',
 			)
 		);
 
-		return '<div ' . $wrapper . '>' . $result->html . '</div>';
+		return '<div ' . $wrapper . '>' . $sanitizer->sanitize_post( $result->html ) . '</div>';
 	}
 }

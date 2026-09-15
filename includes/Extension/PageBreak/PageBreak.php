@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown\Extension\PageBreak;
+namespace Bristlecone\Markdown\Extension\PageBreak;
 
 use League\CommonMark\Node\Block\AbstractBlock;
 

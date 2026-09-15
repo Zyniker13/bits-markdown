@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown;
+namespace Bristlecone\Markdown;
 
 /**
  * REST API: iA Writer publish, Gutenberg document wrapping, live preview.
@@ -28,7 +28,7 @@ final class Rest {
 
 	public function register_routes(): void {
 		register_rest_route(
-			'bits-markdown/v1',
+			'bristlecone-markdown/v1',
 			'/preview',
 			array(
 				'methods'             => 'POST',

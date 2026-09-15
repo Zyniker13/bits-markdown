@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Idempotent publisher for the BITS Markdown spec corpus.
+ * Idempotent publisher for the Bristlecone Markdown spec corpus.
  *
  * Run on a WordPress site that should remain the primary test instance:
  *
  *   wp eval-file tests/integration/publish-corpus.php
  *
- * @package BITSMarkdown
+ * @package BristleconeMarkdown
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -88,9 +88,9 @@ foreach ( $manifest['comments'] as $item ) {
 	WP_CLI::log( sprintf( 'comment %s => %d', $item['key'], $cid ) );
 }
 
-$settings = get_option( 'bits_markdown_settings', array() );
+$settings = get_option( 'bristlecone_markdown_settings', array() );
 update_option(
-	'bits_markdown_settings',
+	'bristlecone_markdown_settings',
 	array(
 		'post_types'          => array(
 			'post'      => true,
@@ -107,10 +107,10 @@ $cpt_id = bits_spec_upsert( 'bits_spec', 'spec-custom-type', 'Spec CPT', "# CPT 
 WP_CLI::log( 'cpt => ' . $cpt_id );
 
 if ( is_array( $settings ) && $settings !== array() ) {
-	update_option( 'bits_markdown_settings', $settings );
+	update_option( 'bristlecone_markdown_settings', $settings );
 }
 
-file_put_contents( '/tmp/bits-markdown-spec-corpus.json', wp_json_encode( $results, JSON_PRETTY_PRINT ) );
+file_put_contents( '/tmp/bristlecone-markdown-spec-corpus.json', wp_json_encode( $results, JSON_PRETTY_PRINT ) );
 WP_CLI::success( 'Published ' . count( $results ) . ' corpus items.' );
 
 /**
@@ -131,7 +131,7 @@ function bits_spec_upsert( string $type, string $slug, string $title, string $ma
 	$existing = bits_spec_find( $type, $slug );
 	$content  = $markdown;
 	if ( 'block' === $mode ) {
-		$content = \Bristlecone\BitsMarkdown\Block::serialize_source( $markdown );
+		$content = \Bristlecone\Markdown\Block::serialize_source( $markdown );
 	}
 
 	$data = array(

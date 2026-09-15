@@ -5,7 +5,7 @@
  *
  *   wp eval-file tests/integration/verify-corpus.php
  *
- * @package BITSMarkdown
+ * @package BristleconeMarkdown
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -41,7 +41,7 @@ if ( ! $kitchen ) {
 	bits_spec_fail( 'missing spec-kitchen-sink' );
 } else {
 	$html = $kitchen->post_content;
-	foreach ( array( 'bits-markdown-toc', 'bits-markdown-footnotes', 'bits-markdown-bibliography', 'bits-markdown-page-break', '<mark>', '<table>', 'Bob Loblaw' ) as $needle ) {
+	foreach ( array( 'bristlecone-markdown-toc', 'bristlecone-markdown-footnotes', 'bristlecone-markdown-bibliography', 'bristlecone-markdown-page-break', '<mark>', '<table>', 'Bob Loblaw' ) as $needle ) {
 		if ( ! str_contains( $html, $needle ) ) {
 			bits_spec_fail( "kitchen sink missing {$needle}" );
 		}
@@ -52,13 +52,13 @@ if ( ! $kitchen ) {
 	if ( str_contains( $html, 'this writer comment must not appear' ) ) {
 		bits_spec_fail( 'kitchen sink leaked writer comment' );
 	}
-	if ( ! get_post_meta( $kitchen->ID, '_bits_markdown', true ) ) {
-		bits_spec_fail( 'kitchen sink missing _bits_markdown' );
+	if ( ! get_post_meta( $kitchen->ID, '_bristlecone_markdown', true ) ) {
+		bits_spec_fail( 'kitchen sink missing _bristlecone_markdown' );
 	}
 	if ( $kitchen->post_content_filtered === '' ) {
 		bits_spec_fail( 'kitchen sink missing post_content_filtered' );
 	}
-	if ( ! str_contains( $html, 'bits-fn-' . $kitchen->ID . '-' ) ) {
+	if ( ! str_contains( $html, 'bristlecone-markdown-fn-' . $kitchen->ID . '-' ) ) {
 		bits_spec_fail( 'kitchen sink footnote ids not namespaced to post id' );
 	}
 	$permalink = get_permalink( $kitchen );
@@ -69,7 +69,7 @@ $page = bits_spec_post( 'spec-kitchen-sink-page', 'page' );
 if ( ! $page ) {
 	bits_spec_fail( 'missing spec-kitchen-sink-page' );
 } else {
-	if ( ! str_contains( $page->post_content, 'bits-markdown-toc' ) ) {
+	if ( ! str_contains( $page->post_content, 'bristlecone-markdown-toc' ) ) {
 		bits_spec_fail( 'page missing TOC' );
 	}
 	bits_spec_ok( 'page ' . get_permalink( $page ) );
@@ -121,16 +121,16 @@ if ( ! $block ) {
 } elseif ( ! has_blocks( $block->post_content ) ) {
 	bits_spec_fail( 'block sample is not block markup' );
 } else {
-	bits_spec_ok( 'block sample uses bits/markdown' );
+	bits_spec_ok( 'block sample uses bristlecone/markdown' );
 }
 
 $a = bits_spec_post( 'spec-footnotes-archive-a' );
 $b = bits_spec_post( 'spec-footnotes-archive-b' );
 if ( $a && $b ) {
-	if ( ! str_contains( $a->post_content, 'bits-fn-' . $a->ID . '-' ) ) {
+	if ( ! str_contains( $a->post_content, 'bristlecone-markdown-fn-' . $a->ID . '-' ) ) {
 		bits_spec_fail( 'archive A footnote id' );
 	}
-	if ( ! str_contains( $b->post_content, 'bits-fn-' . $b->ID . '-' ) ) {
+	if ( ! str_contains( $b->post_content, 'bristlecone-markdown-fn-' . $b->ID . '-' ) ) {
 		bits_spec_fail( 'archive B footnote id' );
 	}
 	if ( $a->ID === $b->ID ) {
@@ -166,8 +166,8 @@ if ( $host ) {
 	if ( ! empty( $found['math'] ) && str_contains( $found['math']->comment_content, 'x^2' ) ) {
 		bits_spec_ok( 'math comment stored (span/div math wrappers are not in the comment KSES allowlist)' );
 	}
-	if ( ! empty( $found['basic'] ) && ! get_comment_meta( (int) $found['basic']->comment_ID, '_bits_markdown', true ) ) {
-		bits_spec_fail( 'comment missing _bits_markdown meta' );
+	if ( ! empty( $found['basic'] ) && ! get_comment_meta( (int) $found['basic']->comment_ID, '_bristlecone_markdown', true ) ) {
+		bits_spec_fail( 'comment missing _bristlecone_markdown meta' );
 	}
 }
 
@@ -194,13 +194,13 @@ if ( $kitchen && $user_id ) {
 	$request->set_param( '_locale', 'user' );
 	$gb   = rest_do_request( $request );
 	$graw = (string) ( $gb->get_data()['content']['raw'] ?? '' );
-	if ( ! str_contains( $graw, 'wp:bits/markdown' ) ) {
+	if ( ! str_contains( $graw, 'wp:bristlecone/markdown' ) ) {
 		bits_spec_fail( 'REST Gutenberg edit payload is not a markdown block' );
 	} else {
-		bits_spec_ok( 'REST edit with _locale wraps bits/markdown' );
+		bits_spec_ok( 'REST edit with _locale wraps bristlecone/markdown' );
 	}
 
-	$preview = new WP_REST_Request( 'POST', '/bits-markdown/v1/preview' );
+	$preview = new WP_REST_Request( 'POST', '/bristlecone-markdown/v1/preview' );
 	$preview->set_param( 'markdown', '**preview** $x$' );
 	$preview->set_param( 'post_id', $kitchen->ID );
 	$pres = rest_do_request( $preview );

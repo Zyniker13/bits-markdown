@@ -1,20 +1,25 @@
+.bristlecone-markdown table,
 .bits-markdown table {
 	border-collapse: collapse;
 	width: 100%;
 	margin: 1em 0;
 }
 
+.bristlecone-markdown th,
+.bristlecone-markdown td,
 .bits-markdown th,
 .bits-markdown td {
 	border: 1px solid #c3c4c7;
 	padding: 0.4em 0.6em;
 }
 
+.bristlecone-markdown mark,
 .bits-markdown mark {
 	background: #fff3bf;
 	padding: 0 0.15em;
 }
 
+.bristlecone-markdown-toc,
 .bits-markdown-toc {
 	margin: 1.5em 0;
 	padding: 1em 1.25em;
@@ -22,6 +27,7 @@
 	background: #f6f7f7;
 }
 
+.bristlecone-markdown-toc::before,
 .bits-markdown-toc::before {
 	content: "Contents";
 	display: block;
@@ -29,26 +35,32 @@
 	margin-bottom: 0.5em;
 }
 
+.bristlecone-markdown-footnotes,
 .bits-markdown-footnotes {
 	margin-top: 2em;
 	font-size: 0.925em;
 }
 
+.bristlecone-markdown-footnote-ref,
 .bits-markdown-footnote-ref {
 	text-decoration: none;
 }
 
+.bristlecone-markdown-heading-permalink,
 .bits-markdown-heading-permalink {
 	margin-right: 0.35em;
 	text-decoration: none;
 	opacity: 0.35;
 }
 
+.bristlecone-markdown-heading-permalink:hover,
+.bristlecone-markdown-heading-permalink:focus,
 .bits-markdown-heading-permalink:hover,
 .bits-markdown-heading-permalink:focus {
 	opacity: 1;
 }
 
+.bristlecone-markdown-page-break,
 .bits-markdown-page-break {
 	border: 0;
 	border-top: 1px dashed #8c8f94;
@@ -56,6 +68,7 @@
 }
 
 @media print {
+	.bristlecone-markdown-page-break,
 	.bits-markdown-page-break {
 		break-before: page;
 		border: 0;
@@ -64,22 +77,27 @@
 	}
 }
 
+.bristlecone-markdown-bibliography,
 .bits-markdown-bibliography {
 	margin-top: 2em;
 }
 
+.bristlecone-markdown-bibliography-title,
 .bits-markdown-bibliography-title {
 	font-size: 1.25em;
 }
 
+.bristlecone-markdown-citation,
 .bits-markdown-citation {
 	font-style: italic;
 }
 
+.bristlecone-markdown-code,
 .bits-markdown-code {
 	overflow: auto;
 }
 
+.bristlecone-markdown-math-display,
 .bits-markdown-math-display {
 	margin: 1em 0;
 	overflow-x: auto;

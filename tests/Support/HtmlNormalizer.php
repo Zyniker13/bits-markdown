@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown\Tests\Support;
+namespace Bristlecone\Markdown\Tests\Support;
 
 /**
  * Compare production parser HTML to CommonMark spec fragments.
@@ -19,12 +19,12 @@ final class HtmlNormalizer {
 	 */
 	public static function production( string $html ): string {
 		$html = preg_replace(
-			'/<a\b[^>]*class="bits-markdown-heading-permalink"[^>]*>.*?<\/a>/s',
+			'/<a\b[^>]*class="bristlecone-markdown-heading-permalink"[^>]*>.*?<\/a>/s',
 			'',
 			$html
 		) ?? $html;
 		$html = preg_replace( '/<(h[1-6]) id="[^"]*"/', '<$1', $html ) ?? $html;
-		$html = preg_replace( '/<pre class="bits-markdown-code">/', '<pre>', $html ) ?? $html;
+		$html = preg_replace( '/<pre class="bristlecone-markdown-code">/', '<pre>', $html ) ?? $html;
 
 		return self::spec( $html );
 	}

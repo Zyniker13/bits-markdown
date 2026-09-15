@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown\Extension\Footnote;
+namespace Bristlecone\Markdown\Extension\Footnote;
 
 use League\CommonMark\Extension\Footnote\Node\FootnoteRef;
 use League\CommonMark\Parser\Inline\InlineParserInterface;

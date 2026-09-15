@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown\Tests;
+namespace Bristlecone\Markdown\Tests;
 
-use Bristlecone\BitsMarkdown\Parser;
+use Bristlecone\Markdown\Parser;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -72,17 +72,17 @@ MD;
 			"Hello[^1] and more[^this is inline.]\n\n[^1]: Named footnote.\n",
 			array( 'id' => '12' )
 		);
-		$this->assertStringContainsString( 'bits-fn-12-', $html );
-		$this->assertStringContainsString( 'bits-fnref-12-', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-fn-12-', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-fnref-12-', $html );
 		$this->assertStringContainsString( 'Named footnote', $html );
 		$this->assertStringContainsString( 'this is inline', $html );
-		$this->assertStringContainsString( 'bits-markdown-footnotes', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-footnotes', $html );
 	}
 
 	public function test_nospace_footnote_is_named_not_inline(): void {
 		$html = $this->html( "See[^note]\n\n[^note]: Named.\n", array( 'id' => '9' ) );
 		$this->assertStringContainsString( 'Named', $html );
-		$this->assertStringContainsString( 'bits-fn-9-', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-fn-9-', $html );
 	}
 
 	public function test_missing_footnote_definition_does_not_fatal(): void {
@@ -110,7 +110,7 @@ MD;
 
 	public function test_toc_placeholder(): void {
 		$html = $this->html( "{{TOC}}\n\n## One\n\n### Two\n" );
-		$this->assertStringContainsString( 'bits-markdown-toc', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-toc', $html );
 		$this->assertStringContainsString( '#one', $html );
 		$this->assertStringContainsString( '#two', $html );
 	}
@@ -123,7 +123,7 @@ MD;
 	public function test_toc_lowercase_is_literal(): void {
 		$html = $this->html( "{{toc}}\n\n## One\n" );
 		$this->assertStringContainsString( '{{toc}}', $html );
-		$this->assertStringNotContainsString( 'bits-markdown-toc', $html );
+		$this->assertStringNotContainsString( 'bristlecone-markdown-toc', $html );
 	}
 
 	public function test_front_matter_interpolation_is_case_insensitive(): void {
@@ -154,7 +154,7 @@ MD;
 
 	public function test_inline_math_rules(): void {
 		$html = $this->html( 'Area $x^2$ and $ x$ and $x $ and a$x$ and $12.00$ and $1,234.56$.' );
-		$this->assertStringContainsString( 'bits-markdown-math-inline', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-math-inline', $html );
 		$this->assertStringContainsString( 'x^2', $html );
 		$this->assertStringNotContainsString( 'data-display="false"> x', $html );
 		$this->assertStringContainsString( '$12.00$', $html );
@@ -163,15 +163,15 @@ MD;
 
 	public function test_display_math_fenced_and_one_line(): void {
 		$block = $this->html( "$$\nE=mc^2\n$$" );
-		$this->assertStringContainsString( 'bits-markdown-math-display', $block );
+		$this->assertStringContainsString( 'bristlecone-markdown-math-display', $block );
 		$this->assertStringContainsString( 'E=mc^2', $block );
 		$one = $this->html( '$$E=mc^2$$' );
-		$this->assertStringContainsString( 'bits-markdown-math-display', $one );
+		$this->assertStringContainsString( 'bristlecone-markdown-math-display', $one );
 	}
 
 	public function test_math_disabled_context(): void {
 		$html = $this->html( '$x^2$', array( 'math' => false ) );
-		$this->assertStringNotContainsString( 'bits-markdown-math', $html );
+		$this->assertStringNotContainsString( 'bristlecone-markdown-math', $html );
 	}
 
 	public function test_superscript_and_subscript(): void {
@@ -185,18 +185,18 @@ MD;
 	public function test_caret_before_bracket_is_not_superscript(): void {
 		$html = $this->html( "See[^1]\n\n[^1]: Note.\n" );
 		$this->assertStringNotContainsString( '<sup>1</sup>', $html );
-		$this->assertStringContainsString( 'bits-markdown-footnote', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-footnote', $html );
 	}
 
 	public function test_math_does_not_grow_extra_sup_inside_tex(): void {
 		$html = $this->html( '$x^2$' );
-		$this->assertStringContainsString( 'bits-markdown-math', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-math', $html );
 		$this->assertStringNotContainsString( '<sup>', $html );
 	}
 
 	public function test_page_break_rules(): void {
 		$html = $this->html( "Visible\n\n+++\n\nAfter" );
-		$this->assertStringContainsString( 'bits-markdown-page-break', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-page-break', $html );
 		$this->assertStringContainsString( 'Visible', $html );
 		$this->assertStringContainsString( 'After', $html );
 		$this->assertStringNotContainsString( 'page-break', $this->html( '++++' ) );
@@ -217,16 +217,16 @@ MD;
 
 	public function test_citations(): void {
 		$html = $this->html( "A claim[p. 23][#Doe:2006] and [][#Doe:2006].\n\n[#Doe:2006]: John Doe. Some Big Fancy Book.\n" );
-		$this->assertStringContainsString( 'bits-markdown-citation', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-citation', $html );
 		$this->assertStringContainsString( 'p. 23', $html );
-		$this->assertStringContainsString( 'bits-markdown-bibliography', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-bibliography', $html );
 		$this->assertStringContainsString( 'John Doe', $html );
 		$this->assertStringContainsString( 'bits-ref-doe-2006', $html );
 	}
 
 	public function test_unknown_citation_left_as_markdown(): void {
 		$html = $this->html( 'A claim[p. 1][#Missing].' );
-		$this->assertStringNotContainsString( 'bits-markdown-citation', $html );
+		$this->assertStringNotContainsString( 'bristlecone-markdown-citation', $html );
 		$this->assertStringContainsString( '[#Missing]', $html );
 	}
 

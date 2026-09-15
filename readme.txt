@@ -1,9 +1,9 @@
-=== BITS Markdown ===
+=== Bristlecone Markdown ===
 Contributors: bristleconeit
 Tags: markdown, editor, writing, comments, gutenberg
 Requires at least: 6.4
 Tested up to: 7.1
-Requires PHP: 8.1
+Requires PHP: 8.4
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -12,9 +12,9 @@ Write in Markdown without Jetpack. Block editor, Classic Editor, comments, and i
 
 == Description ==
 
-BITS Markdown lets you write WordPress content in Markdown and keep the source for later edits. It is a self-contained replacement for Jetpack’s Markdown features, and its syntax is aligned with [iA Writer](https://ia.net/writer) (Markdown support only, not the rest of the iA Writer app).
+Bristlecone Markdown lets you write WordPress content in Markdown and keep the source for later edits. It is a self-contained replacement for Jetpack’s Markdown features, and its syntax is aligned with [iA Writer](https://ia.net/writer) (Markdown support only, not the rest of the iA Writer app).
 
-The plugin is developed by [Bristlecone IT Services](https://bristleconeit.com). Plugin homepage: [bristleconeit.com/bits-markdown](https://bristleconeit.com/bits-markdown). Source and issues are on [GitHub](https://github.com/Zyniker13/bits-markdown).
+The plugin is developed by [Bristlecone IT Services](https://bristleconeit.com). Plugin homepage: [bristleconeit.com/bristlecone-markdown](https://bristleconeit.com/bristlecone-markdown). Source and issues are on [GitHub](https://github.com/Zyniker13/bits-markdown).
 
 = Writing surfaces =
 
@@ -42,15 +42,15 @@ CommonMark plus:
 * MultiMarkdown-style citations `[p. 23][#CiteKey]`
 * Safe inline HTML
 
-Fenced code blocks can be highlighted on the server (no extra JavaScript). Theme developers can override `.hljs` or dequeue `bits-markdown-highlight`.
+Fenced code blocks can be highlighted on the server (no extra JavaScript). Theme developers can override `.hljs` or dequeue `bristlecone-markdown-highlight`.
 
 = Jetpack Markdown =
 
-If Jetpack Markdown is still active, BITS Markdown **does not** convert posts or comments, so content is not processed twice. An admin notice offers a one-click control to disable the Jetpack Markdown module. Existing Jetpack Markdown posts (`_wpcom_markdown` and `post_content_filtered`) are adopted automatically afterward.
+If Jetpack Markdown is still active, Bristlecone Markdown **does not** convert posts or comments, so content is not processed twice. An admin notice offers a one-click control to disable the Jetpack Markdown module. Existing Jetpack Markdown posts (`_wpcom_markdown` and `post_content_filtered`) are adopted automatically afterward.
 
 = iA Writer =
 
-In iA Writer you can publish drafts to WordPress 5.6+ over the REST API as Markdown. BITS Markdown converts that body on save and returns Markdown source to non-Gutenberg clients on edit.
+In iA Writer you can publish drafts to WordPress 5.6+ over the REST API as Markdown. Bristlecone Markdown converts that body on save and returns Markdown source to non-Gutenberg clients on edit.
 
 YAML keys such as `title`, `excerpt`, `tags`, `categories`, and `slug` are mapped onto the WordPress post when present. If `title` is applied to an auto-draft and `slug` is omitted, the permalink is generated from the title. Other keys are stored and available for `[%key]` interpolation.
 
@@ -61,13 +61,13 @@ YAML keys such as `title`, `excerpt`, `tags`, `categories`, and `slug` are mappe
 
 = Footnotes =
 
-Footnote IDs are namespaced with the post ID (`bits-fn-{id}-…`) so archives and the core Footnotes block are less likely to clash. New posts are converted again after insert so those IDs are not left as a placeholder. Footnote markup can still be sensitive to theme CSS and to `wpautop` on classic (non-block) content; we disable `wpautop` for document-mode Markdown posts. If a theme styles `sup` unusually, footnotes may need a CSS tweak. Footnote lists still render on archive views for each post that contains them.
+Footnote IDs are namespaced with the post ID (`bristlecone-markdown-fn-{id}-…`) so archives and the core Footnotes block are less likely to clash. New posts are converted again after insert so those IDs are not left as a placeholder. Footnote markup can still be sensitive to theme CSS and to `wpautop` on classic (non-block) content; we disable `wpautop` for document-mode Markdown posts. If a theme styles `sup` unusually, footnotes may need a CSS tweak. Footnote lists still render on archive views for each post that contains them.
 
 == Installation ==
 
-1. Upload the `bits-markdown` folder to `/wp-content/plugins/`, or install the zip from Plugins → Add New.
-2. Activate **BITS Markdown**.
-3. Open Settings → BITS Markdown to choose post types, comments, code highlighting, and math.
+1. Upload the `bristlecone-markdown` folder to `/wp-content/plugins/`, or install the zip from Plugins → Add New.
+2. Activate **Bristlecone Markdown**.
+3. Open Settings → Bristlecone Markdown to choose post types, comments, code highlighting, and math.
 4. If Jetpack is installed, disable Jetpack Markdown when prompted.
 
 == Frequently Asked Questions ==
@@ -98,4 +98,4 @@ No. KaTeX and the highlighter are bundled. There is no tracking and no remote co
 == Upgrade Notice ==
 
 = 1.0.0 =
-Initial public release of BITS Markdown.
+Initial public release of Bristlecone Markdown.

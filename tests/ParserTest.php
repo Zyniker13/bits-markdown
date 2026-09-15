@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown\Tests;
+namespace Bristlecone\Markdown\Tests;
 
-use Bristlecone\BitsMarkdown\Parser;
+use Bristlecone\Markdown\Parser;
 use PHPUnit\Framework\TestCase;
 
 final class ParserTest extends TestCase {
@@ -35,15 +35,15 @@ final class ParserTest extends TestCase {
 	public function test_named_and_inline_footnotes(): void {
 		$markdown = "Hello[^1] and more[^this is inline.]\n\n[^1]: Named footnote.\n";
 		$html     = $this->html( $markdown, array( 'id' => '12' ) );
-		$this->assertStringContainsString( 'bits-fn-12-', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-fn-12-', $html );
 		$this->assertStringContainsString( 'Named footnote', $html );
 		$this->assertStringContainsString( 'this is inline', $html );
-		$this->assertStringContainsString( 'bits-markdown-footnotes', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-footnotes', $html );
 	}
 
 	public function test_math_and_sup_sub(): void {
 		$html = $this->html( 'Area is $x^2$ and 100m^2 and x~z and y^(a+b)^.' );
-		$this->assertStringContainsString( 'bits-markdown-math', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-math', $html );
 		$this->assertStringContainsString( '<sup>2</sup>', $html );
 		$this->assertStringContainsString( '<sub>z</sub>', $html );
 		$this->assertStringContainsString( '<sup>a+b</sup>', $html );
@@ -51,14 +51,14 @@ final class ParserTest extends TestCase {
 
 	public function test_display_math(): void {
 		$html = $this->html( "$$\nE=mc^2\n$$" );
-		$this->assertStringContainsString( 'bits-markdown-math-display', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-math-display', $html );
 		$this->assertStringContainsString( 'E=mc^2', $html );
 	}
 
 	public function test_page_break_and_writer_comment(): void {
 		$html = $this->html( "Visible\n\n// secret comment\n\n+++\n\nAfter break" );
 		$this->assertStringNotContainsString( 'secret comment', $html );
-		$this->assertStringContainsString( 'bits-markdown-page-break', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-page-break', $html );
 		$this->assertStringContainsString( 'Visible', $html );
 		$this->assertStringContainsString( 'After break', $html );
 	}
@@ -68,7 +68,7 @@ final class ParserTest extends TestCase {
 		$result   = $this->parser->convert( $markdown );
 		$this->assertSame( 'Hello', $result->front_matter['title'] ?? null );
 		$this->assertStringContainsString( 'Bob Loblaw', $result->html );
-		$this->assertStringContainsString( 'bits-markdown-toc', $result->html );
+		$this->assertStringContainsString( 'bristlecone-markdown-toc', $result->html );
 		$this->assertStringContainsString( '#one', $result->html );
 	}
 
@@ -82,9 +82,9 @@ final class ParserTest extends TestCase {
 	public function test_citations(): void {
 		$markdown = "A claim[p. 23][#Doe:2006].\n\n[#Doe:2006]: John Doe. Some Big Fancy Book. Vanity Press, 2006.\n";
 		$html     = $this->html( $markdown );
-		$this->assertStringContainsString( 'bits-markdown-citation', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-citation', $html );
 		$this->assertStringContainsString( 'p. 23', $html );
-		$this->assertStringContainsString( 'bits-markdown-bibliography', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-bibliography', $html );
 		$this->assertStringContainsString( 'John Doe', $html );
 	}
 

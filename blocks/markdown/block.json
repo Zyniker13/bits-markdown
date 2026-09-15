@@ -1,14 +1,14 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "bits/markdown",
+	"name": "bristlecone/markdown",
 	"title": "Markdown",
 	"category": "text",
 	"icon": "editor-code",
 	"description": "Write formatted content in Markdown. Syntax is aligned with iA Writer.",
 	"keywords": [ "markdown", "md", "writing", "ia writer" ],
-	"textdomain": "bits-markdown",
-	"editorScript": "bits-markdown-block",
+	"textdomain": "bristlecone-markdown",
+	"editorScript": "bristlecone-markdown-block",
 	"attributes": {
 		"markdown": {
 			"type": "string",

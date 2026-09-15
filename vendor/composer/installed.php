@@ -1,19 +1,19 @@
 <?php return array(
     'root' => array(
-        'name' => 'bristlecone/bits-markdown',
+        'name' => 'bristlecone/bristlecone-markdown',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'af38d4ca0559a6f3050a98bdcc4673b3e80668b4',
+        'reference' => '278b3c7f7fc3f24c17cd7e5352777d2f70ab016e',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
-        'bristlecone/bits-markdown' => array(
+        'bristlecone/bristlecone-markdown' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'af38d4ca0559a6f3050a98bdcc4673b3e80668b4',
+            'reference' => '278b3c7f7fc3f24c17cd7e5352777d2f70ab016e',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -335,9 +335,9 @@
             'dev_requirement' => false,
         ),
         'symfony/yaml' => array(
-            'pretty_version' => 'v6.4.45',
-            'version' => '6.4.45.0',
-            'reference' => 'a778aba2d7130eba6150cc80cb692988a361ee4b',
+            'pretty_version' => 'v8.1.6',
+            'version' => '8.1.6.0',
+            'reference' => '0b4aa53a67f9fece88c665f1a1dadcfd25d93fe5',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/yaml',
             'aliases' => array(),

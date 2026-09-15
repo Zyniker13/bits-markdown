@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown\Extension\Math;
+namespace Bristlecone\Markdown\Extension\Math;
 
 use League\CommonMark\Node\Block\AbstractBlock;
 

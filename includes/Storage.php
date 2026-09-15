@@ -2,16 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown;
+namespace Bristlecone\Markdown;
 
 /**
  * Jetpack-compatible Markdown storage: HTML in post_content, source in post_content_filtered.
  */
 final class Storage {
 
-	public const META_KEY          = '_bits_markdown';
-	public const META_WPCOM_KEY    = '_wpcom_markdown';
-	public const META_FRONT_MATTER = '_bits_markdown_front_matter';
+	public const META_KEY                 = '_bristlecone_markdown';
+	public const META_LEGACY_KEY          = '_bits_markdown';
+	public const META_WPCOM_KEY           = '_wpcom_markdown';
+	public const META_FRONT_MATTER        = '_bristlecone_markdown_front_matter';
+	public const META_LEGACY_FRONT_MATTER = '_bits_markdown_front_matter';
 
 	private static ?self $instance = null;
 
@@ -46,6 +48,7 @@ final class Storage {
 			return false;
 		}
 		return (bool) get_post_meta( $post_id, self::META_KEY, true )
+			|| (bool) get_post_meta( $post_id, self::META_LEGACY_KEY, true )
 			|| (bool) get_post_meta( $post_id, self::META_WPCOM_KEY, true );
 	}
 
@@ -154,7 +157,7 @@ final class Storage {
 	 * @return array<string, string>
 	 */
 	public function revision_fields( array $fields ): array {
-		$fields['post_content_filtered'] = __( 'Markdown content', 'bits-markdown' );
+		$fields['post_content_filtered'] = __( 'Markdown content', 'bristlecone-markdown' );
 		return $fields;
 	}
 
@@ -219,11 +222,13 @@ final class Storage {
 			return $content;
 		}
 
-		if ( str_starts_with( ltrim( $content ), '<div class="bits-markdown">' ) ) {
+		$trimmed = ltrim( $content );
+		if ( str_starts_with( $trimmed, '<div class="bristlecone-markdown">' )
+			|| str_starts_with( $trimmed, '<div class="bits-markdown">' ) ) {
 			return $content;
 		}
 
-		return '<div class="bits-markdown">' . $content . '</div>';
+		return '<div class="bristlecone-markdown">' . $content . '</div>';
 	}
 
 	/**
@@ -291,7 +296,7 @@ final class Storage {
 			$named[] = $block;
 		}
 
-		if ( count( $named ) === 1 && 'bits/markdown' === $named[0]['blockName'] ) {
+		if ( count( $named ) === 1 && in_array( $named[0]['blockName'], array( 'bristlecone/markdown', 'bits/markdown' ), true ) ) {
 			$markdown = $named[0]['attrs']['markdown'] ?? '';
 			return is_string( $markdown ) ? $markdown : null;
 		}

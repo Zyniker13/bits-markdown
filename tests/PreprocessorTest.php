@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown\Tests;
+namespace Bristlecone\Markdown\Tests;
 
-use Bristlecone\BitsMarkdown\Parser;
-use Bristlecone\BitsMarkdown\Preprocessor;
+use Bristlecone\Markdown\Parser;
+use Bristlecone\Markdown\Preprocessor;
 use PHPUnit\Framework\TestCase;
 
 final class PreprocessorTest extends TestCase {
@@ -44,8 +44,8 @@ final class PreprocessorTest extends TestCase {
 		$out = $pre->process( "See[p. 1][#K]\n\n[#K]: Book title\n" );
 		$this->assertArrayHasKey( 'K', $out['citations'] );
 		$this->assertStringNotContainsString( '[#K]: Book title', $out['markdown'] );
-		$this->assertStringContainsString( 'bits-markdown-citation', $out['markdown'] );
-		$this->assertStringContainsString( 'bits-markdown-bibliography', $out['markdown'] );
+		$this->assertStringContainsString( 'bristlecone-markdown-citation', $out['markdown'] );
+		$this->assertStringContainsString( 'bristlecone-markdown-bibliography', $out['markdown'] );
 	}
 
 	public function test_empty_locator_uses_citation_key(): void {
@@ -56,7 +56,7 @@ final class PreprocessorTest extends TestCase {
 
 	public function test_id_sanitizer_strips_non_slug_characters(): void {
 		$html = ( new Parser() )->convert( "Hi[^1]\n\n[^1]: n\n", array( 'id' => 'post/12' ) )->html;
-		$this->assertStringContainsString( 'bits-fn-post12-', $html );
-		$this->assertStringNotContainsString( 'bits-fn-post/12-', $html );
+		$this->assertStringContainsString( 'bristlecone-markdown-fn-post12-', $html );
+		$this->assertStringNotContainsString( 'bristlecone-markdown-fn-post/12-', $html );
 	}
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown\Extension\PageBreak;
+namespace Bristlecone\Markdown\Extension\PageBreak;
 
 use League\CommonMark\Node\Node;
 use League\CommonMark\Renderer\ChildNodeRendererInterface;
@@ -17,7 +17,7 @@ final class PageBreakRenderer implements NodeRendererInterface {
 		return new HtmlElement(
 			'hr',
 			array(
-				'class' => 'bits-markdown-page-break',
+				'class' => 'bristlecone-markdown-page-break',
 			),
 			'',
 			true
