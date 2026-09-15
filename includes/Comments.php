@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown;
+namespace Bristlecone\Markdown;
 
 /**
  * Comment Markdown conversion.
  */
 final class Comments {
 
-	public const META_KEY = '_bits_markdown';
+	public const META_KEY        = '_bristlecone_markdown';
+	public const META_LEGACY_KEY = '_bits_markdown';
 
 	private static ?self $instance = null;
 
@@ -33,15 +34,15 @@ final class Comments {
 			)
 		);
 
-		$GLOBALS['bits_markdown_last_comment'] = true;
+		$GLOBALS['bristlecone_markdown_last_comment'] = true;
 
 		return $result->html;
 	}
 
 	public function on_comment_post( int $comment_id ): void {
-		if ( ! empty( $GLOBALS['bits_markdown_last_comment'] ) ) {
+		if ( ! empty( $GLOBALS['bristlecone_markdown_last_comment'] ) ) {
 			update_comment_meta( $comment_id, self::META_KEY, 1 );
-			unset( $GLOBALS['bits_markdown_last_comment'] );
+			unset( $GLOBALS['bristlecone_markdown_last_comment'] );
 		}
 	}
 
@@ -55,7 +56,7 @@ final class Comments {
 			$id = (int) $comment->comment_ID;
 		}
 
-		if ( $id && get_comment_meta( $id, self::META_KEY, true ) ) {
+		if ( $id && ( get_comment_meta( $id, self::META_KEY, true ) || get_comment_meta( $id, self::META_LEGACY_KEY, true ) ) ) {
 			remove_filter( 'comment_text', 'wpautop', 30 );
 			add_filter( 'comment_text', array( $this, 'reenable_wpautop' ), 31 );
 		}

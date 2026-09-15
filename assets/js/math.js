@@ -6,7 +6,7 @@
 			return;
 		}
 		var scope = root || document;
-		scope.querySelectorAll( '.bits-markdown-math' ).forEach( function ( node ) {
+		scope.querySelectorAll( '.bristlecone-markdown-math, .bits-markdown-math' ).forEach( function ( node ) {
 			if ( node.getAttribute( 'data-rendered' ) === '1' ) {
 				return;
 			}

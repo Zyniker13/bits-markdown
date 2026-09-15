@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown;
+namespace Bristlecone\Markdown;
 
-use Bristlecone\BitsMarkdown\Extension\BitsMarkdownExtension;
-use Bristlecone\BitsMarkdown\Renderer\FencedCodeRenderer;
+use Bristlecone\Markdown\Extension\MarkdownExtension;
+use Bristlecone\Markdown\Renderer\FencedCodeRenderer;
 use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\Attributes\AttributesExtension;
 use League\CommonMark\Extension\Autolink\AutolinkExtension;
@@ -73,7 +73,7 @@ final class Parser {
 				'id_prefix'           => '',
 				'fragment_prefix'     => '',
 				'apply_id_to_heading' => true,
-				'html_class'          => 'bits-markdown-heading-permalink',
+				'html_class'          => 'bristlecone-markdown-heading-permalink',
 				'symbol'              => '#',
 				'title'               => 'Permalink',
 				'aria_hidden'         => true,
@@ -81,19 +81,19 @@ final class Parser {
 			'table_of_contents'   => array(
 				'position'          => 'placeholder',
 				'placeholder'       => '{{TOC}}',
-				'html_class'        => 'bits-markdown-toc',
+				'html_class'        => 'bristlecone-markdown-toc',
 				'min_heading_level' => 1,
 				'max_heading_level' => 6,
 				'style'             => 'bullet',
 				'normalize'         => 'relative',
 			),
 			'footnote'            => array(
-				'backref_class'           => 'bits-markdown-footnote-backref',
-				'container_class'         => 'bits-markdown-footnotes',
-				'ref_class'               => 'bits-markdown-footnote-ref',
-				'footnote_class'          => 'bits-markdown-footnote',
-				'ref_id_prefix'           => 'bits-fnref-' . $id . '-',
-				'footnote_id_prefix'      => 'bits-fn-' . $id . '-',
+				'backref_class'           => 'bristlecone-markdown-footnote-backref',
+				'container_class'         => 'bristlecone-markdown-footnotes',
+				'ref_class'               => 'bristlecone-markdown-footnote-ref',
+				'footnote_class'          => 'bristlecone-markdown-footnote',
+				'ref_id_prefix'           => 'bristlecone-markdown-fnref-' . $id . '-',
+				'footnote_id_prefix'      => 'bristlecone-markdown-fn-' . $id . '-',
 				'enable_inline_footnotes' => true,
 			),
 			'disallowed_raw_html' => array(
@@ -136,7 +136,7 @@ final class Parser {
 		$environment->addExtension( new FootnoteExtension() );
 		$environment->addExtension( new HeadingPermalinkExtension() );
 		$environment->addExtension( new TableOfContentsExtension() );
-		$environment->addExtension( new BitsMarkdownExtension( (bool) ( $context['math'] ?? true ) ) );
+		$environment->addExtension( new MarkdownExtension( (bool) ( $context['math'] ?? true ) ) );
 
 		if ( $context['highlight'] ?? true ) {
 			$environment->addRenderer( FencedCode::class, new FencedCodeRenderer() );
@@ -148,7 +148,7 @@ final class Parser {
 		return new ConversionResult(
 			$html,
 			$front_matter,
-			str_contains( $html, 'bits-markdown-math' ),
+			str_contains( $html, 'bristlecone-markdown-math' ),
 			str_contains( $html, 'hljs' ) || str_contains( $html, '<pre>' ),
 		);
 	}

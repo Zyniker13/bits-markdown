@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown\Extension\WriterComment;
+namespace Bristlecone\Markdown\Extension\WriterComment;
 
 use League\CommonMark\Node\Block\AbstractBlock;
 

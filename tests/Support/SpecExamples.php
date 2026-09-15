@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown\Tests\Support;
+namespace Bristlecone\Markdown\Tests\Support;
 
 use League\CommonMark\Util\SpecReader;
 

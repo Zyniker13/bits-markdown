@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown;
+namespace Bristlecone\Markdown;
 
 /**
  * Front-end and editor assets. KaTeX loads only when math is present.
@@ -26,39 +26,39 @@ final class Assets {
 		}
 
 		wp_register_style(
-			'bits-markdown',
-			BITS_MARKDOWN_URL . 'assets/css/frontend.css',
+			'bristlecone-markdown',
+			BRISTLECONE_MARKDOWN_URL . 'assets/css/frontend.css',
 			array(),
-			BITS_MARKDOWN_VERSION
+			BRISTLECONE_MARKDOWN_VERSION
 		);
 
 		wp_register_style(
-			'bits-markdown-highlight',
-			BITS_MARKDOWN_URL . 'assets/css/highlight-github.css',
-			array( 'bits-markdown' ),
-			BITS_MARKDOWN_VERSION
+			'bristlecone-markdown-highlight',
+			BRISTLECONE_MARKDOWN_URL . 'assets/css/highlight-github.css',
+			array( 'bristlecone-markdown' ),
+			BRISTLECONE_MARKDOWN_VERSION
 		);
 
 		wp_register_style(
-			'bits-markdown-katex',
-			BITS_MARKDOWN_URL . 'assets/vendor/katex/katex.min.css',
+			'bristlecone-markdown-katex',
+			BRISTLECONE_MARKDOWN_URL . 'assets/vendor/katex/katex.min.css',
 			array(),
-			BITS_MARKDOWN_VERSION
+			BRISTLECONE_MARKDOWN_VERSION
 		);
 
 		wp_register_script(
-			'bits-markdown-katex',
-			BITS_MARKDOWN_URL . 'assets/vendor/katex/katex.min.js',
+			'bristlecone-markdown-katex',
+			BRISTLECONE_MARKDOWN_URL . 'assets/vendor/katex/katex.min.js',
 			array(),
-			BITS_MARKDOWN_VERSION,
+			BRISTLECONE_MARKDOWN_VERSION,
 			true
 		);
 
 		wp_register_script(
-			'bits-markdown-math',
-			BITS_MARKDOWN_URL . 'assets/js/math.js',
-			array( 'bits-markdown-katex' ),
-			BITS_MARKDOWN_VERSION,
+			'bristlecone-markdown-math',
+			BRISTLECONE_MARKDOWN_URL . 'assets/js/math.js',
+			array( 'bristlecone-markdown-katex' ),
+			BRISTLECONE_MARKDOWN_VERSION,
 			true
 		);
 
@@ -71,73 +71,74 @@ final class Assets {
 		$needs   = $this->needs_assets( $content );
 
 		if ( $needs['css'] ) {
-			wp_enqueue_style( 'bits-markdown' );
+			wp_enqueue_style( 'bristlecone-markdown' );
 		}
 
 		if ( $needs['highlight'] && Settings::instance()->highlighting_enabled() ) {
-			wp_enqueue_style( 'bits-markdown-highlight' );
+			wp_enqueue_style( 'bristlecone-markdown-highlight' );
 		}
 
 		if ( $needs['math'] && Settings::instance()->math_enabled() ) {
-			wp_enqueue_style( 'bits-markdown-katex' );
-			wp_enqueue_script( 'bits-markdown-math' );
+			wp_enqueue_style( 'bristlecone-markdown-katex' );
+			wp_enqueue_script( 'bristlecone-markdown-math' );
 		}
 	}
 
 	public function enqueue_editor(): void {
 		wp_enqueue_style(
-			'bits-markdown-editor',
-			BITS_MARKDOWN_URL . 'assets/css/editor.css',
+			'bristlecone-markdown-editor',
+			BRISTLECONE_MARKDOWN_URL . 'assets/css/editor.css',
 			array(),
-			BITS_MARKDOWN_VERSION
+			BRISTLECONE_MARKDOWN_VERSION
 		);
 
 		if ( Settings::instance()->highlighting_enabled() ) {
 			wp_enqueue_style(
-				'bits-markdown-highlight',
-				BITS_MARKDOWN_URL . 'assets/css/highlight-github.css',
+				'bristlecone-markdown-highlight',
+				BRISTLECONE_MARKDOWN_URL . 'assets/css/highlight-github.css',
 				array(),
-				BITS_MARKDOWN_VERSION
+				BRISTLECONE_MARKDOWN_VERSION
 			);
 		}
 
 		if ( Settings::instance()->math_enabled() ) {
 			wp_enqueue_style(
-				'bits-markdown-katex',
-				BITS_MARKDOWN_URL . 'assets/vendor/katex/katex.min.css',
+				'bristlecone-markdown-katex',
+				BRISTLECONE_MARKDOWN_URL . 'assets/vendor/katex/katex.min.css',
 				array(),
-				BITS_MARKDOWN_VERSION
+				BRISTLECONE_MARKDOWN_VERSION
 			);
 			wp_enqueue_script(
-				'bits-markdown-katex',
-				BITS_MARKDOWN_URL . 'assets/vendor/katex/katex.min.js',
+				'bristlecone-markdown-katex',
+				BRISTLECONE_MARKDOWN_URL . 'assets/vendor/katex/katex.min.js',
 				array(),
-				BITS_MARKDOWN_VERSION,
+				BRISTLECONE_MARKDOWN_VERSION,
 				true
 			);
 			wp_enqueue_script(
-				'bits-markdown-math',
-				BITS_MARKDOWN_URL . 'assets/js/math.js',
-				array( 'bits-markdown-katex' ),
-				BITS_MARKDOWN_VERSION,
+				'bristlecone-markdown-math',
+				BRISTLECONE_MARKDOWN_URL . 'assets/js/math.js',
+				array( 'bristlecone-markdown-katex' ),
+				BRISTLECONE_MARKDOWN_VERSION,
 				true
 			);
 		}
 
-		wp_enqueue_style( 'bits-markdown', BITS_MARKDOWN_URL . 'assets/css/frontend.css', array(), BITS_MARKDOWN_VERSION );
+		wp_enqueue_style( 'bristlecone-markdown', BRISTLECONE_MARKDOWN_URL . 'assets/css/frontend.css', array(), BRISTLECONE_MARKDOWN_VERSION );
 	}
 
 	/**
 	 * @return array{css: bool, highlight: bool, math: bool}
 	 */
 	private function needs_assets( string $content ): array {
-		$math      = str_contains( $content, 'bits-markdown-math' ) || str_contains( $content, '$$' ) || (bool) preg_match( '/\$[^$]+\$/', $content );
+		$math      = str_contains( $content, 'bristlecone-markdown-math' ) || str_contains( $content, 'bits-markdown-math' ) || str_contains( $content, '$$' ) || (bool) preg_match( '/\$[^$]+\$/', $content );
 		$highlight = str_contains( $content, 'hljs' ) || str_contains( $content, '```' ) || str_contains( $content, '<pre' );
-		$css       = $math || $highlight || str_contains( $content, 'bits-markdown' ) || Storage::instance()->is_markdown_post( (int) get_the_ID() ) || has_block( 'bits/markdown' );
+		$has_block = has_block( 'bristlecone/markdown' ) || has_block( 'bits/markdown' );
+		$css       = $math || $highlight || str_contains( $content, 'bristlecone-markdown' ) || str_contains( $content, 'bits-markdown' ) || Storage::instance()->is_markdown_post( (int) get_the_ID() ) || $has_block;
 
 		return array(
 			'css'       => $css,
-			'highlight' => $highlight || has_block( 'bits/markdown' ) || str_contains( $content, '<pre' ),
+			'highlight' => $highlight || $has_block || str_contains( $content, '<pre' ),
 			'math'      => $math,
 		);
 	}

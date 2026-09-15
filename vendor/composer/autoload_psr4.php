@@ -16,6 +16,6 @@ return array(
     'League\\CommonMark\\' => array($vendorDir . '/league/commonmark/src'),
     'Dflydev\\DotAccessData\\' => array($vendorDir . '/dflydev/dot-access-data/src'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
-    'Bristlecone\\BitsMarkdown\\Tests\\' => array($baseDir . '/tests'),
-    'Bristlecone\\BitsMarkdown\\' => array($baseDir . '/includes'),
+    'Bristlecone\\Markdown\\Tests\\' => array($baseDir . '/tests'),
+    'Bristlecone\\Markdown\\' => array($baseDir . '/includes'),
 );

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown;
+namespace Bristlecone\Markdown;
 
 /**
  * Plugin bootstrap.
@@ -33,5 +33,18 @@ final class Plugin {
 
 	public function activate(): void {
 		Settings::instance()->ensure_defaults();
+	}
+
+	public static function is_plugin_admin_screen(): bool {
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			return false;
+		}
+
+		$screen = get_current_screen();
+		if ( ! $screen ) {
+			return false;
+		}
+
+		return in_array( $screen->id, array( 'plugins', 'settings_page_bristlecone-markdown' ), true );
 	}
 }

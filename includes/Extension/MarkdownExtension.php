@@ -2,26 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown\Extension;
+namespace Bristlecone\Markdown\Extension;
 
-use Bristlecone\BitsMarkdown\Extension\Heading\HeadingIdProcessor;
-use Bristlecone\BitsMarkdown\Extension\Footnote\InlineFootnoteParser;
-use Bristlecone\BitsMarkdown\Extension\Math\MathBlock;
-use Bristlecone\BitsMarkdown\Extension\Math\MathBlockStartParser;
-use Bristlecone\BitsMarkdown\Extension\Math\MathInline;
-use Bristlecone\BitsMarkdown\Extension\Math\MathInlineParser;
-use Bristlecone\BitsMarkdown\Extension\Math\MathRenderer;
-use Bristlecone\BitsMarkdown\Extension\PageBreak\PageBreak;
-use Bristlecone\BitsMarkdown\Extension\PageBreak\PageBreakRenderer;
-use Bristlecone\BitsMarkdown\Extension\PageBreak\PageBreakStartParser;
-use Bristlecone\BitsMarkdown\Extension\SupSub\Subscript;
-use Bristlecone\BitsMarkdown\Extension\SupSub\SubscriptParser;
-use Bristlecone\BitsMarkdown\Extension\SupSub\Superscript;
-use Bristlecone\BitsMarkdown\Extension\SupSub\SuperscriptParser;
-use Bristlecone\BitsMarkdown\Extension\SupSub\SupSubRenderer;
-use Bristlecone\BitsMarkdown\Extension\WriterComment\WriterComment;
-use Bristlecone\BitsMarkdown\Extension\WriterComment\WriterCommentRenderer;
-use Bristlecone\BitsMarkdown\Extension\WriterComment\WriterCommentStartParser;
+use Bristlecone\Markdown\Extension\Heading\HeadingIdProcessor;
+use Bristlecone\Markdown\Extension\Footnote\InlineFootnoteParser;
+use Bristlecone\Markdown\Extension\Math\MathBlock;
+use Bristlecone\Markdown\Extension\Math\MathBlockStartParser;
+use Bristlecone\Markdown\Extension\Math\MathInline;
+use Bristlecone\Markdown\Extension\Math\MathInlineParser;
+use Bristlecone\Markdown\Extension\Math\MathRenderer;
+use Bristlecone\Markdown\Extension\PageBreak\PageBreak;
+use Bristlecone\Markdown\Extension\PageBreak\PageBreakRenderer;
+use Bristlecone\Markdown\Extension\PageBreak\PageBreakStartParser;
+use Bristlecone\Markdown\Extension\SupSub\Subscript;
+use Bristlecone\Markdown\Extension\SupSub\SubscriptParser;
+use Bristlecone\Markdown\Extension\SupSub\Superscript;
+use Bristlecone\Markdown\Extension\SupSub\SuperscriptParser;
+use Bristlecone\Markdown\Extension\SupSub\SupSubRenderer;
+use Bristlecone\Markdown\Extension\WriterComment\WriterComment;
+use Bristlecone\Markdown\Extension\WriterComment\WriterCommentRenderer;
+use Bristlecone\Markdown\Extension\WriterComment\WriterCommentStartParser;
 use League\CommonMark\Environment\EnvironmentBuilderInterface;
 use League\CommonMark\Event\DocumentParsedEvent;
 use League\CommonMark\Extension\ExtensionInterface;
@@ -29,7 +29,7 @@ use League\CommonMark\Extension\ExtensionInterface;
 /**
  * iA Writer-aligned extras not provided by league/commonmark core extensions.
  */
-final class BitsMarkdownExtension implements ExtensionInterface {
+final class MarkdownExtension implements ExtensionInterface {
 
 	public function __construct( private bool $math = true ) {}
 

@@ -1,29 +1,29 @@
 <?php
 /**
- * Build a WordPress.org production zip: dist/bits-markdown-{version}.zip
+ * Build a WordPress.org production zip: dist/bristlecone-markdown-{version}.zip
  *
  * Copies the plugin (honoring .distignore), runs `composer install --no-dev`,
- * and zips a single root folder named bits-markdown.
+ * and zips a single root folder named bristlecone-markdown.
  */
 
 declare(strict_types=1);
 
 $root = dirname( __DIR__ );
-$plugin_file = $root . '/bits-markdown.php';
+$plugin_file = $root . '/bristlecone-markdown.php';
 
 if ( ! is_readable( $plugin_file ) ) {
-	fwrite( STDERR, "Missing bits-markdown.php\n" );
+	fwrite( STDERR, "Missing bristlecone-markdown.php\n" );
 	exit( 1 );
 }
 
 $header = file_get_contents( $plugin_file );
 if ( $header === false || ! preg_match( '/^\s*\*\s*Version:\s*(.+)$/m', $header, $match ) ) {
-	fwrite( STDERR, "Could not read Version from bits-markdown.php\n" );
+	fwrite( STDERR, "Could not read Version from bristlecone-markdown.php\n" );
 	exit( 1 );
 }
 
 $version = trim( $match[1] );
-$slug    = 'bits-markdown';
+$slug    = 'bristlecone-markdown';
 
 $patterns = array( '.git', 'vendor' );
 $distignore = $root . '/.distignore';
@@ -38,7 +38,7 @@ if ( is_readable( $distignore ) ) {
 	$patterns = array_values( array_unique( $patterns ) );
 }
 
-$stage = sys_get_temp_dir() . '/bits-markdown-release-' . bin2hex( random_bytes( 4 ) );
+$stage = sys_get_temp_dir() . '/bristlecone-markdown-release-' . bin2hex( random_bytes( 4 ) );
 $dest  = $stage . '/' . $slug;
 if ( ! mkdir( $dest, 0755, true ) && ! is_dir( $dest ) ) {
 	fwrite( STDERR, "Could not create staging directory\n" );
@@ -101,8 +101,8 @@ foreach ( $iterator as $file ) {
 	}
 }
 
-if ( ! is_readable( $dest . '/bits-markdown.php' ) || ! is_readable( $dest . '/composer.lock' ) ) {
-	fwrite( STDERR, "Staging copy is missing bits-markdown.php or composer.lock\n" );
+if ( ! is_readable( $dest . '/bristlecone-markdown.php' ) || ! is_readable( $dest . '/composer.lock' ) ) {
+	fwrite( STDERR, "Staging copy is missing bristlecone-markdown.php or composer.lock\n" );
 	exit( 1 );
 }
 

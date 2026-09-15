@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown\Renderer;
+namespace Bristlecone\Markdown\Renderer;
 
 use Highlight\Highlighter;
 use League\CommonMark\Extension\CommonMark\Node\Block\FencedCode;
@@ -59,7 +59,7 @@ final class FencedCodeRenderer implements NodeRendererInterface {
 				$attrs->append( 'class', 'hljs language-' . $highlighted->language );
 				return new HtmlElement(
 					'pre',
-					array( 'class' => 'bits-markdown-code' ),
+					array( 'class' => 'bristlecone-markdown-code' ),
 					new HtmlElement( 'code', $attrs->export(), $highlighted->value )
 				);
 			} catch ( \Throwable ) {
@@ -74,7 +74,7 @@ final class FencedCodeRenderer implements NodeRendererInterface {
 
 		return new HtmlElement(
 			'pre',
-			array( 'class' => 'bits-markdown-code' ),
+			array( 'class' => 'bristlecone-markdown-code' ),
 			new HtmlElement( 'code', $attrs->export(), Xml::escape( $code ) )
 		);
 	}

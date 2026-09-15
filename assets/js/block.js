@@ -24,7 +24,7 @@
 		if ( ! root || ! window.katex ) {
 			return;
 		}
-		root.querySelectorAll( '.bits-markdown-math' ).forEach( function ( node ) {
+		root.querySelectorAll( '.bristlecone-markdown-math, .bits-markdown-math' ).forEach( function ( node ) {
 			if ( node.getAttribute( 'data-rendered' ) === '1' ) {
 				return;
 			}
@@ -40,7 +40,7 @@
 		} );
 	}
 
-	registerBlockType( 'bits/markdown', {
+	registerBlockType( 'bristlecone/markdown', {
 		edit: function ( props ) {
 			var markdown = props.attributes.markdown || '';
 			var html = props.attributes.html || '';
@@ -64,12 +64,12 @@
 			}
 
 			var blockProps = useBlockProps( {
-				className: 'bits-markdown-editor',
+				className: 'bristlecone-markdown-editor',
 			} );
 
 			function fetchPreview( source ) {
 				apiFetch( {
-					path: '/bits-markdown/v1/preview',
+					path: '/bristlecone-markdown/v1/preview',
 					method: 'POST',
 					data: {
 						markdown: source,
@@ -86,7 +86,7 @@
 					} )
 					.catch( function () {
 						setError(
-							__( 'Could not render a preview. The published output still uses the server parser.', 'bits-markdown' )
+							__( 'Could not render a preview. The published output still uses the server parser.', 'bristlecone-markdown' )
 						);
 					} );
 			}
@@ -138,7 +138,7 @@
 						null,
 						el( ToolbarButton, {
 							icon: 'editor-code',
-							label: __( 'Markdown', 'bits-markdown' ),
+							label: __( 'Markdown', 'bristlecone-markdown' ),
 							isPressed: tab === 'markdown',
 							onClick: function () {
 								setTab( 'markdown' );
@@ -146,7 +146,7 @@
 						} ),
 						el( ToolbarButton, {
 							icon: 'visibility',
-							label: __( 'Preview', 'bits-markdown' ),
+							label: __( 'Preview', 'bristlecone-markdown' ),
 							isPressed: tab === 'preview',
 							onClick: function () {
 								setTab( 'preview' );
@@ -162,7 +162,7 @@
 							render: function ( obj ) {
 								return el( ToolbarButton, {
 									icon: 'format-image',
-									label: __( 'Insert image', 'bits-markdown' ),
+									label: __( 'Insert image', 'bristlecone-markdown' ),
 									onClick: obj.open,
 								} );
 							},
@@ -174,21 +174,21 @@
 					null,
 					el(
 						PanelBody,
-						{ title: __( 'BITS Markdown', 'bits-markdown' ), initialOpen: true },
+						{ title: __( 'Bristlecone Markdown', 'bristlecone-markdown' ), initialOpen: true },
 						el(
 							'p',
 							null,
 							__(
 								'Write Markdown in this block. Syntax follows iA Writer (CommonMark plus highlight, footnotes, tables, math, metadata, and more). Task lists and Content Blocks are not converted.',
-								'bits-markdown'
+								'bristlecone-markdown'
 							)
 						)
 					)
 				),
 				tab === 'markdown'
 					? el( TextareaControl, {
-							className: 'bits-markdown-source',
-							label: __( 'Markdown', 'bits-markdown' ),
+							className: 'bristlecone-markdown-source',
+							label: __( 'Markdown', 'bristlecone-markdown' ),
 							hideLabelFromVision: true,
 							value: markdown,
 							onChange: function ( value ) {
@@ -199,7 +199,7 @@
 					: el(
 							'div',
 							{
-								className: 'bits-markdown-preview bits-markdown',
+								className: 'bristlecone-markdown-preview bristlecone-markdown',
 								ref: previewRef,
 							},
 							el( RawHTML, null, preview || '<p></p>' )
@@ -209,7 +209,7 @@
 		},
 		save: function ( props ) {
 			var blockProps = useBlockProps.save( {
-				className: 'bits-markdown',
+				className: 'bristlecone-markdown',
 			} );
 			return el( 'div', blockProps, el( RawHTML, null, props.attributes.html || '' ) );
 		},

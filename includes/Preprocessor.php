@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown;
+namespace Bristlecone\Markdown;
 
 /**
  * Normalizes iA Writer-oriented Markdown before CommonMark parsing.
@@ -73,7 +73,7 @@ final class Preprocessor {
 						$locator = trim( $match[1] );
 						$id      = self::citation_id( $key );
 						$label   = $locator !== '' ? $locator : $key;
-						return '<cite class="bits-markdown-citation"><a href="#' . $id . '">' . self::escape_html( $label ) . '</a></cite>';
+						return '<cite class="bristlecone-markdown-citation"><a href="#' . $id . '">' . self::escape_html( $label ) . '</a></cite>';
 					},
 					$chunk
 				);
@@ -184,7 +184,7 @@ final class Preprocessor {
 			$items[] = '<li id="' . $id . '">' . $encoded . '</li>';
 		}
 
-		return '<div class="bits-markdown-bibliography" role="doc-bibliography"><h2 class="bits-markdown-bibliography-title">References</h2><ol>' . implode( '', $items ) . '</ol></div>';
+		return '<div class="bristlecone-markdown-bibliography" role="doc-bibliography"><h2 class="bristlecone-markdown-bibliography-title">References</h2><ol>' . implode( '', $items ) . '</ol></div>';
 	}
 
 	/**

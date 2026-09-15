@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown\Extension\Math;
+namespace Bristlecone\Markdown\Extension\Math;
 
 use League\CommonMark\Node\Node;
 use League\CommonMark\Renderer\ChildNodeRendererInterface;
@@ -22,7 +22,7 @@ final class MathRenderer implements NodeRendererInterface {
 		return new HtmlElement(
 			$display ? 'div' : 'span',
 			array(
-				'class'        => $display ? 'bits-markdown-math bits-markdown-math-display' : 'bits-markdown-math bits-markdown-math-inline',
+				'class'        => $display ? 'bristlecone-markdown-math bristlecone-markdown-math-display' : 'bristlecone-markdown-math bristlecone-markdown-math-inline',
 				'data-display' => $display ? 'true' : 'false',
 			),
 			Xml::escape( $literal )

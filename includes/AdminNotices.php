@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown;
+namespace Bristlecone\Markdown;
 
 /**
  * Warn when another Markdown plugin is active.
@@ -20,7 +20,6 @@ final class AdminNotices {
 		'kototsugi/kototsugi.php',
 		'wp-markdown/wp-markdown.php',
 		'easy-markdown/easy-markdown.php',
-		'jetpack/jetpack.php',
 	);
 
 	public static function instance(): self {
@@ -32,7 +31,7 @@ final class AdminNotices {
 	}
 
 	public function conflict_notice(): void {
-		if ( ! current_user_can( 'activate_plugins' ) ) {
+		if ( ! current_user_can( 'activate_plugins' ) || ! Plugin::is_plugin_admin_screen() ) {
 			return;
 		}
 
@@ -42,7 +41,7 @@ final class AdminNotices {
 		}
 
 		echo '<div class="notice notice-warning"><p>';
-		echo esc_html__( 'BITS Markdown detected another Markdown-related plugin. Disable the extra Markdown conversion to avoid double-processing:', 'bits-markdown' );
+		echo esc_html__( 'Bristlecone Markdown detected another Markdown-related plugin. Disable the extra Markdown conversion to avoid double-processing:', 'bristlecone-markdown' );
 		echo ' <strong>' . esc_html( implode( ', ', $conflicts ) ) . '</strong>';
 		echo '</p></div>';
 	}
@@ -57,12 +56,6 @@ final class AdminNotices {
 
 		$found = array();
 		foreach ( self::KNOWN as $file ) {
-			if ( 'jetpack/jetpack.php' === $file ) {
-				if ( JetpackCompat::instance()->is_jetpack_markdown_active() ) {
-					$found[] = 'Jetpack Markdown';
-				}
-				continue;
-			}
 			if ( is_plugin_active( $file ) ) {
 				$found[] = $file;
 			}

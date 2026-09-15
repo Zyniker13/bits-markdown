@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown\Extension\Heading;
+namespace Bristlecone\Markdown\Extension\Heading;
 
 use League\CommonMark\Event\DocumentParsedEvent;
 use League\CommonMark\Extension\CommonMark\Node\Block\Heading;
@@ -23,7 +23,7 @@ final class HeadingIdProcessor {
 			}
 			$id = $node->data->get( 'attributes/id', null );
 			if ( is_string( $id ) && $id !== '' ) {
-				$node->data->set( 'bits/explicit_id', $id );
+				$node->data->set( 'bristlecone/explicit_id', $id );
 			}
 		}
 	}
@@ -33,7 +33,7 @@ final class HeadingIdProcessor {
 			if ( ! $node instanceof Heading ) {
 				continue;
 			}
-			$id = $node->data->get( 'bits/explicit_id', null );
+			$id = $node->data->get( 'bristlecone/explicit_id', null );
 			if ( ! is_string( $id ) || $id === '' ) {
 				continue;
 			}

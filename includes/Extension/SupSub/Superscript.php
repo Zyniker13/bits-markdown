@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown\Extension\SupSub;
+namespace Bristlecone\Markdown\Extension\SupSub;
 
 use League\CommonMark\Node\Inline\AbstractInline;
 

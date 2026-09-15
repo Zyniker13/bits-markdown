@@ -1,7 +1,7 @@
 ---
 title: Spec kitchen sink
 slug: spec-kitchen-sink
-excerpt: Exhaustive Markdown sample for BITS Markdown.
+excerpt: Exhaustive Markdown sample for Bristlecone Markdown.
 tags:
   - spec
   - markdown

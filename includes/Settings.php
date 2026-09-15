@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Bristlecone\BitsMarkdown;
+namespace Bristlecone\Markdown;
 
 /**
- * Plugin settings stored in bits_markdown_settings.
+ * Plugin settings stored in bristlecone_markdown_settings.
  */
 final class Settings {
 
-	public const OPTION = 'bits_markdown_settings';
+	public const OPTION        = 'bristlecone_markdown_settings';
+	public const LEGACY_OPTION = 'bits_markdown_settings';
 
 	private static ?self $instance = null;
 
@@ -26,9 +27,10 @@ final class Settings {
 	 * }
 	 */
 	public function all(): array {
-		$stored = get_option( self::OPTION, array() );
+		$stored = get_option( self::OPTION, false );
 		if ( ! is_array( $stored ) ) {
-			$stored = array();
+			$legacy = get_option( self::LEGACY_OPTION, false );
+			$stored = is_array( $legacy ) ? $legacy : array();
 		}
 		return wp_parse_args( $stored, $this->defaults() );
 	}
@@ -54,9 +56,17 @@ final class Settings {
 	}
 
 	public function ensure_defaults(): void {
-		if ( false === get_option( self::OPTION, false ) ) {
-			add_option( self::OPTION, $this->defaults() );
+		if ( false !== get_option( self::OPTION, false ) ) {
+			return;
 		}
+
+		$legacy = get_option( self::LEGACY_OPTION, false );
+		if ( is_array( $legacy ) ) {
+			add_option( self::OPTION, wp_parse_args( $legacy, $this->defaults() ) );
+			return;
+		}
+
+		add_option( self::OPTION, $this->defaults() );
 	}
 
 	public function comments_enabled(): bool {
@@ -95,7 +105,7 @@ final class Settings {
 
 	public function register_setting(): void {
 		register_setting(
-			'bits_markdown',
+			'bristlecone_markdown',
 			self::OPTION,
 			array(
 				'type'              => 'array',
@@ -108,10 +118,10 @@ final class Settings {
 
 	public function register_menu(): void {
 		add_options_page(
-			__( 'BITS Markdown', 'bits-markdown' ),
-			__( 'BITS Markdown', 'bits-markdown' ),
+			__( 'Bristlecone Markdown', 'bristlecone-markdown' ),
+			__( 'Bristlecone Markdown', 'bristlecone-markdown' ),
 			'manage_options',
-			'bits-markdown',
+			'bristlecone-markdown',
 			array( $this, 'render_page' )
 		);
 	}
@@ -161,19 +171,19 @@ final class Settings {
 		$settings = $this->all();
 		?>
 		<div class="wrap">
-			<h1><?php echo esc_html__( 'BITS Markdown', 'bits-markdown' ); ?></h1>
-			<p><?php echo esc_html__( 'Write posts, pages, and comments in Markdown. Syntax is aligned with iA Writer. HTML is stored on save so content still displays if the plugin is deactivated.', 'bits-markdown' ); ?></p>
+			<h1><?php echo esc_html__( 'Bristlecone Markdown', 'bristlecone-markdown' ); ?></h1>
+			<p><?php echo esc_html__( 'Write posts, pages, and comments in Markdown. Syntax is aligned with iA Writer. HTML is stored on save so content still displays if the plugin is deactivated.', 'bristlecone-markdown' ); ?></p>
 
 			<?php JetpackCompat::instance()->render_settings_notice(); ?>
 
 			<form action="options.php" method="post">
-				<?php settings_fields( 'bits_markdown' ); ?>
+				<?php settings_fields( 'bristlecone_markdown' ); ?>
 				<table class="form-table" role="presentation">
 					<tr>
-						<th scope="row"><?php echo esc_html__( 'Post types', 'bits-markdown' ); ?></th>
+						<th scope="row"><?php echo esc_html__( 'Post types', 'bristlecone-markdown' ); ?></th>
 						<td>
 							<fieldset>
-								<legend class="screen-reader-text"><?php echo esc_html__( 'Enable Markdown for these post types', 'bits-markdown' ); ?></legend>
+								<legend class="screen-reader-text"><?php echo esc_html__( 'Enable Markdown for these post types', 'bristlecone-markdown' ); ?></legend>
 								<?php foreach ( $this->available_post_types() as $type => $object ) : ?>
 									<label>
 										<input type="checkbox" name="<?php echo esc_attr( self::OPTION ); ?>[post_types][<?php echo esc_attr( $type ); ?>]" value="1" <?php checked( ! empty( $settings['post_types'][ $type ] ) ); ?> />
@@ -182,35 +192,35 @@ final class Settings {
 									</label>
 									<br />
 								<?php endforeach; ?>
-								<p class="description"><?php echo esc_html__( 'Whole-document Markdown (Classic Editor, REST API, and iA Writer) is enabled for the selected types. The Markdown block is always available in the block editor.', 'bits-markdown' ); ?></p>
+								<p class="description"><?php echo esc_html__( 'Whole-document Markdown (Classic Editor, REST API, and iA Writer) is enabled for the selected types. The Markdown block is always available in the block editor.', 'bristlecone-markdown' ); ?></p>
 							</fieldset>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php echo esc_html__( 'Comments', 'bits-markdown' ); ?></th>
+						<th scope="row"><?php echo esc_html__( 'Comments', 'bristlecone-markdown' ); ?></th>
 						<td>
 							<label>
 								<input type="checkbox" name="<?php echo esc_attr( self::OPTION ); ?>[comments]" value="1" <?php checked( $settings['comments'] ); ?> />
-								<?php echo esc_html__( 'Allow visitors to write comments in Markdown', 'bits-markdown' ); ?>
+								<?php echo esc_html__( 'Allow visitors to write comments in Markdown', 'bristlecone-markdown' ); ?>
 							</label>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php echo esc_html__( 'Code highlighting', 'bits-markdown' ); ?></th>
+						<th scope="row"><?php echo esc_html__( 'Code highlighting', 'bristlecone-markdown' ); ?></th>
 						<td>
 							<label>
 								<input type="checkbox" name="<?php echo esc_attr( self::OPTION ); ?>[syntax_highlighting]" value="1" <?php checked( $settings['syntax_highlighting'] ); ?> />
-								<?php echo esc_html__( 'Highlight fenced code blocks on the front end (server-side, no extra JavaScript)', 'bits-markdown' ); ?>
+								<?php echo esc_html__( 'Highlight fenced code blocks on the front end (server-side, no extra JavaScript)', 'bristlecone-markdown' ); ?>
 							</label>
-							<p class="description"><?php echo esc_html__( 'Highlighted output uses the hljs CSS classes. Theme developers can override .hljs rules or dequeue bits-markdown-highlight.', 'bits-markdown' ); ?></p>
+							<p class="description"><?php echo esc_html__( 'Highlighted output uses the hljs CSS classes. Theme developers can override .hljs rules or dequeue bristlecone-markdown-highlight.', 'bristlecone-markdown' ); ?></p>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php echo esc_html__( 'Mathematics', 'bits-markdown' ); ?></th>
+						<th scope="row"><?php echo esc_html__( 'Mathematics', 'bristlecone-markdown' ); ?></th>
 						<td>
 							<label>
 								<input type="checkbox" name="<?php echo esc_attr( self::OPTION ); ?>[math]" value="1" <?php checked( $settings['math'] ); ?> />
-								<?php echo esc_html__( 'Render $inline$ and $$block$$ TeX with KaTeX when a post contains math', 'bits-markdown' ); ?>
+								<?php echo esc_html__( 'Render $inline$ and $$block$$ TeX with KaTeX when a post contains math', 'bristlecone-markdown' ); ?>
 							</label>
 						</td>
 					</tr>
