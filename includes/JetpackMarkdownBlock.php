@@ -155,10 +155,12 @@ final class JetpackMarkdownBlock {
 		wp_localize_script(
 			'bristlecone-markdown-block',
 			'bristleconeMarkdownBlock',
-			array(
-				'previewUrl'        => esc_url_raw( rest_url( 'bristlecone-markdown/v1/preview' ) ),
-				'adoptJetpackBlock' => isset( $this->adopting[ BlockAliasRegistry::JETPACK ] ),
-				'aliases'           => $aliases,
+			array_merge(
+				Block::editor_script_config(),
+				array(
+					'adoptJetpackBlock' => isset( $this->adopting[ BlockAliasRegistry::JETPACK ] ),
+					'aliases'           => $aliases,
+				)
 			)
 		);
 	}

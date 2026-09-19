@@ -16,32 +16,32 @@ class ComposerStaticInit15bf25365698e333dca4dc0faedf89a7
     );
 
     public static $prefixLengthsPsr4 = array (
-        'S' => 
+        'S' =>
         array (
             'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Component\\Yaml\\' => 23,
         ),
-        'P' => 
+        'P' =>
         array (
             'Psr\\EventDispatcher\\' => 20,
             'PhpParser\\' => 10,
         ),
-        'N' => 
+        'N' =>
         array (
             'Nette\\' => 6,
         ),
-        'L' => 
+        'L' =>
         array (
             'League\\Config\\' => 14,
             'League\\CommonMark\\' => 18,
         ),
-        'D' => 
+        'D' =>
         array (
             'Dflydev\\DotAccessData\\' => 22,
             'DeepCopy\\' => 9,
         ),
-        'B' => 
+        'B' =>
         array (
             'Bristlecone\\Markdown\\Tests\\' => 27,
             'Bristlecone\\Markdown\\' => 21,
@@ -49,65 +49,65 @@ class ComposerStaticInit15bf25365698e333dca4dc0faedf89a7
     );
 
     public static $prefixDirsPsr4 = array (
-        'Symfony\\Polyfill\\Php80\\' => 
+        'Symfony\\Polyfill\\Php80\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
         ),
-        'Symfony\\Polyfill\\Ctype\\' => 
+        'Symfony\\Polyfill\\Ctype\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
-        'Symfony\\Component\\Yaml\\' => 
+        'Symfony\\Component\\Yaml\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/yaml',
         ),
-        'Psr\\EventDispatcher\\' => 
+        'Psr\\EventDispatcher\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/event-dispatcher/src',
         ),
-        'PhpParser\\' => 
+        'PhpParser\\' =>
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
         ),
-        'Nette\\' => 
+        'Nette\\' =>
         array (
             0 => __DIR__ . '/..' . '/nette/schema/src',
             1 => __DIR__ . '/..' . '/nette/utils/src',
         ),
-        'League\\Config\\' => 
+        'League\\Config\\' =>
         array (
             0 => __DIR__ . '/..' . '/league/config/src',
         ),
-        'League\\CommonMark\\' => 
+        'League\\CommonMark\\' =>
         array (
             0 => __DIR__ . '/..' . '/league/commonmark/src',
         ),
-        'Dflydev\\DotAccessData\\' => 
+        'Dflydev\\DotAccessData\\' =>
         array (
             0 => __DIR__ . '/..' . '/dflydev/dot-access-data/src',
         ),
-        'DeepCopy\\' => 
+        'DeepCopy\\' =>
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
-        'Bristlecone\\Markdown\\Tests\\' => 
+        'Bristlecone\\Markdown\\Tests\\' =>
         array (
             0 => __DIR__ . '/../..' . '/tests',
         ),
-        'Bristlecone\\Markdown\\' => 
+        'Bristlecone\\Markdown\\' =>
         array (
             0 => __DIR__ . '/../..' . '/includes',
         ),
     );
 
     public static $prefixesPsr0 = array (
-        'H' => 
+        'H' =>
         array (
-            'Highlight\\' => 
+            'Highlight\\' =>
             array (
                 0 => __DIR__ . '/..' . '/scrivo/highlight.php',
             ),
-            'HighlightUtilities\\' => 
+            'HighlightUtilities\\' =>
             array (
                 0 => __DIR__ . '/..' . '/scrivo/highlight.php',
             ),
@@ -124,6 +124,7 @@ class ComposerStaticInit15bf25365698e333dca4dc0faedf89a7
         'Bristlecone\\Markdown\\BlockMarkup' => __DIR__ . '/../..' . '/includes/BlockMarkup.php',
         'Bristlecone\\Markdown\\Comments' => __DIR__ . '/../..' . '/includes/Comments.php',
         'Bristlecone\\Markdown\\ConversionResult' => __DIR__ . '/../..' . '/includes/ConversionResult.php',
+        'Bristlecone\\Markdown\\DefaultMarkdownEditor' => __DIR__ . '/../..' . '/includes/DefaultMarkdownEditor.php',
         'Bristlecone\\Markdown\\Extension\\Footnote\\InlineFootnoteParser' => __DIR__ . '/../..' . '/includes/Extension/Footnote/InlineFootnoteParser.php',
         'Bristlecone\\Markdown\\Extension\\Heading\\HeadingIdProcessor' => __DIR__ . '/../..' . '/includes/Extension/Heading/HeadingIdProcessor.php',
         'Bristlecone\\Markdown\\Extension\\MarkdownExtension' => __DIR__ . '/../..' . '/includes/Extension/MarkdownExtension.php',
@@ -162,6 +163,7 @@ class ComposerStaticInit15bf25365698e333dca4dc0faedf89a7
         'Bristlecone\\Markdown\\Tests\\CommonMarkCoreSpecTest' => __DIR__ . '/../..' . '/tests/CommonMarkCoreSpecTest.php',
         'Bristlecone\\Markdown\\Tests\\CommonMarkProductionSpecTest' => __DIR__ . '/../..' . '/tests/CommonMarkProductionSpecTest.php',
         'Bristlecone\\Markdown\\Tests\\ConflictMatrixTest' => __DIR__ . '/../..' . '/tests/ConflictMatrixTest.php',
+        'Bristlecone\\Markdown\\Tests\\DefaultMarkdownEditorTest' => __DIR__ . '/../..' . '/tests/DefaultMarkdownEditorTest.php',
         'Bristlecone\\Markdown\\Tests\\DocumentFixtureTest' => __DIR__ . '/../..' . '/tests/DocumentFixtureTest.php',
         'Bristlecone\\Markdown\\Tests\\ExtrasTest' => __DIR__ . '/../..' . '/tests/ExtrasTest.php',
         'Bristlecone\\Markdown\\Tests\\JetpackMarkdownBlockTest' => __DIR__ . '/../..' . '/tests/JetpackMarkdownBlockTest.php',

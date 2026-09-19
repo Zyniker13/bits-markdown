@@ -114,6 +114,7 @@ final class BlockAliasRegistryTest extends TestCase {
 		$this->assertArrayHasKey( 'custom_block_aliases', $defaults );
 		$this->assertSame( '', $defaults['custom_block_aliases'] );
 		$this->assertFalse( $defaults['jetpack_block_converter'] );
+		$this->assertFalse( $defaults['default_to_markdown'] );
 	}
 
 	public function test_tools_and_scan_share_settings_unlock(): void {

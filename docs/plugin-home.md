@@ -12,7 +12,7 @@ Use this document to generate the public plugin page. It is the source of truth 
 | **Product name** | Bristlecone Markdown |
 | **Slug** | `bristlecone-markdown` |
 | **Vendor** | Bristlecone IT Services |
-| **Version described** | 1.0.2 |
+| **Version described** | 1.1.0 |
 | **License** | GPL-2.0-or-later (GNU GPL v2 or later) |
 | **Price** | Fully free. No paid tier, no phone-home, no account. |
 | **WordPress.org listing** | In submission. Do not claim it is listed until it is. A “Download” control may say it will be available on WordPress.org, with GitHub as the current source. |
@@ -87,7 +87,7 @@ It is a self-contained replacement for **Jetpack’s Markdown module only**, not
 
 ### Writing surfaces
 
-**Markdown block (block editor).** Insert a Markdown block, edit source, and preview with the same PHP parser used on publish (`POST /bristlecone-markdown/v1/preview`). Saved block markup includes HTML so the content still renders if the plugin is deactivated.
+**Markdown block (block editor).** Insert a Markdown block, edit source, and preview with the same PHP parser used on publish (`POST /bristlecone-markdown/v1/preview`). Saved block markup includes HTML so the content still renders if the plugin is deactivated. An optional setting (off by default) starts new block-editor posts with that block and prefers it as Gutenberg’s default block instead of a paragraph.
 
 **Whole-document Markdown.** Classic Editor, the REST API, and iA Writer’s Publish command send a Markdown body. The plugin converts on save for post types enabled in settings (posts and pages by default; other public types are a checklist, not auto-enabled).
 
@@ -111,6 +111,7 @@ If you deactivate Bristlecone Markdown, published HTML remains. You cannot edit 
 ### Settings (Settings → Bristlecone Markdown)
 
 - **Post types** — which types get whole-document Markdown (Classic, REST, iA Writer). The Markdown block is always available in the block editor.
+- **Block editor** — optional, **off by default**. “Default to Markdown for new posts and pages”: new posts of the enabled types that use the block editor start with an empty Markdown block, and inserting a new block prefers Markdown instead of a paragraph. Existing content, the Classic Editor, and whole-document Markdown are unchanged. Safe to enable while Jetpack Markdown is still active (Bristlecone still skips conversion in that case).
 - **Comments** — allow Markdown in comments.
 - **Code highlighting** — server-side highlighting of fenced code (no extra JavaScript). Output uses `hljs` CSS classes. Themes may override `.hljs` or dequeue `bristlecone-markdown-highlight`.
 - **Mathematics** — render `$inline$` and `$$block$$` with bundled KaTeX, enqueued only when a post contains math.
@@ -289,6 +290,9 @@ Published HTML stays in `post_content`. The site still displays. You cannot edit
 
 **Can I use the block editor and Classic Editor together?**  
 Yes. Use the Markdown block in Gutenberg. Classic / REST / iA Writer posts are whole-document Markdown.
+
+**Can Markdown be the default in the block editor?**  
+Yes, optionally. Enable “Default to Markdown for new posts and pages” under Settings → Bristlecone Markdown (off by default). New posts of the enabled types that use the block editor then start with a Markdown block, and inserting a new block prefers Markdown instead of a paragraph. Existing content and the Classic Editor are unchanged.
 
 **Does it replace Jetpack?**  
 Only Jetpack Markdown. Leave Jetpack installed if you use other Jetpack modules. Turn off the Markdown module so Bristlecone Markdown can convert. Existing Markdown *blocks* from Jetpack remain editable and convert to Bristlecone Markdown on save; a bulk Tools converter is opt-in.

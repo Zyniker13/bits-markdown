@@ -4,7 +4,7 @@ Tags: markdown, editor, writing, comments, gutenberg
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.4
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,6 +19,7 @@ The plugin is developed by [Bristlecone IT Services](https://bristleconeit.com).
 = Writing surfaces =
 
 * **Markdown block** in the block editor, with source and preview tabs
+* **Optional Markdown-first editor** (off by default): new posts start with a Markdown block, and new blocks prefer Markdown instead of a paragraph
 * **Whole-document Markdown** for the Classic Editor, the REST API, and iA Writer’s Publish command
 * **Comment Markdown**, enabled separately
 
@@ -78,7 +79,7 @@ Footnote IDs are namespaced with the post ID (`bristlecone-markdown-fn-{id}-…`
 
 1. Upload the `bristlecone-markdown` folder to `/wp-content/plugins/`, or install the zip from Plugins → Add New.
 2. Activate **Bristlecone Markdown**.
-3. Open Settings → Bristlecone Markdown to choose post types, comments, code highlighting, and math.
+3. Open Settings → Bristlecone Markdown to choose post types, comments, code highlighting, math, and whether new block-editor posts should start in Markdown.
 4. If Jetpack is installed, disable Jetpack Markdown when prompted.
 5. Optional: to rewrite every `jetpack/markdown` block in the database, enable the Tools converter in settings, then confirm the run under Tools → Bristlecone Markdown Converter. The same page can convert Simple Markdown / custom identifiers and, after a scan and review, other unregistered blocks whose names contain “markdown”.
 
@@ -91,6 +92,10 @@ Published HTML remains in `post_content`. Document-mode posts continue to displa
 = Can I use this with the block editor and Classic Editor together? =
 
 Yes. Mixed Gutenberg posts should use the Markdown block. Classic / REST / iA Writer posts are converted as a whole document.
+
+= Can Markdown be the default in the block editor? =
+
+Yes, optionally. Enable “Default to Markdown for new posts and pages” under Settings → Bristlecone Markdown. New posts of the enabled types that use the block editor then start with a Markdown block, and inserting a new block prefers Markdown instead of a paragraph. Existing content is not rewritten. The Classic Editor is unchanged. The setting is off by default.
 
 = What happens to existing Jetpack Markdown blocks? =
 
@@ -112,6 +117,9 @@ No. KaTeX and the highlighter are bundled. There is no tracking and no remote co
 
 == Changelog ==
 
+= 1.1.0 =
+* Optional setting to default the block editor to Markdown: new posts and pages start with a Markdown block, and new blocks prefer Markdown instead of a paragraph. Off by default; existing content and the Classic Editor are unchanged.
+
 = 1.0.2 =
 * Adopt `simple-markdown/markdown-block` (attribute `content`) the same way as Jetpack when that plugin is inactive.
 * Advanced settings: custom block identifiers (`namespace/block-name|attribute`), with source/content/markdown fallback when the attribute is omitted.
@@ -131,6 +139,9 @@ No. KaTeX and the highlighter are bundled. There is no tracking and no remote co
 * Jetpack Markdown coexistence: skip conversion while that module is active, then adopt existing Markdown posts.
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+Optional Markdown-first block editor (off by default). Enable it under Settings → Bristlecone Markdown.
 
 = 1.0.2 =
 Optional Simple Markdown and custom-block compatibility. Tools can scan other Markdown-named blocks; conversion still requires the existing settings unlock and a confirmation step.
