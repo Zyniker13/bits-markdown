@@ -17,6 +17,7 @@ final class Block {
 
 	public function register(): void {
 		add_action( 'init', array( $this, 'register_block' ) );
+		add_action( 'wp_loaded', array( $this, 'maybe_apply_default_templates' ) );
 	}
 
 	public function register_block(): void {
@@ -33,6 +34,7 @@ final class Block {
 				'wp-i18n',
 				'wp-api-fetch',
 				'wp-data',
+				'wp-dom-ready',
 			),
 			file_exists( $block_js ) ? (string) filemtime( $block_js ) : BRISTLECONE_MARKDOWN_VERSION,
 			true
@@ -43,9 +45,7 @@ final class Block {
 		wp_localize_script(
 			'bristlecone-markdown-block',
 			'bristleconeMarkdownBlock',
-			array(
-				'previewUrl' => esc_url_raw( rest_url( 'bristlecone-markdown/v1/preview' ) ),
-			)
+			self::editor_script_config()
 		);
 
 		register_block_type(
@@ -55,6 +55,66 @@ final class Block {
 				'render_callback' => array( $this, 'render' ),
 			)
 		);
+	}
+
+	/**
+	 * Data passed to the block editor script. JetpackMarkdownBlock merges alias flags on top.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public static function editor_script_config(): array {
+		$settings = Settings::instance();
+		$preview  = '';
+		if ( function_exists( 'rest_url' ) && function_exists( 'esc_url_raw' ) ) {
+			$preview = esc_url_raw( rest_url( 'bristlecone-markdown/v1/preview' ) );
+		}
+
+		return array_merge(
+			array(
+				'previewUrl' => $preview,
+			),
+			DefaultMarkdownEditor::script_flags(
+				$settings->default_to_markdown_enabled(),
+				$settings->enabled_post_types()
+			)
+		);
+	}
+
+	/**
+	 * When the setting is on, start new block-editor posts with an empty Markdown block.
+	 * Existing content and Classic Editor / document-mode paths are left alone.
+	 */
+	public function maybe_apply_default_templates(): void {
+		$settings = Settings::instance();
+		if ( ! $settings->default_to_markdown_enabled() ) {
+			return;
+		}
+
+		foreach ( $settings->enabled_post_types() as $post_type ) {
+			$object = function_exists( 'get_post_type_object' ) ? get_post_type_object( $post_type ) : null;
+			if ( ! is_object( $object ) ) {
+				continue;
+			}
+
+			$apply = DefaultMarkdownEditor::should_apply(
+				true,
+				true,
+				$this->post_type_uses_block_editor( $post_type )
+			);
+			DefaultMarkdownEditor::assign_unlocked_template( $object, $apply );
+		}
+	}
+
+	private function post_type_uses_block_editor( string $post_type ): bool {
+		if ( function_exists( 'post_type_supports' ) && ! post_type_supports( $post_type, 'editor' ) ) {
+			return false;
+		}
+
+		if ( function_exists( 'use_block_editor_for_post_type' ) ) {
+			return (bool) use_block_editor_for_post_type( $post_type );
+		}
+
+		return true;
 	}
 
 	public static function serialize_source( string $markdown, string $html = '' ): string {

@@ -363,4 +363,85 @@
 		aliases.unshift( { name: 'jetpack/markdown', attribute: 'source' } );
 	}
 	aliases.forEach( registerAliasBlock );
+
+	function preferMarkdownAsDefaultBlock() {
+		var flags = window.bristleconeMarkdownBlock || {};
+		if ( flags.defaultToMarkdown !== true && flags.defaultToMarkdown !== 1 && flags.defaultToMarkdown !== '1' ) {
+			return;
+		}
+		if ( ! wp.blocks || typeof wp.blocks.setDefaultBlockName !== 'function' ) {
+			return;
+		}
+
+		function enabledTypes() {
+			return Array.isArray( flags.enabledPostTypes ) && flags.enabledPostTypes.length
+				? flags.enabledPostTypes
+				: [ 'post', 'page' ];
+		}
+
+		function storeExists( name ) {
+			try {
+				return !!( wp.data && typeof wp.data.select === 'function' && wp.data.select( name ) );
+			} catch ( e ) {
+				return false;
+			}
+		}
+
+		function currentPostType() {
+			try {
+				var editor = wp.data.select( 'core/editor' );
+				return editor && typeof editor.getCurrentPostType === 'function'
+					? editor.getCurrentPostType() || ''
+					: '';
+			} catch ( e ) {
+				return '';
+			}
+		}
+
+		function applyForPostType( postType ) {
+			if ( ! postType || enabledTypes().indexOf( postType ) === -1 ) {
+				return;
+			}
+			wp.blocks.setDefaultBlockName( 'bristlecone/markdown' );
+		}
+
+		function attempt() {
+			var postType = currentPostType();
+			if ( postType ) {
+				applyForPostType( postType );
+				return true;
+			}
+			if ( storeExists( 'core/edit-widgets' ) || storeExists( 'core/edit-site' ) ) {
+				return true;
+			}
+			return false;
+		}
+
+		function watch() {
+			if ( attempt() ) {
+				return;
+			}
+			if ( ! wp.data || typeof wp.data.subscribe !== 'function' ) {
+				return;
+			}
+			var unsub = wp.data.subscribe( function () {
+				if ( attempt() ) {
+					unsub();
+				}
+			} );
+		}
+
+		if ( attempt() ) {
+			return;
+		}
+
+		if ( typeof wp.domReady === 'function' ) {
+			wp.domReady( watch );
+			return;
+		}
+
+		watch();
+	}
+
+	preferMarkdownAsDefaultBlock();
 } )( window.wp );

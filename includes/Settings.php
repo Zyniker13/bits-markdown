@@ -24,6 +24,7 @@ final class Settings {
 	 *   comments: bool,
 	 *   syntax_highlighting: bool,
 	 *   math: bool,
+	 *   default_to_markdown: bool,
 	 *   jetpack_block_converter: bool,
 	 *   custom_block_aliases: string
 	 * }
@@ -43,6 +44,7 @@ final class Settings {
 	 *   comments: bool,
 	 *   syntax_highlighting: bool,
 	 *   math: bool,
+	 *   default_to_markdown: bool,
 	 *   jetpack_block_converter: bool,
 	 *   custom_block_aliases: string
 	 * }
@@ -56,6 +58,7 @@ final class Settings {
 			'comments'                => true,
 			'syntax_highlighting'     => true,
 			'math'                    => true,
+			'default_to_markdown'     => false,
 			'jetpack_block_converter' => false,
 			'custom_block_aliases'    => '',
 		);
@@ -85,6 +88,10 @@ final class Settings {
 
 	public function math_enabled(): bool {
 		return (bool) $this->all()['math'];
+	}
+
+	public function default_to_markdown_enabled(): bool {
+		return ! empty( $this->all()['default_to_markdown'] );
 	}
 
 	public function jetpack_block_converter_enabled(): bool {
@@ -208,6 +215,7 @@ final class Settings {
 			'comments'                => ! empty( $value['comments'] ),
 			'syntax_highlighting'     => ! empty( $value['syntax_highlighting'] ),
 			'math'                    => ! empty( $value['math'] ),
+			'default_to_markdown'     => ! empty( $value['default_to_markdown'] ),
 			'jetpack_block_converter' => ! empty( $value['jetpack_block_converter'] ),
 			'custom_block_aliases'    => self::sanitize_custom_block_aliases( $value['custom_block_aliases'] ?? '' ),
 		);
@@ -258,6 +266,16 @@ final class Settings {
 								<?php endforeach; ?>
 								<p class="description"><?php echo esc_html__( 'Whole-document Markdown (Classic Editor, REST API, and iA Writer) is enabled for the selected types. The Markdown block is always available in the block editor.', 'bristlecone-markdown' ); ?></p>
 							</fieldset>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php echo esc_html__( 'Block editor', 'bristlecone-markdown' ); ?></th>
+						<td>
+							<label>
+								<input type="checkbox" name="<?php echo esc_attr( self::OPTION ); ?>[default_to_markdown]" value="1" <?php checked( ! empty( $settings['default_to_markdown'] ) ); ?> />
+								<?php echo esc_html__( 'Default to Markdown for new posts and pages', 'bristlecone-markdown' ); ?>
+							</label>
+							<p class="description"><?php echo esc_html__( 'When enabled, new posts of the types above that use the block editor start with an empty Markdown block, and inserting a new block prefers Markdown instead of a paragraph. Existing content is not changed. The Classic Editor and whole-document Markdown are unaffected. Off by default.', 'bristlecone-markdown' ); ?></p>
 						</td>
 					</tr>
 					<tr>
