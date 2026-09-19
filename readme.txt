@@ -84,6 +84,12 @@ Yes. Mixed Gutenberg posts should use the Markdown block. Classic / REST / iA Wr
 
 No. KaTeX and the highlighter are bundled. There is no tracking and no remote conversion API.
 
+== Screenshots ==
+
+1. Settings screen for Bristlecone Markdown.
+2. Markdown block in the editor with source and preview.
+3. A published Markdown post on the front end.
+
 == Changelog ==
 
 = 1.0.0 =
