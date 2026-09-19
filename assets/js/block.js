@@ -4,6 +4,7 @@
 	var el = wp.element.createElement;
 	var useState = wp.element.useState;
 	var useEffect = wp.element.useEffect;
+	var useLayoutEffect = wp.element.useLayoutEffect || wp.element.useEffect;
 	var useRef = wp.element.useRef;
 	var RawHTML = wp.element.RawHTML;
 	var registerBlockType = wp.blocks.registerBlockType;
@@ -40,172 +41,221 @@
 		} );
 	}
 
-	registerBlockType( 'bristlecone/markdown', {
-		edit: function ( props ) {
-			var markdown = props.attributes.markdown || '';
-			var html = props.attributes.html || '';
-			var previewState = useState( html );
-			var preview = previewState[ 0 ];
-			var setPreview = previewState[ 1 ];
-			var tabState = useState( 'markdown' );
-			var tab = tabState[ 0 ];
-			var setTab = tabState[ 1 ];
-			var errorState = useState( '' );
-			var error = errorState[ 0 ];
-			var setError = errorState[ 1 ];
-			var timer = useRef( null );
-			var previewRef = useRef( null );
-			var postId = 0;
+	function markdownEdit( props, options ) {
+		options = options || {};
+		var sourceKey = options.sourceKey || 'markdown';
+		var persistHtml = options.persistHtml !== false;
+		var compatibility = !! options.compatibility;
+		var markdown = props.attributes[ sourceKey ] || '';
+		var html = persistHtml ? props.attributes.html || '' : '';
+		var previewState = useState( html );
+		var preview = previewState[ 0 ];
+		var setPreview = previewState[ 1 ];
+		var tabState = useState( 'markdown' );
+		var tab = tabState[ 0 ];
+		var setTab = tabState[ 1 ];
+		var errorState = useState( '' );
+		var error = errorState[ 0 ];
+		var setError = errorState[ 1 ];
+		var timer = useRef( null );
+		var previewRef = useRef( null );
+		var postId = 0;
 
-			try {
-				postId = wp.data.select( 'core/editor' ).getCurrentPostId() || 0;
-			} catch ( e ) {
-				postId = 0;
-			}
+		try {
+			postId = wp.data.select( 'core/editor' ).getCurrentPostId() || 0;
+		} catch ( e ) {
+			postId = 0;
+		}
 
-			var blockProps = useBlockProps( {
-				className: 'bristlecone-markdown-editor',
-			} );
+		var blockProps = useBlockProps( {
+			className: 'bristlecone-markdown-editor',
+		} );
 
-			function fetchPreview( source ) {
-				apiFetch( {
-					path: '/bristlecone-markdown/v1/preview',
-					method: 'POST',
-					data: {
-						markdown: source,
-						post_id: postId,
-					},
+		function setSource( value ) {
+			var next = {};
+			next[ sourceKey ] = value;
+			props.setAttributes( next );
+		}
+
+		function fetchPreview( source ) {
+			apiFetch( {
+				path: '/bristlecone-markdown/v1/preview',
+				method: 'POST',
+				data: {
+					markdown: source,
+					post_id: postId,
+				},
+			} )
+				.then( function ( response ) {
+					var nextHtml = response.html || '';
+					setPreview( nextHtml );
+					setError( '' );
+					if ( persistHtml && nextHtml !== ( props.attributes.html || '' ) ) {
+						props.setAttributes( { html: nextHtml } );
+					}
 				} )
-					.then( function ( response ) {
-						var nextHtml = response.html || '';
-						setPreview( nextHtml );
-						setError( '' );
-						if ( nextHtml !== ( props.attributes.html || '' ) ) {
-							props.setAttributes( { html: nextHtml } );
-						}
-					} )
-					.catch( function () {
-						setError(
-							__( 'Could not render a preview. The published output still uses the server parser.', 'bristlecone-markdown' )
-						);
-					} );
-			}
+				.catch( function () {
+					setError(
+						__( 'Could not render a preview. The published output still uses the server parser.', 'bristlecone-markdown' )
+					);
+				} );
+		}
 
-			useEffect(
-				function () {
+		useEffect(
+			function () {
+				if ( timer.current ) {
+					window.clearTimeout( timer.current );
+				}
+				timer.current = window.setTimeout( function () {
+					fetchPreview( markdown );
+				}, 400 );
+				return function () {
 					if ( timer.current ) {
 						window.clearTimeout( timer.current );
 					}
-					timer.current = window.setTimeout( function () {
-						fetchPreview( markdown );
-					}, 400 );
-					return function () {
-						if ( timer.current ) {
-							window.clearTimeout( timer.current );
-						}
-					};
-				},
-				[ markdown ]
-			);
+				};
+			},
+			[ markdown ]
+		);
 
-			useEffect(
-				function () {
-					if ( tab === 'preview' ) {
-						renderMath( previewRef.current );
-					}
-				},
-				[ preview, tab ]
-			);
-
-			function insertMedia( media ) {
-				if ( ! media || ! media.url ) {
-					return;
+		useEffect(
+			function () {
+				if ( tab === 'preview' ) {
+					renderMath( previewRef.current );
 				}
-				var alt = media.alt || media.title || '';
-				var snippet = '![' + alt + '](' + media.url + ')';
-				var next = markdown ? markdown.replace( /\s*$/, '\n\n' ) + snippet + '\n' : snippet + '\n';
-				props.setAttributes( { markdown: next } );
-			}
+			},
+			[ preview, tab ]
+		);
 
-			return el(
-				'div',
-				blockProps,
+		function insertMedia( media ) {
+			if ( ! media || ! media.url ) {
+				return;
+			}
+			var alt = media.alt || media.title || '';
+			var snippet = '![' + alt + '](' + media.url + ')';
+			var next = markdown ? markdown.replace( /\s*$/, '\n\n' ) + snippet + '\n' : snippet + '\n';
+			setSource( next );
+		}
+
+		return el(
+			'div',
+			blockProps,
+			el(
+				BlockControls,
+				null,
 				el(
-					BlockControls,
+					ToolbarGroup,
 					null,
-					el(
-						ToolbarGroup,
-						null,
-						el( ToolbarButton, {
-							icon: 'editor-code',
-							label: __( 'Markdown', 'bristlecone-markdown' ),
-							isPressed: tab === 'markdown',
-							onClick: function () {
-								setTab( 'markdown' );
-							},
-						} ),
-						el( ToolbarButton, {
-							icon: 'visibility',
-							label: __( 'Preview', 'bristlecone-markdown' ),
-							isPressed: tab === 'preview',
-							onClick: function () {
-								setTab( 'preview' );
-							},
-						} )
-					),
-					el(
-						MediaUploadCheck,
-						null,
-						el( MediaUpload, {
-							onSelect: insertMedia,
-							allowedTypes: [ 'image' ],
-							render: function ( obj ) {
-								return el( ToolbarButton, {
-									icon: 'format-image',
-									label: __( 'Insert image', 'bristlecone-markdown' ),
-									onClick: obj.open,
-								} );
-							},
-						} )
-					)
+					el( ToolbarButton, {
+						icon: 'editor-code',
+						label: __( 'Markdown', 'bristlecone-markdown' ),
+						isPressed: tab === 'markdown',
+						onClick: function () {
+							setTab( 'markdown' );
+						},
+					} ),
+					el( ToolbarButton, {
+						icon: 'visibility',
+						label: __( 'Preview', 'bristlecone-markdown' ),
+						isPressed: tab === 'preview',
+						onClick: function () {
+							setTab( 'preview' );
+						},
+					} )
 				),
 				el(
-					InspectorControls,
+					MediaUploadCheck,
 					null,
+					el( MediaUpload, {
+						onSelect: insertMedia,
+						allowedTypes: [ 'image' ],
+						render: function ( obj ) {
+							return el( ToolbarButton, {
+								icon: 'format-image',
+								label: __( 'Insert image', 'bristlecone-markdown' ),
+								onClick: obj.open,
+							} );
+						},
+					} )
+				)
+			),
+			el(
+				InspectorControls,
+				null,
+				el(
+					PanelBody,
+					{ title: __( 'Bristlecone Markdown', 'bristlecone-markdown' ), initialOpen: true },
 					el(
-						PanelBody,
-						{ title: __( 'Bristlecone Markdown', 'bristlecone-markdown' ), initialOpen: true },
-						el(
-							'p',
-							null,
-							__(
-								'Write Markdown in this block. Syntax follows iA Writer (CommonMark plus highlight, footnotes, tables, math, metadata, and more). Task lists and Content Blocks are not converted.',
-								'bristlecone-markdown'
-							)
-						)
+						'p',
+						null,
+						compatibility
+							? __(
+									'This is an existing Markdown block. Saving the post stores it as a Bristlecone Markdown block. New blocks should be inserted as Markdown from Bristlecone Markdown.',
+									'bristlecone-markdown'
+							  )
+							: __(
+									'Write Markdown in this block. Syntax follows iA Writer (CommonMark plus highlight, footnotes, tables, math, metadata, and more). Task lists and Content Blocks are not converted.',
+									'bristlecone-markdown'
+							  )
 					)
-				),
-				tab === 'markdown'
-					? el( TextareaControl, {
-							className: 'bristlecone-markdown-source',
-							label: __( 'Markdown', 'bristlecone-markdown' ),
-							hideLabelFromVision: true,
-							value: markdown,
-							onChange: function ( value ) {
-								props.setAttributes( { markdown: value } );
-							},
-							rows: 16,
-					  } )
-					: el(
-							'div',
-							{
-								className: 'bristlecone-markdown-preview bristlecone-markdown',
-								ref: previewRef,
-							},
-							el( RawHTML, null, preview || '<p></p>' )
-					  ),
-				error ? el( Notice, { status: 'warning', isDismissible: false }, error ) : null
-			);
+				)
+			),
+			tab === 'markdown'
+				? el( TextareaControl, {
+						className: 'bristlecone-markdown-source',
+						label: __( 'Markdown', 'bristlecone-markdown' ),
+						hideLabelFromVision: true,
+						value: markdown,
+						onChange: setSource,
+						rows: 16,
+				  } )
+				: el(
+						'div',
+						{
+							className: 'bristlecone-markdown-preview bristlecone-markdown',
+							ref: previewRef,
+						},
+						el( RawHTML, null, preview || '<p></p>' )
+				  ),
+			error ? el( Notice, { status: 'warning', isDismissible: false }, error ) : null
+		);
+	}
+
+	function migrateJetpackBlock( props ) {
+		if ( ! wp.blocks || ! wp.blocks.createBlock || ! wp.data || ! wp.data.dispatch ) {
+			return false;
+		}
+		var editor = wp.data.dispatch( 'core/block-editor' );
+		if ( ! editor || ! editor.replaceBlock ) {
+			return false;
+		}
+		var nextAttrs = {
+			markdown: props.attributes.source || '',
+			html: '',
+		};
+		if ( props.attributes.align ) {
+			nextAttrs.align = props.attributes.align;
+		}
+		if ( props.attributes.anchor ) {
+			nextAttrs.anchor = props.attributes.anchor;
+		}
+		if ( props.attributes.className ) {
+			nextAttrs.className = props.attributes.className;
+		}
+		var next = wp.blocks.createBlock( 'bristlecone/markdown', nextAttrs );
+		if ( typeof editor.__unstableMarkNextChangeAsNotPersistent === 'function' ) {
+			editor.__unstableMarkNextChangeAsNotPersistent();
+		}
+		editor.replaceBlock( props.clientId, next );
+		return true;
+	}
+
+	registerBlockType( 'bristlecone/markdown', {
+		edit: function ( props ) {
+			return markdownEdit( props, {
+				sourceKey: 'markdown',
+				persistHtml: true,
+			} );
 		},
 		save: function ( props ) {
 			var blockProps = useBlockProps.save( {
@@ -214,4 +264,50 @@
 			return el( 'div', blockProps, el( RawHTML, null, props.attributes.html || '' ) );
 		},
 	} );
+
+	var config = window.bristleconeMarkdownBlock || {};
+	var adoptJetpack = config.adoptJetpackBlock === true || config.adoptJetpackBlock === 1 || config.adoptJetpackBlock === '1';
+	if ( adoptJetpack && typeof wp.blocks.getBlockType === 'function' && ! wp.blocks.getBlockType( 'jetpack/markdown' ) ) {
+		registerBlockType( 'jetpack/markdown', {
+			apiVersion: 3,
+			title: __( 'Markdown', 'bristlecone-markdown' ),
+			description: __(
+				'Compatibility for an existing Markdown block. Saving this post stores it as a Bristlecone Markdown block.',
+				'bristlecone-markdown'
+			),
+			icon: 'editor-code',
+			category: 'text',
+			attributes: {
+				source: {
+					type: 'string',
+					default: '',
+				},
+			},
+			supports: {
+				html: false,
+				inserter: false,
+				align: [ 'wide', 'full' ],
+				anchor: true,
+				className: true,
+			},
+			edit: function ( props ) {
+				var migrated = useRef( false );
+				useLayoutEffect( function () {
+					if ( migrated.current ) {
+						return;
+					}
+					migrated.current = true;
+					migrateJetpackBlock( props );
+				}, [] );
+				return markdownEdit( props, {
+					sourceKey: 'source',
+					persistHtml: false,
+					compatibility: true,
+				} );
+			},
+			save: function () {
+				return null;
+			},
+		} );
+	}
 } )( window.wp );

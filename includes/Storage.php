@@ -285,22 +285,6 @@ final class Storage {
 			return null;
 		}
 
-		$named = array();
-		foreach ( parse_blocks( $content ) as $block ) {
-			if ( empty( $block['blockName'] ) ) {
-				if ( trim( (string) ( $block['innerHTML'] ?? '' ) ) !== '' ) {
-					return null;
-				}
-				continue;
-			}
-			$named[] = $block;
-		}
-
-		if ( count( $named ) === 1 && in_array( $named[0]['blockName'], array( 'bristlecone/markdown', 'bits/markdown' ), true ) ) {
-			$markdown = $named[0]['attrs']['markdown'] ?? '';
-			return is_string( $markdown ) ? $markdown : null;
-		}
-
-		return null;
+		return BlockMarkup::document_markdown_from_blocks( parse_blocks( $content ) );
 	}
 }

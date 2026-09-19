@@ -4,7 +4,7 @@ Tags: markdown, editor, writing, comments, gutenberg
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -48,6 +48,8 @@ Fenced code blocks can be highlighted on the server (no extra JavaScript). Theme
 
 If Jetpack Markdown is still active, Bristlecone Markdown **does not** convert posts or comments, so content is not processed twice. An admin notice offers a one-click control to disable the Jetpack Markdown module. Existing Jetpack Markdown posts (`_wpcom_markdown` and `post_content_filtered`) are adopted automatically afterward.
 
+When that module is off, existing `jetpack/markdown` Gutenberg blocks stay editable (they are not treated as missing blocks). Saving a post rewrites them to `bristlecone/markdown`. The inserter still offers only the Bristlecone Markdown block. An optional Tools converter can rewrite every matching post at once; it is off by default and requires Settings → Bristlecone Markdown → “Enable Jetpack Markdown block converter under Tools”, then Tools → Bristlecone Markdown Converter, then a confirmation checkbox.
+
 = iA Writer =
 
 In iA Writer you can publish drafts to WordPress 5.6+ over the REST API as Markdown. Bristlecone Markdown converts that body on save and returns Markdown source to non-Gutenberg clients on edit.
@@ -69,6 +71,7 @@ Footnote IDs are namespaced with the post ID (`bristlecone-markdown-fn-{id}-…`
 2. Activate **Bristlecone Markdown**.
 3. Open Settings → Bristlecone Markdown to choose post types, comments, code highlighting, and math.
 4. If Jetpack is installed, disable Jetpack Markdown when prompted.
+5. Optional: to rewrite every `jetpack/markdown` block in the database, enable the Tools converter in settings, then confirm the run under Tools → Bristlecone Markdown Converter.
 
 == Frequently Asked Questions ==
 
@@ -79,6 +82,10 @@ Published HTML remains in `post_content`. Document-mode posts continue to displa
 = Can I use this with the block editor and Classic Editor together? =
 
 Yes. Mixed Gutenberg posts should use the Markdown block. Classic / REST / iA Writer posts are converted as a whole document.
+
+= What happens to existing Jetpack Markdown blocks? =
+
+When Jetpack Markdown is off, existing `jetpack/markdown` blocks open in the editor (no missing-block warning) and are rewritten to Bristlecone Markdown when you save. The inserter still only offers the Bristlecone Markdown block. A bulk converter under Tools is optional and off by default: enable it in settings, then confirm the run on the Tools page.
 
 = Does this phone home? =
 
@@ -92,6 +99,10 @@ No. KaTeX and the highlighter are bundled. There is no tracking and no remote co
 
 == Changelog ==
 
+= 1.0.1 =
+* Adopt existing `jetpack/markdown` Gutenberg blocks when Jetpack Markdown is inactive (hidden from the inserter; saved as `bristlecone/markdown`).
+* Optional Tools converter (off by default) to rewrite those blocks site-wide after a settings checkbox and a confirmation step.
+
 = 1.0.0 =
 * Initial public release.
 * Markdown block in the block editor, with source and preview tabs that use the same PHP parser as publish.
@@ -102,6 +113,9 @@ No. KaTeX and the highlighter are bundled. There is no tracking and no remote co
 * Jetpack Markdown coexistence: skip conversion while that module is active, then adopt existing Markdown posts.
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+Existing Jetpack Markdown blocks are editable without Jetpack. Saving converts them to Bristlecone Markdown. Bulk rewrite is opt-in under Settings and Tools.
 
 = 1.0.0 =
 Initial public release of Bristlecone Markdown.
