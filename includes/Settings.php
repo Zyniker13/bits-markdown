@@ -24,7 +24,8 @@ final class Settings {
 	 *   comments: bool,
 	 *   syntax_highlighting: bool,
 	 *   math: bool,
-	 *   jetpack_block_converter: bool
+	 *   jetpack_block_converter: bool,
+	 *   custom_block_aliases: string
 	 * }
 	 */
 	public function all(): array {
@@ -42,7 +43,8 @@ final class Settings {
 	 *   comments: bool,
 	 *   syntax_highlighting: bool,
 	 *   math: bool,
-	 *   jetpack_block_converter: bool
+	 *   jetpack_block_converter: bool,
+	 *   custom_block_aliases: string
 	 * }
 	 */
 	public function defaults(): array {
@@ -55,6 +57,7 @@ final class Settings {
 			'syntax_highlighting'     => true,
 			'math'                    => true,
 			'jetpack_block_converter' => false,
+			'custom_block_aliases'    => '',
 		);
 	}
 
@@ -86,6 +89,58 @@ final class Settings {
 
 	public function jetpack_block_converter_enabled(): bool {
 		return ! empty( $this->all()['jetpack_block_converter'] );
+	}
+
+	/**
+	 * Same settings unlock as the Jetpack Tools converter.
+	 */
+	public function block_converter_enabled(): bool {
+		return $this->jetpack_block_converter_enabled();
+	}
+
+	public function custom_block_aliases_text(): string {
+		return (string) ( $this->all()['custom_block_aliases'] ?? '' );
+	}
+
+	/**
+	 * @return list<BlockAlias>
+	 */
+	public function custom_block_alias_objects(): array {
+		return BlockAliasRegistry::parse_custom_text( $this->custom_block_aliases_text() );
+	}
+
+	public static function sanitize_custom_block_aliases( mixed $value ): string {
+		if ( ! is_string( $value ) ) {
+			return '';
+		}
+
+		return BlockAliasRegistry::format_lines( BlockAliasRegistry::parse_custom_text( $value ) );
+	}
+
+	/**
+	 * Persist user-selected scanner identifiers. Regex hits are never added here.
+	 *
+	 * @param list<string> $lines
+	 */
+	public function append_custom_aliases( array $lines ): void {
+		$merged = $this->custom_block_alias_objects();
+		$seen   = array();
+		foreach ( $merged as $alias ) {
+			$seen[ $alias->name ] = true;
+		}
+
+		foreach ( $lines as $line ) {
+			$alias = BlockAliasRegistry::parse_custom_line( (string) $line );
+			if ( null === $alias || isset( $seen[ $alias->name ] ) ) {
+				continue;
+			}
+			$seen[ $alias->name ] = true;
+			$merged[]             = $alias;
+		}
+
+		$current                         = $this->all();
+		$current['custom_block_aliases'] = BlockAliasRegistry::format_lines( $merged );
+		update_option( self::OPTION, $current );
 	}
 
 	/**
@@ -154,6 +209,7 @@ final class Settings {
 			'syntax_highlighting'     => ! empty( $value['syntax_highlighting'] ),
 			'math'                    => ! empty( $value['math'] ),
 			'jetpack_block_converter' => ! empty( $value['jetpack_block_converter'] ),
+			'custom_block_aliases'    => self::sanitize_custom_block_aliases( $value['custom_block_aliases'] ?? '' ),
 		);
 	}
 
@@ -240,7 +296,7 @@ final class Settings {
 								<?php echo esc_html__( 'Enable Jetpack Markdown block converter under Tools', 'bristlecone-markdown' ); ?>
 							</label>
 							<p class="description">
-								<?php echo esc_html__( 'Existing Jetpack Markdown blocks are already editable and convert to Bristlecone Markdown when you save a post. Turn this on only if you want a Tools page that can rewrite every matching post at once. Off by default to avoid accidents.', 'bristlecone-markdown' ); ?>
+								<?php echo esc_html__( 'Existing Jetpack Markdown blocks are already editable and convert to Bristlecone Markdown when you save a post. Turn this on only if you want a Tools page that can rewrite matching posts at once, scan for other unregistered blocks whose names contain “markdown”, or convert Simple Markdown and custom identifiers. Off by default to avoid accidents. This does not replace other Markdown plugins.', 'bristlecone-markdown' ); ?>
 							</p>
 							<?php if ( ! empty( $settings['jetpack_block_converter'] ) ) : ?>
 								<p>
@@ -249,6 +305,32 @@ final class Settings {
 									</a>
 								</p>
 							<?php endif; ?>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php echo esc_html__( 'Other Markdown blocks', 'bristlecone-markdown' ); ?></th>
+						<td>
+							<p class="description">
+								<?php echo esc_html__( 'simple-markdown/markdown-block is built in (attribute content). Jetpack’s jetpack/markdown (attribute source) stays first-class. Custom names below are optional.', 'bristlecone-markdown' ); ?>
+							</p>
+							<details>
+								<summary><?php echo esc_html__( 'Advanced: custom block identifiers', 'bristlecone-markdown' ); ?></summary>
+								<p>
+									<label for="bristlecone-markdown-custom-aliases">
+										<?php echo esc_html__( 'Custom block names, one per line', 'bristlecone-markdown' ); ?>
+									</label>
+								</p>
+								<textarea
+									id="bristlecone-markdown-custom-aliases"
+									name="<?php echo esc_attr( self::OPTION ); ?>[custom_block_aliases]"
+									rows="5"
+									cols="50"
+									class="large-text code"
+								><?php echo esc_textarea( (string) ( $settings['custom_block_aliases'] ?? '' ) ); ?></textarea>
+								<p class="description">
+									<?php echo esc_html__( 'Prefer namespace/block-name|attribute (for example acme/markdown|content). If |attribute is omitted, Bristlecone tries source, then content, then markdown when reading the block. Aliases are registered only when that block name is not already registered by another plugin. A Tools scan never adds names here by itself.', 'bristlecone-markdown' ); ?>
+								</p>
+							</details>
 						</td>
 					</tr>
 				</table>

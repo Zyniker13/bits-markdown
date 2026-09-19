@@ -221,7 +221,35 @@
 		);
 	}
 
-	function migrateJetpackBlock( props ) {
+	function sourceFromAttributes( attrs, preferred ) {
+		if ( preferred && typeof attrs[ preferred ] === 'string' ) {
+			return attrs[ preferred ];
+		}
+		var keys = [ 'source', 'content', 'markdown' ];
+		var i;
+		for ( i = 0; i < keys.length; i++ ) {
+			if ( typeof attrs[ keys[ i ] ] === 'string' && attrs[ keys[ i ] ] !== '' ) {
+				return attrs[ keys[ i ] ];
+			}
+		}
+		return '';
+	}
+
+	function resolveSourceKey( attrs, preferred ) {
+		if ( preferred && Object.prototype.hasOwnProperty.call( attrs, preferred ) ) {
+			return preferred;
+		}
+		var keys = [ 'source', 'content', 'markdown' ];
+		var i;
+		for ( i = 0; i < keys.length; i++ ) {
+			if ( typeof attrs[ keys[ i ] ] === 'string' && attrs[ keys[ i ] ] !== '' ) {
+				return keys[ i ];
+			}
+		}
+		return preferred || 'source';
+	}
+
+	function migrateAliasBlock( props, sourceKey ) {
 		if ( ! wp.blocks || ! wp.blocks.createBlock || ! wp.data || ! wp.data.dispatch ) {
 			return false;
 		}
@@ -230,7 +258,7 @@
 			return false;
 		}
 		var nextAttrs = {
-			markdown: props.attributes.source || '',
+			markdown: sourceFromAttributes( props.attributes, sourceKey ),
 			html: '',
 		};
 		if ( props.attributes.align ) {
@@ -250,6 +278,69 @@
 		return true;
 	}
 
+	function migrateJetpackBlock( props ) {
+		return migrateAliasBlock( props, 'source' );
+	}
+
+	function aliasAttributeSchema( sourceKey ) {
+		var keys = sourceKey ? [ sourceKey ] : [ 'source', 'content', 'markdown' ];
+		var attributes = {};
+		keys.forEach( function ( key ) {
+			attributes[ key ] = {
+				type: 'string',
+				default: '',
+			};
+		} );
+		return attributes;
+	}
+
+	function registerAliasBlock( alias ) {
+		if ( ! alias || ! alias.name ) {
+			return;
+		}
+		if ( typeof wp.blocks.getBlockType === 'function' && wp.blocks.getBlockType( alias.name ) ) {
+			return;
+		}
+		var preferred = alias.attribute || '';
+		registerBlockType( alias.name, {
+			apiVersion: 3,
+			title: __( 'Markdown', 'bristlecone-markdown' ),
+			description: __(
+				'Compatibility for an existing Markdown block. Saving this post stores it as a Bristlecone Markdown block.',
+				'bristlecone-markdown'
+			),
+			icon: 'editor-code',
+			category: 'text',
+			attributes: aliasAttributeSchema( preferred ),
+			supports: {
+				html: false,
+				inserter: false,
+				align: [ 'wide', 'full' ],
+				anchor: true,
+				className: true,
+			},
+			edit: function ( props ) {
+				var sourceKey = resolveSourceKey( props.attributes, preferred );
+				var migrated = useRef( false );
+				useLayoutEffect( function () {
+					if ( migrated.current ) {
+						return;
+					}
+					migrated.current = true;
+					migrateAliasBlock( props, sourceKey );
+				}, [] );
+				return markdownEdit( props, {
+					sourceKey: sourceKey,
+					persistHtml: false,
+					compatibility: true,
+				} );
+			},
+			save: function () {
+				return null;
+			},
+		} );
+	}
+
 	registerBlockType( 'bristlecone/markdown', {
 		edit: function ( props ) {
 			return markdownEdit( props, {
@@ -267,47 +358,9 @@
 
 	var config = window.bristleconeMarkdownBlock || {};
 	var adoptJetpack = config.adoptJetpackBlock === true || config.adoptJetpackBlock === 1 || config.adoptJetpackBlock === '1';
-	if ( adoptJetpack && typeof wp.blocks.getBlockType === 'function' && ! wp.blocks.getBlockType( 'jetpack/markdown' ) ) {
-		registerBlockType( 'jetpack/markdown', {
-			apiVersion: 3,
-			title: __( 'Markdown', 'bristlecone-markdown' ),
-			description: __(
-				'Compatibility for an existing Markdown block. Saving this post stores it as a Bristlecone Markdown block.',
-				'bristlecone-markdown'
-			),
-			icon: 'editor-code',
-			category: 'text',
-			attributes: {
-				source: {
-					type: 'string',
-					default: '',
-				},
-			},
-			supports: {
-				html: false,
-				inserter: false,
-				align: [ 'wide', 'full' ],
-				anchor: true,
-				className: true,
-			},
-			edit: function ( props ) {
-				var migrated = useRef( false );
-				useLayoutEffect( function () {
-					if ( migrated.current ) {
-						return;
-					}
-					migrated.current = true;
-					migrateJetpackBlock( props );
-				}, [] );
-				return markdownEdit( props, {
-					sourceKey: 'source',
-					persistHtml: false,
-					compatibility: true,
-				} );
-			},
-			save: function () {
-				return null;
-			},
-		} );
+	var aliases = Array.isArray( config.aliases ) ? config.aliases.slice() : [];
+	if ( adoptJetpack && ! aliases.some( function ( alias ) { return alias && alias.name === 'jetpack/markdown'; } ) ) {
+		aliases.unshift( { name: 'jetpack/markdown', attribute: 'source' } );
 	}
+	aliases.forEach( registerAliasBlock );
 } )( window.wp );

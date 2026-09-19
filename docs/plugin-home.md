@@ -12,7 +12,7 @@ Use this document to generate the public plugin page. It is the source of truth 
 | **Product name** | Bristlecone Markdown |
 | **Slug** | `bristlecone-markdown` |
 | **Vendor** | Bristlecone IT Services |
-| **Version described** | 1.0.1 |
+| **Version described** | 1.0.2 |
 | **License** | GPL-2.0-or-later (GNU GPL v2 or later) |
 | **Price** | Fully free. No paid tier, no phone-home, no account. |
 | **WordPress.org listing** | In submission. Do not claim it is listed until it is. A “Download” control may say it will be available on WordPress.org, with GitHub as the current source. |
@@ -26,6 +26,7 @@ Professional, precise, and short. Company site for Bristlecone IT Services — n
 
 - Official affiliation, partnership, or endorsement by Automattic, Jetpack, iA, or iA Writer.
 - That the plugin *is* Jetpack, or that it replaces Jetpack as a whole. It replaces **Jetpack Markdown only**.
+- That it replaces all Markdown plugins, or that a Tools scan auto-converts every block whose name contains “markdown”.
 - That it implements the entire iA Writer *application* (library, Content Blocks, compile, typography, export). Alignment is **Markdown syntax**, not the app.
 - Task-list conversion (`- [ ]` / `- [x]`). Those stay as text.
 - File transclusion / iA Writer Content Blocks. WordPress cannot see the local library; authors must compile in iA Writer first.
@@ -113,7 +114,8 @@ If you deactivate Bristlecone Markdown, published HTML remains. You cannot edit 
 - **Comments** — allow Markdown in comments.
 - **Code highlighting** — server-side highlighting of fenced code (no extra JavaScript). Output uses `hljs` CSS classes. Themes may override `.hljs` or dequeue `bristlecone-markdown-highlight`.
 - **Mathematics** — render `$inline$` and `$$block$$` with bundled KaTeX, enqueued only when a post contains math.
-- **Jetpack Markdown blocks** — optional, **off by default**. Enables Tools → Bristlecone Markdown Converter so an administrator can rewrite existing `jetpack/markdown` blocks to `bristlecone/markdown` after a confirmation step. This is not required for editing: with Jetpack Markdown inactive, those blocks already load in the editor and convert on save.
+- **Jetpack Markdown blocks** — optional, **off by default**. Enables Tools → Bristlecone Markdown Converter so an administrator can rewrite existing `jetpack/markdown` blocks to `bristlecone/markdown` after a confirmation step. The same checkbox unlocks conversion of Simple Markdown / custom identifiers and a scanner for other unregistered blocks whose names contain “markdown”. This is not required for editing: with Jetpack Markdown inactive, those blocks already load in the editor and convert on save.
+- **Other Markdown blocks (Advanced, collapsed)** — optional custom identifiers, one per line: `namespace/block-name|attribute` (example `acme/markdown|content`). If `|attribute` is omitted, the plugin tries `source`, then `content`, then `markdown`. `simple-markdown/markdown-block` is built in (`content`). This is leftover-block compatibility, not a replacement for those plugins.
 
 ### iA Writer Publish
 
@@ -133,9 +135,13 @@ If Jetpack’s Markdown module is still active, Bristlecone Markdown **does not*
 
 Gutenberg blocks named `jetpack/markdown` are a separate compatibility path. When Jetpack Markdown is inactive and that block type is not already registered, Bristlecone Markdown registers it as a hidden alias (`inserter` off) so posts do not show a missing-block warning. The editor uses the Bristlecone source/preview UI (attribute `source`). Saving rewrites the block to `bristlecone/markdown` (`markdown` ← `source`, HTML from the server parser). New blocks are still inserted as `bristlecone/markdown` only. This is compatibility, not impersonation of Jetpack.
 
-A bulk converter under Tools can rewrite every matching post in enabled post types. It stays unavailable until Settings → Bristlecone Markdown → “Enable Jetpack Markdown block converter under Tools” is checked (default off), then requires a confirmation checkbox on the Tools page. It no-ops with a notice if Jetpack Markdown is still active. Posts are updated in batches.
+A bulk converter under Tools can rewrite every matching post in enabled post types. It stays unavailable until Settings → Bristlecone Markdown → “Enable Jetpack Markdown block converter under Tools” is checked (default off), then requires a confirmation checkbox on the Tools page. Jetpack block conversion no-ops with a notice if Jetpack Markdown is still active. Posts are updated in batches.
 
-If another Markdown plugin is active, an admin notice warns about double-processing.
+The same Tools page can scan enabled post types for **unregistered** Gutenberg blocks whose names contain “markdown”. The scan only lists names, sample attribute keys, and counts. Conversion and optional “add to custom identifiers” happen only after the administrator selects names and confirms. Names that look like editor comments (for example `markdown-comment`) are flagged and left unchecked. A scan never registers aliases by itself.
+
+`simple-markdown/markdown-block` uses the same alias / soft-migrate / bulk path as Jetpack when that plugin is not already registering the block (`content` → `markdown`). Custom identifiers from settings join that list. Aliases stay hidden from the inserter (`inserter: false`) and are not registered while another plugin already owns the block name.
+
+If another Markdown plugin is active, an admin notice warns about double-processing. Bristlecone Markdown does not replace those plugins.
 
 ### Footnotes and archives
 
@@ -286,6 +292,9 @@ Yes. Use the Markdown block in Gutenberg. Classic / REST / iA Writer posts are w
 
 **Does it replace Jetpack?**  
 Only Jetpack Markdown. Leave Jetpack installed if you use other Jetpack modules. Turn off the Markdown module so Bristlecone Markdown can convert. Existing Markdown *blocks* from Jetpack remain editable and convert to Bristlecone Markdown on save; a bulk Tools converter is opt-in.
+
+**Does it replace other Markdown plugins?**  
+No. Simple Markdown and custom block identifiers are optional compatibility aliases for leftover Gutenberg markup. The Tools scanner never auto-converts or auto-registers names from a regex.
 
 **Does it phone home?**  
 No.
