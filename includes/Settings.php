@@ -23,7 +23,8 @@ final class Settings {
 	 *   post_types: array<string, bool>,
 	 *   comments: bool,
 	 *   syntax_highlighting: bool,
-	 *   math: bool
+	 *   math: bool,
+	 *   jetpack_block_converter: bool
 	 * }
 	 */
 	public function all(): array {
@@ -40,18 +41,20 @@ final class Settings {
 	 *   post_types: array<string, bool>,
 	 *   comments: bool,
 	 *   syntax_highlighting: bool,
-	 *   math: bool
+	 *   math: bool,
+	 *   jetpack_block_converter: bool
 	 * }
 	 */
 	public function defaults(): array {
 		return array(
-			'post_types'          => array(
+			'post_types'              => array(
 				'post' => true,
 				'page' => true,
 			),
-			'comments'            => true,
-			'syntax_highlighting' => true,
-			'math'                => true,
+			'comments'                => true,
+			'syntax_highlighting'     => true,
+			'math'                    => true,
+			'jetpack_block_converter' => false,
 		);
 	}
 
@@ -79,6 +82,10 @@ final class Settings {
 
 	public function math_enabled(): bool {
 		return (bool) $this->all()['math'];
+	}
+
+	public function jetpack_block_converter_enabled(): bool {
+		return ! empty( $this->all()['jetpack_block_converter'] );
 	}
 
 	/**
@@ -142,10 +149,11 @@ final class Settings {
 		}
 
 		return array(
-			'post_types'          => $post_types !== array() ? $post_types : $defaults['post_types'],
-			'comments'            => ! empty( $value['comments'] ),
-			'syntax_highlighting' => ! empty( $value['syntax_highlighting'] ),
-			'math'                => ! empty( $value['math'] ),
+			'post_types'              => $post_types !== array() ? $post_types : $defaults['post_types'],
+			'comments'                => ! empty( $value['comments'] ),
+			'syntax_highlighting'     => ! empty( $value['syntax_highlighting'] ),
+			'math'                    => ! empty( $value['math'] ),
+			'jetpack_block_converter' => ! empty( $value['jetpack_block_converter'] ),
 		);
 	}
 
@@ -222,6 +230,25 @@ final class Settings {
 								<input type="checkbox" name="<?php echo esc_attr( self::OPTION ); ?>[math]" value="1" <?php checked( $settings['math'] ); ?> />
 								<?php echo esc_html__( 'Render $inline$ and $$block$$ TeX with KaTeX when a post contains math', 'bristlecone-markdown' ); ?>
 							</label>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php echo esc_html__( 'Jetpack Markdown blocks', 'bristlecone-markdown' ); ?></th>
+						<td>
+							<label>
+								<input type="checkbox" name="<?php echo esc_attr( self::OPTION ); ?>[jetpack_block_converter]" value="1" <?php checked( ! empty( $settings['jetpack_block_converter'] ) ); ?> />
+								<?php echo esc_html__( 'Enable Jetpack Markdown block converter under Tools', 'bristlecone-markdown' ); ?>
+							</label>
+							<p class="description">
+								<?php echo esc_html__( 'Existing Jetpack Markdown blocks are already editable and convert to Bristlecone Markdown when you save a post. Turn this on only if you want a Tools page that can rewrite every matching post at once. Off by default to avoid accidents.', 'bristlecone-markdown' ); ?>
+							</p>
+							<?php if ( ! empty( $settings['jetpack_block_converter'] ) ) : ?>
+								<p>
+									<a href="<?php echo esc_url( admin_url( 'tools.php?page=' . JetpackMarkdownBlock::TOOLS_SLUG ) ); ?>">
+										<?php echo esc_html__( 'Open Tools → Bristlecone Markdown Converter', 'bristlecone-markdown' ); ?>
+									</a>
+								</p>
+							<?php endif; ?>
 						</td>
 					</tr>
 				</table>

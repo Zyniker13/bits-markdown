@@ -2,7 +2,7 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Bristlecone Markdown 1.0.0\n"
+"Project-Id-Version: Bristlecone Markdown 1.0.1\n"
 "Report-Msgid-Bugs-To: https://github.com/Zyniker13/bits-markdown/issues\n"
 "Last-Translator: Bristlecone IT Services <https://bristleconeit.com>\n"
 "Language-Team: Bristlecone IT Services\n"
@@ -161,3 +161,90 @@ msgstr ""
 msgctxt "block keyword"
 msgid "ia writer"
 msgstr ""
+
+#: includes/JetpackMarkdownBlock.php
+msgid "Compatibility for an existing Markdown block. Saving this post stores it as a Bristlecone Markdown block."
+msgstr ""
+
+#: includes/JetpackMarkdownBlock.php
+msgid "Bristlecone Markdown Converter"
+msgstr ""
+
+#: includes/JetpackMarkdownBlock.php
+msgid "The converter is disabled. Enable it under Settings → Bristlecone Markdown first."
+msgstr ""
+
+#: includes/JetpackMarkdownBlock.php
+msgid "Jetpack Markdown is still active. Turn it off before converting blocks, so content is not processed twice."
+msgstr ""
+
+#: includes/JetpackMarkdownBlock.php
+msgid "Conversion was not run. Check the confirmation box on the Tools page first."
+msgstr ""
+
+#: includes/JetpackMarkdownBlock.php
+msgid "This tool rewrites existing Jetpack Markdown blocks (jetpack/markdown) to Bristlecone Markdown blocks (bristlecone/markdown). It does not impersonate Jetpack, and it does not add a Jetpack block to the inserter."
+msgstr ""
+
+#: includes/JetpackMarkdownBlock.php
+msgid "Opening and saving a post already converts its Jetpack Markdown blocks. Use this page only when you want to update every matching post or page in the database. That cannot be undone automatically; WordPress revisions are created where enabled."
+msgstr ""
+
+#: includes/JetpackMarkdownBlock.php
+msgid "Jetpack Markdown is still active. Conversion is paused so content is not processed twice. Disable that Jetpack module first."
+msgstr ""
+
+#: includes/JetpackMarkdownBlock.php
+msgid "%d post or page in the enabled post types still contains a Jetpack Markdown block."
+msgid_plural "%d posts or pages in the enabled post types still contain a Jetpack Markdown block."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/JetpackMarkdownBlock.php
+msgid "Processed %d so far. Continuing with the next batch…"
+msgstr ""
+
+#: includes/JetpackMarkdownBlock.php
+msgid "Continue conversion"
+msgstr ""
+
+#: includes/JetpackMarkdownBlock.php
+msgid "I understand this will update matching posts and pages in the database."
+msgstr ""
+
+#: includes/JetpackMarkdownBlock.php
+msgid "Convert Jetpack Markdown blocks"
+msgstr ""
+
+#: includes/JetpackMarkdownBlock.php
+msgid "Nothing to convert."
+msgstr ""
+
+#: includes/JetpackMarkdownBlock.php
+msgid "Back to Bristlecone Markdown settings"
+msgstr ""
+
+#: includes/JetpackMarkdownBlock.php
+msgid "Processed %1$d posts. Converted: %2$d. Skipped: %3$d. Errors: %4$d."
+msgstr ""
+
+#: includes/Settings.php
+msgid "Jetpack Markdown blocks"
+msgstr ""
+
+#: includes/Settings.php
+msgid "Enable Jetpack Markdown block converter under Tools"
+msgstr ""
+
+#: includes/Settings.php
+msgid "Existing Jetpack Markdown blocks are already editable and convert to Bristlecone Markdown when you save a post. Turn this on only if you want a Tools page that can rewrite every matching post at once. Off by default to avoid accidents."
+msgstr ""
+
+#: includes/Settings.php
+msgid "Open Tools → Bristlecone Markdown Converter"
+msgstr ""
+
+#: assets/js/block.js
+msgid "This is an existing Markdown block. Saving the post stores it as a Bristlecone Markdown block. New blocks should be inserted as Markdown from Bristlecone Markdown."
+msgstr ""
+

@@ -133,8 +133,8 @@ final class Assets {
 	private function needs_assets( string $content ): array {
 		$math      = str_contains( $content, 'bristlecone-markdown-math' ) || str_contains( $content, 'bits-markdown-math' ) || str_contains( $content, '$$' ) || (bool) preg_match( '/\$[^$]+\$/', $content );
 		$highlight = str_contains( $content, 'hljs' ) || str_contains( $content, '```' ) || str_contains( $content, '<pre' );
-		$has_block = has_block( 'bristlecone/markdown' ) || has_block( 'bits/markdown' );
-		$css       = $math || $highlight || str_contains( $content, 'bristlecone-markdown' ) || str_contains( $content, 'bits-markdown' ) || Storage::instance()->is_markdown_post( (int) get_the_ID() ) || $has_block;
+		$has_block = has_block( 'bristlecone/markdown' ) || has_block( 'bits/markdown' ) || has_block( 'jetpack/markdown' );
+		$css       = $math || $highlight || str_contains( $content, 'bristlecone-markdown' ) || str_contains( $content, 'bits-markdown' ) || str_contains( $content, 'wp-block-jetpack-markdown' ) || Storage::instance()->is_markdown_post( (int) get_the_ID() ) || $has_block;
 
 		return array(
 			'css'       => $css,

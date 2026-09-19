@@ -12,7 +12,7 @@ Use this document to generate the public plugin page. It is the source of truth 
 | **Product name** | Bristlecone Markdown |
 | **Slug** | `bristlecone-markdown` |
 | **Vendor** | Bristlecone IT Services |
-| **Version described** | 1.0.0 |
+| **Version described** | 1.0.1 |
 | **License** | GPL-2.0-or-later (GNU GPL v2 or later) |
 | **Price** | Fully free. No paid tier, no phone-home, no account. |
 | **WordPress.org listing** | In submission. Do not claim it is listed until it is. A “Download” control may say it will be available on WordPress.org, with GitHub as the current source. |
@@ -113,6 +113,7 @@ If you deactivate Bristlecone Markdown, published HTML remains. You cannot edit 
 - **Comments** — allow Markdown in comments.
 - **Code highlighting** — server-side highlighting of fenced code (no extra JavaScript). Output uses `hljs` CSS classes. Themes may override `.hljs` or dequeue `bristlecone-markdown-highlight`.
 - **Mathematics** — render `$inline$` and `$$block$$` with bundled KaTeX, enqueued only when a post contains math.
+- **Jetpack Markdown blocks** — optional, **off by default**. Enables Tools → Bristlecone Markdown Converter so an administrator can rewrite existing `jetpack/markdown` blocks to `bristlecone/markdown` after a confirmation step. This is not required for editing: with Jetpack Markdown inactive, those blocks already load in the editor and convert on save.
 
 ### iA Writer Publish
 
@@ -128,7 +129,11 @@ Gutenberg’s editor is detected separately so the block editor still receives a
 
 ### Jetpack Markdown coexistence
 
-If Jetpack’s Markdown module is still active, Bristlecone Markdown **does not** convert posts or comments, so content is not processed twice. An admin notice offers a one-click control to disable that Jetpack module. After it is off, existing Jetpack Markdown documents are adopted.
+If Jetpack’s Markdown module is still active, Bristlecone Markdown **does not** convert posts or comments, so content is not processed twice. An admin notice offers a one-click control to disable that Jetpack module. After it is off, existing Jetpack Markdown documents (`_wpcom_markdown` and `post_content_filtered`) are adopted.
+
+Gutenberg blocks named `jetpack/markdown` are a separate compatibility path. When Jetpack Markdown is inactive and that block type is not already registered, Bristlecone Markdown registers it as a hidden alias (`inserter` off) so posts do not show a missing-block warning. The editor uses the Bristlecone source/preview UI (attribute `source`). Saving rewrites the block to `bristlecone/markdown` (`markdown` ← `source`, HTML from the server parser). New blocks are still inserted as `bristlecone/markdown` only. This is compatibility, not impersonation of Jetpack.
+
+A bulk converter under Tools can rewrite every matching post in enabled post types. It stays unavailable until Settings → Bristlecone Markdown → “Enable Jetpack Markdown block converter under Tools” is checked (default off), then requires a confirmation checkbox on the Tools page. It no-ops with a notice if Jetpack Markdown is still active. Posts are updated in batches.
 
 If another Markdown plugin is active, an admin notice warns about double-processing.
 
@@ -280,7 +285,7 @@ Published HTML stays in `post_content`. The site still displays. You cannot edit
 Yes. Use the Markdown block in Gutenberg. Classic / REST / iA Writer posts are whole-document Markdown.
 
 **Does it replace Jetpack?**  
-Only Jetpack Markdown. Leave Jetpack installed if you use other Jetpack modules. Turn off the Markdown module so Bristlecone Markdown can convert.
+Only Jetpack Markdown. Leave Jetpack installed if you use other Jetpack modules. Turn off the Markdown module so Bristlecone Markdown can convert. Existing Markdown *blocks* from Jetpack remain editable and convert to Bristlecone Markdown on save; a bulk Tools converter is opt-in.
 
 **Does it phone home?**  
 No.

@@ -20,6 +20,7 @@ final class Plugin {
 		AdminNotices::instance()->register();
 		JetpackCompat::instance()->register();
 		Block::instance()->register();
+		JetpackMarkdownBlock::instance()->register();
 		Assets::instance()->register();
 
 		if ( ! JetpackCompat::instance()->is_jetpack_markdown_active() ) {
@@ -45,6 +46,14 @@ final class Plugin {
 			return false;
 		}
 
-		return in_array( $screen->id, array( 'plugins', 'settings_page_bristlecone-markdown' ), true );
+		return in_array(
+			$screen->id,
+			array(
+				'plugins',
+				'settings_page_bristlecone-markdown',
+				'tools_page_' . JetpackMarkdownBlock::TOOLS_SLUG,
+			),
+			true
+		);
 	}
 }
