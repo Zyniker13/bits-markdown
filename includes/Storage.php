@@ -285,6 +285,11 @@ final class Storage {
 			return null;
 		}
 
-		return BlockMarkup::document_markdown_from_blocks( parse_blocks( $content ) );
+		$extra = array();
+		if ( function_exists( 'get_option' ) ) {
+			$extra = Settings::instance()->custom_block_alias_objects();
+		}
+
+		return BlockMarkup::document_markdown_from_blocks( parse_blocks( $content ), $extra );
 	}
 }

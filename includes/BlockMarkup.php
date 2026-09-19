@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Bristlecone\Markdown;
 
 /**
- * Gutenberg markup helpers for Markdown blocks (Bristlecone, legacy BITS, Jetpack).
+ * Gutenberg markup helpers for Markdown blocks (Bristlecone, legacy BITS, aliases).
  *
  * Parsing and rewriting here is WordPress-free so unit tests can cover Jetpack
- * compatibility without bootstrapping WordPress.
+ * and other identifiers without bootstrapping WordPress.
  */
 final class BlockMarkup {
 
@@ -17,9 +17,13 @@ final class BlockMarkup {
 	public const LEGACY      = 'bits/markdown';
 
 	/**
+	 * Read Markdown from block attributes. Built-ins use a fixed key; custom
+	 * aliases may omit a key and fall back to source, then content, then markdown.
+	 *
 	 * @param array<string, mixed> $block
+	 * @param list<BlockAlias>     $extra_aliases
 	 */
-	public static function markdown_from_block( array $block ): ?string {
+	public static function markdown_from_block( array $block, array $extra_aliases = array() ): ?string {
 		$name  = isset( $block['blockName'] ) && is_string( $block['blockName'] ) ? $block['blockName'] : '';
 		$attrs = isset( $block['attrs'] ) && is_array( $block['attrs'] ) ? $block['attrs'] : array();
 
@@ -28,20 +32,48 @@ final class BlockMarkup {
 			return is_string( $markdown ) ? $markdown : null;
 		}
 
-		if ( self::JETPACK === $name ) {
-			$source = $attrs['source'] ?? '';
-			return is_string( $source ) ? $source : null;
+		$aliases = array_merge( BlockAliasRegistry::builtins(), $extra_aliases );
+		foreach ( $aliases as $alias ) {
+			if ( $alias->name !== $name ) {
+				continue;
+			}
+
+			return self::source_from_attrs( $attrs, $alias->attribute );
 		}
 
 		return null;
 	}
 
 	/**
+	 * Prefer an explicit attribute; if omitted, try source, then content, then markdown.
+	 *
+	 * @param array<string, mixed> $attrs
+	 */
+	public static function source_from_attrs( array $attrs, ?string $preferred = null ): ?string {
+		if ( is_string( $preferred ) && $preferred !== '' ) {
+			if ( array_key_exists( $preferred, $attrs ) ) {
+				return is_string( $attrs[ $preferred ] ) ? $attrs[ $preferred ] : null;
+			}
+
+			return '';
+		}
+
+		foreach ( BlockAliasRegistry::fallback_attributes() as $key ) {
+			if ( isset( $attrs[ $key ] ) && is_string( $attrs[ $key ] ) ) {
+				return $attrs[ $key ];
+			}
+		}
+
+		return '';
+	}
+
+	/**
 	 * Extract Markdown from a document that is a single Markdown block (plus empty freeform).
 	 *
 	 * @param list<array<string, mixed>> $blocks
+	 * @param list<BlockAlias>           $extra_aliases
 	 */
-	public static function document_markdown_from_blocks( array $blocks ): ?string {
+	public static function document_markdown_from_blocks( array $blocks, array $extra_aliases = array() ): ?string {
 		$named = array();
 		foreach ( $blocks as $block ) {
 			if ( empty( $block['blockName'] ) ) {
@@ -57,7 +89,7 @@ final class BlockMarkup {
 			return null;
 		}
 
-		return self::markdown_from_block( $named[0] );
+		return self::markdown_from_block( $named[0], $extra_aliases );
 	}
 
 	/**
@@ -72,13 +104,55 @@ final class BlockMarkup {
 	}
 
 	/**
+	 * @return list<string>
+	 */
+	public static function extract_named_sources( string $content, string $block_name, ?string $attribute = null ): array {
+		$sources = array();
+		foreach ( self::find_named_blocks( $content, $block_name, $attribute ) as $block ) {
+			$sources[] = $block['source'];
+		}
+		return $sources;
+	}
+
+	/**
 	 * Rewrite jetpack/markdown comments to bristlecone/markdown. Other blocks are unchanged.
 	 *
 	 * @param callable(string): string $html_from_source
 	 * @return array{content: string, converted: int, errors: int}
 	 */
 	public static function rewrite_jetpack_markdown_blocks( string $content, callable $html_from_source ): array {
-		$found = self::find_jetpack_markdown_blocks( $content );
+		return self::rewrite_named_blocks( $content, self::JETPACK, 'source', $html_from_source );
+	}
+
+	/**
+	 * @param list<BlockAlias>         $aliases
+	 * @param callable(string): string $html_from_source
+	 * @return array{content: string, converted: int, errors: int}
+	 */
+	public static function rewrite_aliased_blocks( string $content, array $aliases, callable $html_from_source ): array {
+		$converted = 0;
+		$errors    = 0;
+
+		foreach ( $aliases as $alias ) {
+			$result     = self::rewrite_named_blocks( $content, $alias->name, $alias->attribute, $html_from_source );
+			$content    = $result['content'];
+			$converted += $result['converted'];
+			$errors    += $result['errors'];
+		}
+
+		return array(
+			'content'   => $content,
+			'converted' => $converted,
+			'errors'    => $errors,
+		);
+	}
+
+	/**
+	 * @param callable(string): string $html_from_source
+	 * @return array{content: string, converted: int, errors: int}
+	 */
+	public static function rewrite_named_blocks( string $content, string $block_name, ?string $attribute, callable $html_from_source ): array {
+		$found = self::find_named_blocks( $content, $block_name, $attribute );
 		if ( $found === array() ) {
 			return array(
 				'content'   => $content,
@@ -99,7 +173,7 @@ final class BlockMarkup {
 				if ( ! is_string( $html ) ) {
 					throw new \RuntimeException( 'Converter must return a string.' );
 				}
-				$out .= self::serialize_bristlecone( $block['source'], $html, $block['attrs'] );
+				$out .= self::serialize_bristlecone( $block['source'], $html, self::attrs_without_source( $block['attrs'], $attribute ) );
 				++$converted;
 			} catch ( \Throwable ) {
 				$out .= substr( $content, $block['start'], $block['end'] - $block['start'] );
@@ -118,19 +192,28 @@ final class BlockMarkup {
 	}
 
 	/**
+	 * Map a foreign Markdown block’s attributes onto a Bristlecone attribute set.
+	 *
+	 * @param array<string, mixed> $foreign_attrs
+	 * @return array<string, mixed>
+	 */
+	public static function bristlecone_attrs_from_alias( array $foreign_attrs, string $html, ?string $preferred = null ): array {
+		$source = self::source_from_attrs( $foreign_attrs, $preferred );
+		$source = is_string( $source ) ? $source : '';
+		$attrs  = self::attrs_without_source( $foreign_attrs, $preferred );
+		$attrs['markdown'] = $source;
+		$attrs['html']     = $html;
+		return $attrs;
+	}
+
+	/**
 	 * Map Jetpack block attributes onto a Bristlecone Markdown block attribute set.
 	 *
 	 * @param array<string, mixed> $jetpack_attrs
 	 * @return array<string, mixed>
 	 */
 	public static function bristlecone_attrs_from_jetpack( array $jetpack_attrs, string $html ): array {
-		$source = isset( $jetpack_attrs['source'] ) && is_string( $jetpack_attrs['source'] )
-			? $jetpack_attrs['source']
-			: '';
-		unset( $jetpack_attrs['source'] );
-		$jetpack_attrs['markdown'] = $source;
-		$jetpack_attrs['html']     = $html;
-		return $jetpack_attrs;
+		return self::bristlecone_attrs_from_alias( $jetpack_attrs, $html, 'source' );
 	}
 
 	/**
@@ -188,6 +271,13 @@ final class BlockMarkup {
 	 * @return list<array{source: string, attrs: array<string, mixed>, start: int, end: int, inner_html: string}>
 	 */
 	public static function find_jetpack_markdown_blocks( string $content ): array {
+		return self::find_named_blocks( $content, self::JETPACK, 'source' );
+	}
+
+	/**
+	 * @return list<array{source: string, attrs: array<string, mixed>, start: int, end: int, inner_html: string, name: string}>
+	 */
+	public static function find_named_blocks( string $content, string $block_name, ?string $attribute = null ): array {
 		$found  = array();
 		$offset = 0;
 		$length = strlen( $content );
@@ -198,7 +288,81 @@ final class BlockMarkup {
 				break;
 			}
 
-			$parsed = self::parse_jetpack_opener( $content, $pos );
+			$parsed = self::parse_block_opener( $content, $pos, $block_name );
+			if ( null === $parsed ) {
+				$offset = $pos + 4;
+				continue;
+			}
+
+			$source = self::source_from_attrs( $parsed['attrs'], $attribute );
+			$source = is_string( $source ) ? $source : '';
+
+			if ( $parsed['void'] ) {
+				$found[] = array(
+					'name'       => $parsed['name'],
+					'source'     => $source,
+					'attrs'      => $parsed['attrs'],
+					'start'      => $pos,
+					'end'        => $parsed['opener_end'],
+					'inner_html' => '',
+				);
+				$offset = $parsed['opener_end'];
+				continue;
+			}
+
+			$search_from = $parsed['opener_end'];
+			$closer      = null;
+			$end         = null;
+			$close_raw   = $parsed['raw'];
+			while ( $search_from < $length ) {
+				$next = strpos( $content, '<!--', $search_from );
+				if ( false === $next ) {
+					break;
+				}
+				if ( preg_match( '/^<!--\s+\/wp:' . preg_quote( $close_raw, '/' ) . '\s+-->/', substr( $content, $next ), $close_match ) ) {
+					$closer = $next;
+					$end    = $next + strlen( $close_match[0] );
+					break;
+				}
+				$search_from = $next + 4;
+			}
+
+			if ( null === $end || null === $closer ) {
+				$offset = $pos + 4;
+				continue;
+			}
+
+			$found[] = array(
+				'name'       => $parsed['name'],
+				'source'     => $source,
+				'attrs'      => $parsed['attrs'],
+				'start'      => $pos,
+				'end'        => $end,
+				'inner_html' => substr( $content, $parsed['opener_end'], $closer - $parsed['opener_end'] ),
+			);
+			$offset = $end;
+		}
+
+		return $found;
+	}
+
+	/**
+	 * Every Gutenberg opener in $content, including nested blocks.
+	 *
+	 * @return list<array{name: string, attrs: array<string, mixed>, start: int, end: int, inner_html: string}>
+	 */
+	public static function find_all_blocks( string $content ): array {
+		$found  = array();
+		$offset = 0;
+		$length = strlen( $content );
+
+		while ( $offset < $length ) {
+			$pos = strpos( $content, '<!--', $offset );
+			if ( false === $pos ) {
+				break;
+			}
+
+			$parsed = self::parse_block_opener( $content, $pos, null );
 			if ( null === $parsed ) {
 				$offset = $pos + 4;
 				continue;
@@ -206,7 +370,7 @@ final class BlockMarkup {
 
 			if ( $parsed['void'] ) {
 				$found[] = array(
-					'source'     => $parsed['source'],
+					'name'       => $parsed['name'],
 					'attrs'      => $parsed['attrs'],
 					'start'      => $pos,
 					'end'        => $parsed['opener_end'],
@@ -224,7 +388,7 @@ final class BlockMarkup {
 				if ( false === $next ) {
 					break;
 				}
-				if ( preg_match( '/^<!--\s+\/wp:jetpack\/markdown\s+-->/', substr( $content, $next ), $close_match ) ) {
+				if ( preg_match( '/^<!--\s+\/wp:' . preg_quote( $parsed['raw'], '/' ) . '\s+-->/', substr( $content, $next ), $close_match ) ) {
 					$closer = $next;
 					$end    = $next + strlen( $close_match[0] );
 					break;
@@ -232,30 +396,50 @@ final class BlockMarkup {
 				$search_from = $next + 4;
 			}
 
-			if ( null === $end || null === $closer ) {
-				$offset = $pos + 4;
-				continue;
-			}
-
 			$found[] = array(
-				'source'     => $parsed['source'],
+				'name'       => $parsed['name'],
 				'attrs'      => $parsed['attrs'],
 				'start'      => $pos,
-				'end'        => $end,
-				'inner_html' => substr( $content, $parsed['opener_end'], $closer - $parsed['opener_end'] ),
+				'end'        => $end ?? $parsed['opener_end'],
+				'inner_html' => ( null !== $closer )
+					? substr( $content, $parsed['opener_end'], $closer - $parsed['opener_end'] )
+					: '',
 			);
-			$offset = $end;
+
+			// Continue inside the block so nested Markdown blocks are visible to the scanner.
+			$offset = $parsed['opener_end'];
 		}
 
 		return $found;
 	}
 
 	/**
-	 * @return array{attrs: array<string, mixed>, source: string, void: bool, opener_end: int}|null
+	 * @param array<string, mixed> $attrs
+	 * @return array<string, mixed>
 	 */
-	private static function parse_jetpack_opener( string $content, int $pos ): ?array {
+	private static function attrs_without_source( array $attrs, ?string $preferred ): array {
+		if ( is_string( $preferred ) && $preferred !== '' ) {
+			unset( $attrs[ $preferred ] );
+			return $attrs;
+		}
+
+		unset( $attrs['source'], $attrs['content'] );
+		return $attrs;
+	}
+
+	/**
+	 * @return array{name: string, raw: string, attrs: array<string, mixed>, void: bool, opener_end: int}|null
+	 */
+	private static function parse_block_opener( string $content, int $pos, ?string $only_name ): ?array {
 		$slice = substr( $content, $pos );
-		if ( ! preg_match( '/^<!--\s+wp:jetpack\/markdown\b/', $slice, $match ) ) {
+		if ( ! preg_match( '/^<!--\s+wp:((?:[a-z0-9-]+\/)?[a-z0-9-]+)\b/', $slice, $match ) ) {
+			return null;
+		}
+
+		$raw  = $match[1];
+		$name = str_contains( $raw, '/' ) ? $raw : 'core/' . $raw;
+
+		if ( null !== $only_name && $name !== $only_name && $raw !== $only_name ) {
 			return null;
 		}
 
@@ -295,11 +479,10 @@ final class BlockMarkup {
 			return null;
 		}
 
-		$source = isset( $attrs['source'] ) && is_string( $attrs['source'] ) ? $attrs['source'] : '';
-
 		return array(
+			'name'       => $name,
+			'raw'        => $raw,
 			'attrs'      => $attrs,
-			'source'     => $source,
 			'void'       => $void,
 			'opener_end' => $i + 3,
 		);

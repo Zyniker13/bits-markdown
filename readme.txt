@@ -50,6 +50,15 @@ If Jetpack Markdown is still active, Bristlecone Markdown **does not** convert p
 
 When that module is off, existing `jetpack/markdown` Gutenberg blocks stay editable (they are not treated as missing blocks). Saving a post rewrites them to `bristlecone/markdown`. The inserter still offers only the Bristlecone Markdown block. An optional Tools converter can rewrite every matching post at once; it is off by default and requires Settings → Bristlecone Markdown → “Enable Jetpack Markdown block converter under Tools”, then Tools → Bristlecone Markdown Converter, then a confirmation checkbox.
 
+= Other Markdown blocks =
+
+This plugin does **not** replace every Markdown plugin. It can adopt a few Gutenberg block names so existing posts stay editable:
+
+* `simple-markdown/markdown-block` (attribute `content`) when that plugin is not already registering the block
+* Custom identifiers under Settings → Advanced: one `namespace/block-name|attribute` per line (for example `acme/markdown|content`). If `|attribute` is omitted, Bristlecone tries `source`, then `content`, then `markdown`
+
+Aliases are hidden from the inserter and convert on save. The same Tools checkbox unlocks a scanner that lists unregistered block names containing “markdown” for review. Nothing is rewritten or added to the custom list until you select names and confirm. Names that look like editor comments (for example `markdown-comment`) are flagged and left unchecked.
+
 = iA Writer =
 
 In iA Writer you can publish drafts to WordPress 5.6+ over the REST API as Markdown. Bristlecone Markdown converts that body on save and returns Markdown source to non-Gutenberg clients on edit.
@@ -71,7 +80,7 @@ Footnote IDs are namespaced with the post ID (`bristlecone-markdown-fn-{id}-…`
 2. Activate **Bristlecone Markdown**.
 3. Open Settings → Bristlecone Markdown to choose post types, comments, code highlighting, and math.
 4. If Jetpack is installed, disable Jetpack Markdown when prompted.
-5. Optional: to rewrite every `jetpack/markdown` block in the database, enable the Tools converter in settings, then confirm the run under Tools → Bristlecone Markdown Converter.
+5. Optional: to rewrite every `jetpack/markdown` block in the database, enable the Tools converter in settings, then confirm the run under Tools → Bristlecone Markdown Converter. The same page can convert Simple Markdown / custom identifiers and, after a scan and review, other unregistered blocks whose names contain “markdown”.
 
 == Frequently Asked Questions ==
 
@@ -87,6 +96,10 @@ Yes. Mixed Gutenberg posts should use the Markdown block. Classic / REST / iA Wr
 
 When Jetpack Markdown is off, existing `jetpack/markdown` blocks open in the editor (no missing-block warning) and are rewritten to Bristlecone Markdown when you save. The inserter still only offers the Bristlecone Markdown block. A bulk converter under Tools is optional and off by default: enable it in settings, then confirm the run on the Tools page.
 
+= What about Simple Markdown or other Markdown blocks? =
+
+`simple-markdown/markdown-block` is treated like Jetpack when that plugin is not registering the block (`content` maps to Bristlecone `markdown`). You can list other block names under Settings → Advanced. The Tools scanner can find unregistered blocks whose names contain “markdown”; you choose which to convert. This is compatibility for leftover Gutenberg markup, not a replacement for those plugins.
+
 = Does this phone home? =
 
 No. KaTeX and the highlighter are bundled. There is no tracking and no remote conversion API.
@@ -98,6 +111,11 @@ No. KaTeX and the highlighter are bundled. There is no tracking and no remote co
 3. A published Markdown post on the front end.
 
 == Changelog ==
+
+= 1.0.2 =
+* Adopt `simple-markdown/markdown-block` (attribute `content`) the same way as Jetpack when that plugin is inactive.
+* Advanced settings: custom block identifiers (`namespace/block-name|attribute`), with source/content/markdown fallback when the attribute is omitted.
+* Gated Tools scanner lists unregistered blocks whose names contain “markdown” for review→convert. Regex never auto-registers aliases. False friends such as `markdown-comment` are warned and left unchecked.
 
 = 1.0.1 =
 * Adopt existing `jetpack/markdown` Gutenberg blocks when Jetpack Markdown is inactive (hidden from the inserter; saved as `bristlecone/markdown`).
@@ -113,6 +131,9 @@ No. KaTeX and the highlighter are bundled. There is no tracking and no remote co
 * Jetpack Markdown coexistence: skip conversion while that module is active, then adopt existing Markdown posts.
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+Optional Simple Markdown and custom-block compatibility. Tools can scan other Markdown-named blocks; conversion still requires the existing settings unlock and a confirmation step.
 
 = 1.0.1 =
 Existing Jetpack Markdown blocks are editable without Jetpack. Saving converts them to Bristlecone Markdown. Bulk rewrite is opt-in under Settings and Tools.

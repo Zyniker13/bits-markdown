@@ -172,6 +172,23 @@ final class JetpackMarkdownBlockTest extends TestCase {
 		$this->assertTrue( JetpackMarkdownBlock::conversion_allowed( true, false ) );
 	}
 
+	public function test_rewrite_jetpack_leaves_simple_markdown_blocks(): void {
+		$markup = '<!-- wp:simple-markdown/markdown-block {"content":"# Simple"} /-->' . "\n"
+			. '<!-- wp:jetpack/markdown {"source":"JP"} /-->';
+		$result = BlockMarkup::rewrite_jetpack_markdown_blocks(
+			$markup,
+			static function ( string $source ): string {
+				return '<p>' . $source . '</p>';
+			}
+		);
+
+		$this->assertSame( 1, $result['converted'] );
+		$this->assertStringContainsString( 'wp:simple-markdown/markdown-block', $result['content'] );
+		$this->assertStringContainsString( '"content":"# Simple"', $result['content'] );
+		$this->assertStringNotContainsString( 'wp:jetpack/markdown', $result['content'] );
+		$this->assertStringContainsString( 'wp:bristlecone/markdown', $result['content'] );
+	}
+
 	public function test_rewrite_nested_in_group_markup(): void {
 		$markup = "<!-- wp:group -->\n<div class=\"wp-block-group\"><!-- wp:jetpack/markdown {\"source\":\"Hi\"} /--></div>\n<!-- /wp:group -->";
 		$result = BlockMarkup::rewrite_jetpack_markdown_blocks(

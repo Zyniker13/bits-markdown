@@ -32,7 +32,7 @@ The public plugin page is `https://bristleconeit.com/bristlecone-markdown`. Copy
 
 ## Storage
 
-Document-mode posts (Classic Editor, REST API, iA Writer) store HTML in `post_content` and Markdown in `post_content_filtered`, with `_bristlecone_markdown` (legacy `_bits_markdown` is still recognized; Jetpack used `_wpcom_markdown`, which this plugin still honors). The Markdown block keeps source in block attributes and saves HTML as a fallback if the plugin is deactivated. Existing `jetpack/markdown` blocks are adopted when Jetpack Markdown is inactive and converted to `bristlecone/markdown` on save (optional bulk converter under Tools, off by default).
+Document-mode posts (Classic Editor, REST API, iA Writer) store HTML in `post_content` and Markdown in `post_content_filtered`, with `_bristlecone_markdown` (legacy `_bits_markdown` is still recognized; Jetpack used `_wpcom_markdown`, which this plugin still honors). The Markdown block keeps source in block attributes and saves HTML as a fallback if the plugin is deactivated. Existing `jetpack/markdown` blocks are adopted when Jetpack Markdown is inactive and converted to `bristlecone/markdown` on save (optional bulk converter under Tools, off by default). The same alias path covers `simple-markdown/markdown-block` (`content`) when that plugin is inactive, plus optional custom identifiers (`namespace/block-name|attribute`). A gated Tools scanner can list other unregistered blocks whose names contain “markdown” for review; it does not auto-register aliases.
 
 ## Footnotes
 
