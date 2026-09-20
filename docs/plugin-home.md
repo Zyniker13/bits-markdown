@@ -51,7 +51,7 @@ Professional, precise, and short. Company site for Bristlecone IT Services — n
 12. License / source
 13. Footer: Bristlecone IT Services, plugin URL, GitHub
 
-Visuals are optional. If you generate screenshots, they must match real UI: Settings → Bristlecone Markdown; block editor Markdown block with source/preview; front-end of a Markdown post. Heading permalinks render as a `#` before the heading text (that is intentional).
+Visuals are optional. If you generate screenshots, they must match real UI: Settings → Bristlecone Markdown; block editor Markdown block with source and preview (typography-first empty placeholder, not a boxed textarea); front-end of a Markdown post. Heading permalinks keep ids and anchors; they must not show a `#` glyph before the heading text.
 
 ---
 
@@ -176,7 +176,7 @@ Headings, paragraphs, emphasis, strong, lists, links, images, block quotes, fenc
 | Description lists | CommonMark description-list extension |
 | Attributes | `{#id}` / classes on headings (explicit `{#id}` is preserved) |
 | Footnotes | `[^1]` definitions and iA Writer inline footnotes `[^this is the note.]` |
-| Heading permalinks | `#` permalink before ATX headings; optional `[Label]` on the heading |
+| Heading permalinks | Ids and permalink anchors on ATX headings (no visible `#` in heading text or SEO); optional `[Label]` on the heading |
 | Cross-references | `[Heading][]` (and explicit ids) |
 | Table of contents | Placeholder `{{TOC}}` |
 | YAML front matter | Leading `---` / `---` block; `[%key]` interpolates scalar values |
@@ -302,6 +302,9 @@ No. Simple Markdown and custom block identifiers are optional compatibility alia
 
 **Does it phone home?**  
 No.
+
+**Why do headings still show a # after 1.2.0?**  
+New previews and new saves omit the permalink `#` glyph. HTML already stored in the post is not rewritten until you save again (or reconvert from Markdown source).
 
 **Where do I get it?**  
 WordPress.org (once listed) and [GitHub](https://github.com/Zyniker13/bits-markdown).

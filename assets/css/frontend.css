@@ -53,6 +53,14 @@
 	opacity: 0.35;
 }
 
+/* 1.2.0+ permalinks use an empty symbol so `#` is not in the text/SEO layer.
+   :empty drops the glyph gutter. Opacity still dims leftover `#` in stored HTML
+   until those posts are re-saved. */
+.bristlecone-markdown-heading-permalink:empty,
+.bits-markdown-heading-permalink:empty {
+	margin-right: 0;
+}
+
 .bristlecone-markdown-heading-permalink:hover,
 .bristlecone-markdown-heading-permalink:focus,
 .bits-markdown-heading-permalink:hover,

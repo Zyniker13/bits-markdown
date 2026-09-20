@@ -33,7 +33,7 @@ CommonMark plus:
 * Highlight `==text==`
 * Tables
 * Footnotes `[^1]` and iA Writer inline footnotes `[^this is the note.]`
-* Heading permalinks and cross-references (`[Heading][]`, optional `{#id}` / `[Label]` on headings)
+* Heading permalinks and cross-references (`[Heading][]`, optional `{#id}` / `[Label]` on headings; permalinks do not show a `#` glyph)
 * Table of contents placeholder `{{TOC}}`
 * YAML front matter and `[%key]` interpolation
 * `$inline$` and `$$block$$` math (KaTeX, loaded only when needed)
@@ -109,6 +109,10 @@ When Jetpack Markdown is off, existing `jetpack/markdown` blocks open in the edi
 
 No. KaTeX and the highlighter are bundled. There is no tracking and no remote conversion API.
 
+= Why do headings still show a # after updating to 1.2.0? =
+
+New previews and new saves omit the permalink `#` glyph. HTML already stored in the post is not rewritten until you save the post again (or reconvert from Markdown source).
+
 == Screenshots ==
 
 1. Settings screen for Bristlecone Markdown.
@@ -118,7 +122,8 @@ No. KaTeX and the highlighter are bundled. There is no tracking and no remote co
 == Changelog ==
 
 = 1.2.0 =
-* Block editor writing surface: empty blocks show “Write your _Markdown_ **here**…” with no boxed textarea. Source uses a borderless PlainText field (monospace). Unselected blocks with content show the server preview. Front-end styles are unchanged.
+* Block editor writing surface: empty blocks show “Write your _Markdown_ **here**…” with no boxed textarea. Source uses a borderless PlainText field (monospace). Unselected blocks with content show the server preview.
+* Heading permalinks no longer insert a visible `#` before heading text. Ids and permalink anchors remain. Already-published HTML keeps the old `#` until the post is re-saved or reconverted from Markdown source.
 
 = 1.1.1 =
 * Recognize Jetpack document Markdown posts that only have `_wpcom_is_markdown` set (the meta Jetpack actually writes). Those posts now open as Markdown source after Jetpack Markdown is turned off. `_wpcom_markdown` is still recognized.
@@ -147,7 +152,7 @@ No. KaTeX and the highlighter are bundled. There is no tracking and no remote co
 == Upgrade Notice ==
 
 = 1.2.0 =
-Editor-only refresh of the Markdown block (placeholder, borderless source, preview when unselected). Published posts are unchanged.
+Editor writing-surface refresh, plus heading permalinks without a visible `#`. Re-save Markdown posts to refresh stored heading HTML.
 
 = 1.1.1 =
 Fixes adoption of existing Jetpack Markdown documents that use `_wpcom_is_markdown`.

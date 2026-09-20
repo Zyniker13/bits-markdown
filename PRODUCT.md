@@ -58,7 +58,6 @@ Undecided / out of scope for design tickets:
 - A JS build “for aesthetics.”
 - Restyling published `.bristlecone-markdown` content except when a shared selector would otherwise leak editor chrome.
 - Full Gutenberg RichText / block-transforms rewrite.
-- Heading-permalink `#` presentation bugs unless a later patch ticket says so.
 
 ## Brand Commitments
 

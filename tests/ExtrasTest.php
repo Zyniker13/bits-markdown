@@ -108,6 +108,36 @@ MD;
 		$this->assertStringContainsString( 'href="#explicit"', $html );
 	}
 
+	public function test_heading_permalink_symbol_is_not_visible_in_text(): void {
+		$markdown = (string) file_get_contents( dirname( __DIR__ ) . '/tests/fixtures/headings/heading-permalink-symbol.md' );
+		$expected = (string) file_get_contents( dirname( __DIR__ ) . '/tests/fixtures/headings/heading-permalink-symbol.html' );
+		$html     = $this->html( $markdown );
+
+		foreach ( array( 'information', 'show-notes', 'donate' ) as $id ) {
+			$this->assertStringContainsString( 'id="' . $id . '"', $html );
+			$this->assertStringContainsString( 'href="#' . $id . '"', $html );
+		}
+
+		$this->assertStringContainsString( 'bristlecone-markdown-heading-permalink', $html );
+		$this->assertDoesNotMatchRegularExpression(
+			'/class="bristlecone-markdown-heading-permalink"[^>]*>#/',
+			$html
+		);
+		$this->assertStringContainsString( '>Information</h2>', $html );
+		$this->assertStringContainsString( '>Show Notes</h2>', $html );
+		$this->assertStringContainsString( '>Donate</h3>', $html );
+		$this->assertStringNotContainsString( '#</a>Information', $html );
+		$this->assertStringNotContainsString( '#</a>Show Notes', $html );
+		$this->assertStringNotContainsString( '#</a>Donate', $html );
+
+		foreach ( preg_split( '/\R/', trim( $expected ) ) ?: array() as $line ) {
+			$line = trim( $line );
+			if ( $line !== '' ) {
+				$this->assertStringContainsString( $line, $html );
+			}
+		}
+	}
+
 	public function test_toc_placeholder(): void {
 		$html = $this->html( "{{TOC}}\n\n## One\n\n### Two\n" );
 		$this->assertStringContainsString( 'bristlecone-markdown-toc', $html );

@@ -74,7 +74,7 @@ final class Parser {
 				'fragment_prefix'     => '',
 				'apply_id_to_heading' => true,
 				'html_class'          => 'bristlecone-markdown-heading-permalink',
-				'symbol'              => '#',
+				'symbol'              => '',
 				'title'               => 'Permalink',
 				'aria_hidden'         => true,
 			),
