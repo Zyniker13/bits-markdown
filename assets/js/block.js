@@ -16,7 +16,7 @@
 	var ToolbarGroup = wp.components.ToolbarGroup;
 	var ToolbarButton = wp.components.ToolbarButton;
 	var PanelBody = wp.components.PanelBody;
-	var TextareaControl = wp.components.TextareaControl;
+	var PlainText = wp.blockEditor.PlainText;
 	var Notice = wp.components.Notice;
 	var __ = wp.i18n.__;
 	var apiFetch = wp.apiFetch;
@@ -59,7 +59,13 @@
 		var setError = errorState[ 1 ];
 		var timer = useRef( null );
 		var previewRef = useRef( null );
+		var sourceRef = useRef( null );
 		var postId = 0;
+		var isSelected = !! props.isSelected;
+		var isEmpty = ! markdown || markdown.trim() === '';
+		var showingPlaceholder = ! isSelected && isEmpty;
+		var showingPreview = ! showingPlaceholder && ( ! isSelected || tab === 'preview' );
+		var showingSource = isSelected && tab === 'markdown';
 
 		try {
 			postId = wp.data.select( 'core/editor' ).getCurrentPostId() || 0;
@@ -68,7 +74,14 @@
 		}
 
 		var blockProps = useBlockProps( {
-			className: 'bristlecone-markdown-editor',
+			className: [
+				'bristlecone-markdown-editor',
+				showingPlaceholder ? 'is-placeholder' : '',
+				showingSource ? 'is-source' : '',
+				showingPreview ? 'is-preview' : '',
+			]
+				.filter( Boolean )
+				.join( ' ' ),
 		} );
 
 		function setSource( value ) {
@@ -120,11 +133,24 @@
 
 		useEffect(
 			function () {
-				if ( tab === 'preview' ) {
+				if ( showingPreview ) {
 					renderMath( previewRef.current );
 				}
 			},
-			[ preview, tab ]
+			[ preview, showingPreview ]
+		);
+
+		useEffect(
+			function () {
+				if ( ! showingSource || ! isEmpty ) {
+					return;
+				}
+				var node = sourceRef.current;
+				if ( node && typeof node.focus === 'function' ) {
+					node.focus();
+				}
+			},
+			[ showingSource, isEmpty ]
 		);
 
 		function insertMedia( media ) {
@@ -135,6 +161,38 @@
 			var snippet = '![' + alt + '](' + media.url + ')';
 			var next = markdown ? markdown.replace( /\s*$/, '\n\n' ) + snippet + '\n' : snippet + '\n';
 			setSource( next );
+		}
+
+		var surface;
+		if ( showingPlaceholder ) {
+			surface = el(
+				'p',
+				{ className: 'bristlecone-markdown-placeholder' },
+				__( 'Write your _Markdown_ **here**…', 'bristlecone-markdown' )
+			);
+		} else if ( showingPreview ) {
+			surface = el(
+				'div',
+				{
+					className: 'bristlecone-markdown-preview bristlecone-markdown',
+					ref: previewRef,
+				},
+				preview
+					? el( RawHTML, null, preview )
+					: el(
+							'p',
+							{ className: 'bristlecone-markdown-preview-empty' },
+							__( 'Nothing to preview yet.', 'bristlecone-markdown' )
+					  )
+			);
+		} else {
+			surface = el( PlainText, {
+				className: 'bristlecone-markdown-source',
+				value: markdown,
+				onChange: setSource,
+				'aria-label': __( 'Markdown', 'bristlecone-markdown' ),
+				ref: sourceRef,
+			} );
 		}
 
 		return el(
@@ -200,23 +258,7 @@
 					)
 				)
 			),
-			tab === 'markdown'
-				? el( TextareaControl, {
-						className: 'bristlecone-markdown-source',
-						label: __( 'Markdown', 'bristlecone-markdown' ),
-						hideLabelFromVision: true,
-						value: markdown,
-						onChange: setSource,
-						rows: 16,
-				  } )
-				: el(
-						'div',
-						{
-							className: 'bristlecone-markdown-preview bristlecone-markdown',
-							ref: previewRef,
-						},
-						el( RawHTML, null, preview || '<p></p>' )
-				  ),
+			surface,
 			error ? el( Notice, { status: 'warning', isDismissible: false }, error ) : null
 		);
 	}

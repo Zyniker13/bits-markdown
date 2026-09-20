@@ -4,7 +4,7 @@ Tags: markdown, editor, writing, comments, gutenberg
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.4
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,7 +18,7 @@ The plugin is developed by [Bristlecone IT Services](https://bristleconeit.com).
 
 = Writing surfaces =
 
-* **Markdown block** in the block editor, with source and preview tabs
+* **Markdown block** in the block editor, with a typography-first empty state, source, and preview
 * **Optional Markdown-first editor** (off by default): new posts start with a Markdown block, and new blocks prefer Markdown instead of a paragraph
 * **Whole-document Markdown** for the Classic Editor, the REST API, and iA Writer’s Publish command
 * **Comment Markdown**, enabled separately
@@ -33,7 +33,7 @@ CommonMark plus:
 * Highlight `==text==`
 * Tables
 * Footnotes `[^1]` and iA Writer inline footnotes `[^this is the note.]`
-* Heading permalinks and cross-references (`[Heading][]`, optional `{#id}` / `[Label]` on headings)
+* Heading permalinks and cross-references (`[Heading][]`, optional `{#id}` / `[Label]` on headings; permalinks do not show a `#` glyph)
 * Table of contents placeholder `{{TOC}}`
 * YAML front matter and `[%key]` interpolation
 * `$inline$` and `$$block$$` math (KaTeX, loaded only when needed)
@@ -109,6 +109,10 @@ When Jetpack Markdown is off, existing `jetpack/markdown` blocks open in the edi
 
 No. KaTeX and the highlighter are bundled. There is no tracking and no remote conversion API.
 
+= Why do headings still show a # after updating to 1.2.0? =
+
+New previews and new saves omit the permalink `#` glyph. HTML already stored in the post is not rewritten until you save the post again (or reconvert from Markdown source).
+
 == Screenshots ==
 
 1. Settings screen for Bristlecone Markdown.
@@ -116,6 +120,10 @@ No. KaTeX and the highlighter are bundled. There is no tracking and no remote co
 3. A published Markdown post on the front end.
 
 == Changelog ==
+
+= 1.2.0 =
+* Block editor writing surface: empty blocks show “Write your _Markdown_ **here**…” with no boxed textarea. Source uses a borderless PlainText field (monospace). Unselected blocks with content show the server preview.
+* Heading permalinks no longer insert a visible `#` before heading text. Ids and permalink anchors remain. Already-published HTML keeps the old `#` until the post is re-saved or reconverted from Markdown source.
 
 = 1.1.1 =
 * Recognize Jetpack document Markdown posts that only have `_wpcom_is_markdown` set (the meta Jetpack actually writes). Those posts now open as Markdown source after Jetpack Markdown is turned off. `_wpcom_markdown` is still recognized.
@@ -142,6 +150,9 @@ No. KaTeX and the highlighter are bundled. There is no tracking and no remote co
 * Jetpack Markdown coexistence: skip conversion while that module is active, then adopt existing Markdown posts.
 
 == Upgrade Notice ==
+
+= 1.2.0 =
+Editor writing-surface refresh, plus heading permalinks without a visible `#`. Re-save Markdown posts to refresh stored heading HTML.
 
 = 1.1.1 =
 Fixes adoption of existing Jetpack Markdown documents that use `_wpcom_is_markdown`.

@@ -12,7 +12,7 @@ Use this document to generate the public plugin page. It is the source of truth 
 | **Product name** | Bristlecone Markdown |
 | **Slug** | `bristlecone-markdown` |
 | **Vendor** | Bristlecone IT Services |
-| **Version described** | 1.1.1 |
+| **Version described** | 1.2.0 |
 | **License** | GPL-2.0-or-later (GNU GPL v2 or later) |
 | **Price** | Fully free. No paid tier, no phone-home, no account. |
 | **WordPress.org listing** | In submission. Do not claim it is listed until it is. A “Download” control may say it will be available on WordPress.org, with GitHub as the current source. |
@@ -51,7 +51,7 @@ Professional, precise, and short. Company site for Bristlecone IT Services — n
 12. License / source
 13. Footer: Bristlecone IT Services, plugin URL, GitHub
 
-Visuals are optional. If you generate screenshots, they must match real UI: Settings → Bristlecone Markdown; block editor Markdown block with source/preview; front-end of a Markdown post. Heading permalinks render as a `#` before the heading text (that is intentional).
+Visuals are optional. If you generate screenshots, they must match real UI: Settings → Bristlecone Markdown; block editor Markdown block with source and preview (typography-first empty placeholder, not a boxed textarea); front-end of a Markdown post. Heading permalinks keep ids and anchors; they must not show a `#` glyph before the heading text.
 
 ---
 
@@ -87,7 +87,7 @@ It is a self-contained replacement for **Jetpack’s Markdown module only**, not
 
 ### Writing surfaces
 
-**Markdown block (block editor).** Insert a Markdown block, edit source, and preview with the same PHP parser used on publish (`POST /bristlecone-markdown/v1/preview`). Saved block markup includes HTML so the content still renders if the plugin is deactivated. An optional setting (off by default) starts new block-editor posts with that block and prefers it as Gutenberg’s default block instead of a paragraph.
+**Markdown block (block editor).** Insert a Markdown block, edit source, and preview with the same PHP parser used on publish (`POST /bristlecone-markdown/v1/preview`). Empty unselected blocks show a typography-first placeholder; selected source is a borderless monospace field; unselected blocks with content show the server preview. Saved block markup includes HTML so the content still renders if the plugin is deactivated. An optional setting (off by default) starts new block-editor posts with that block and prefers it as Gutenberg’s default block instead of a paragraph.
 
 **Whole-document Markdown.** Classic Editor, the REST API, and iA Writer’s Publish command send a Markdown body. The plugin converts on save for post types enabled in settings (posts and pages by default; other public types are a checklist, not auto-enabled).
 
@@ -176,7 +176,7 @@ Headings, paragraphs, emphasis, strong, lists, links, images, block quotes, fenc
 | Description lists | CommonMark description-list extension |
 | Attributes | `{#id}` / classes on headings (explicit `{#id}` is preserved) |
 | Footnotes | `[^1]` definitions and iA Writer inline footnotes `[^this is the note.]` |
-| Heading permalinks | `#` permalink before ATX headings; optional `[Label]` on the heading |
+| Heading permalinks | Ids and permalink anchors on ATX headings (no visible `#` in heading text or SEO); optional `[Label]` on the heading |
 | Cross-references | `[Heading][]` (and explicit ids) |
 | Table of contents | Placeholder `{{TOC}}` |
 | YAML front matter | Leading `---` / `---` block; `[%key]` interpolates scalar values |
@@ -302,6 +302,9 @@ No. Simple Markdown and custom block identifiers are optional compatibility alia
 
 **Does it phone home?**  
 No.
+
+**Why do headings still show a # after 1.2.0?**  
+New previews and new saves omit the permalink `#` glyph. HTML already stored in the post is not rewritten until you save again (or reconvert from Markdown source).
 
 **Where do I get it?**  
 WordPress.org (once listed) and [GitHub](https://github.com/Zyniker13/bits-markdown).
