@@ -34,6 +34,9 @@
 	outline: none;
 	resize: none;
 	overflow: hidden;
+	appearance: none;
+	-webkit-appearance: none;
+	field-sizing: content;
 	min-height: 1.8em;
 	color: inherit;
 	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
