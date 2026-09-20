@@ -4,7 +4,7 @@ Tags: markdown, editor, writing, comments, gutenberg
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.4
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,7 +47,7 @@ Fenced code blocks can be highlighted on the server (no extra JavaScript). Theme
 
 = Jetpack Markdown =
 
-If Jetpack Markdown is still active, Bristlecone Markdown **does not** convert posts or comments, so content is not processed twice. An admin notice offers a one-click control to disable the Jetpack Markdown module. Existing Jetpack Markdown posts (`_wpcom_markdown` and `post_content_filtered`) are adopted automatically afterward.
+If Jetpack Markdown is still active, Bristlecone Markdown **does not** convert posts or comments, so content is not processed twice. An admin notice offers a one-click control to disable the Jetpack Markdown module. Existing Jetpack Markdown posts (`_wpcom_is_markdown` or `_wpcom_markdown`, plus `post_content_filtered`) are adopted automatically afterward.
 
 When that module is off, existing `jetpack/markdown` Gutenberg blocks stay editable (they are not treated as missing blocks). Saving a post rewrites them to `bristlecone/markdown`. The inserter still offers only the Bristlecone Markdown block. An optional Tools converter can rewrite every matching post at once; it is off by default and requires Settings → Bristlecone Markdown → “Enable Jetpack Markdown block converter under Tools”, then Tools → Bristlecone Markdown Converter, then a confirmation checkbox.
 
@@ -117,6 +117,9 @@ No. KaTeX and the highlighter are bundled. There is no tracking and no remote co
 
 == Changelog ==
 
+= 1.1.1 =
+* Recognize Jetpack document Markdown posts that only have `_wpcom_is_markdown` set (the meta Jetpack actually writes). Those posts now open as Markdown source after Jetpack Markdown is turned off. `_wpcom_markdown` is still recognized.
+
 = 1.1.0 =
 * Optional setting to default the block editor to Markdown: new posts and pages start with a Markdown block, and new blocks prefer Markdown instead of a paragraph. Off by default; existing content and the Classic Editor are unchanged.
 
@@ -139,6 +142,9 @@ No. KaTeX and the highlighter are bundled. There is no tracking and no remote co
 * Jetpack Markdown coexistence: skip conversion while that module is active, then adopt existing Markdown posts.
 
 == Upgrade Notice ==
+
+= 1.1.1 =
+Fixes adoption of existing Jetpack Markdown documents that use `_wpcom_is_markdown`.
 
 = 1.1.0 =
 Optional Markdown-first block editor (off by default). Enable it under Settings → Bristlecone Markdown.

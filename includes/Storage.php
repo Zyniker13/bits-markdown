@@ -9,11 +9,12 @@ namespace Bristlecone\Markdown;
  */
 final class Storage {
 
-	public const META_KEY                 = '_bristlecone_markdown';
-	public const META_LEGACY_KEY          = '_bits_markdown';
-	public const META_WPCOM_KEY           = '_wpcom_markdown';
-	public const META_FRONT_MATTER        = '_bristlecone_markdown_front_matter';
-	public const META_LEGACY_FRONT_MATTER = '_bits_markdown_front_matter';
+	public const META_KEY                   = '_bristlecone_markdown';
+	public const META_LEGACY_KEY            = '_bits_markdown';
+	public const META_WPCOM_IS_MARKDOWN_KEY = '_wpcom_is_markdown';
+	public const META_WPCOM_KEY             = '_wpcom_markdown';
+	public const META_FRONT_MATTER          = '_bristlecone_markdown_front_matter';
+	public const META_LEGACY_FRONT_MATTER   = '_bits_markdown_front_matter';
 
 	private static ?self $instance = null;
 
@@ -43,13 +44,54 @@ final class Storage {
 		add_filter( 'wp_kses_allowed_html', array( $this, 'allow_html' ), 10, 2 );
 	}
 
+	/**
+	 * Post meta keys that mark a document-mode Markdown post.
+	 *
+	 * Jetpack’s WPCom_Markdown::IS_MD_META is `_wpcom_is_markdown`. `_wpcom_markdown`
+	 * is also recognized in case anything wrote that key.
+	 *
+	 * @return list<string>
+	 */
+	public static function markdown_flag_keys(): array {
+		return array(
+			self::META_KEY,
+			self::META_LEGACY_KEY,
+			self::META_WPCOM_IS_MARKDOWN_KEY,
+			self::META_WPCOM_KEY,
+		);
+	}
+
 	public function is_markdown_post( int $post_id ): bool {
 		if ( $post_id <= 0 ) {
 			return false;
 		}
-		return (bool) get_post_meta( $post_id, self::META_KEY, true )
-			|| (bool) get_post_meta( $post_id, self::META_LEGACY_KEY, true )
-			|| (bool) get_post_meta( $post_id, self::META_WPCOM_KEY, true );
+
+		foreach ( self::markdown_flag_keys() as $key ) {
+			if ( (bool) get_post_meta( $post_id, $key, true ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Stamp `_bristlecone_markdown` once a Jetpack/legacy Markdown post is adopted.
+	 */
+	public function ensure_native_markdown_flag( int $post_id ): void {
+		if ( $post_id <= 0 ) {
+			return;
+		}
+
+		if ( (bool) get_post_meta( $post_id, self::META_KEY, true ) ) {
+			return;
+		}
+
+		if ( ! $this->is_markdown_post( $post_id ) ) {
+			return;
+		}
+
+		update_post_meta( $post_id, self::META_KEY, 1 );
 	}
 
 	/**
@@ -146,6 +188,7 @@ final class Storage {
 
 		$post = get_post( $post_id );
 		if ( $post && is_string( $post->post_content_filtered ) && $post->post_content_filtered !== '' ) {
+			$this->ensure_native_markdown_flag( $post_id );
 			return $post->post_content_filtered;
 		}
 
