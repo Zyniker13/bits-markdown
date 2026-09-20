@@ -12,7 +12,7 @@ Use this document to generate the public plugin page. It is the source of truth 
 | **Product name** | Bristlecone Markdown |
 | **Slug** | `bristlecone-markdown` |
 | **Vendor** | Bristlecone IT Services |
-| **Version described** | 1.1.1 |
+| **Version described** | 1.2.0 |
 | **License** | GPL-2.0-or-later (GNU GPL v2 or later) |
 | **Price** | Fully free. No paid tier, no phone-home, no account. |
 | **WordPress.org listing** | In submission. Do not claim it is listed until it is. A “Download” control may say it will be available on WordPress.org, with GitHub as the current source. |
@@ -87,7 +87,7 @@ It is a self-contained replacement for **Jetpack’s Markdown module only**, not
 
 ### Writing surfaces
 
-**Markdown block (block editor).** Insert a Markdown block, edit source, and preview with the same PHP parser used on publish (`POST /bristlecone-markdown/v1/preview`). Saved block markup includes HTML so the content still renders if the plugin is deactivated. An optional setting (off by default) starts new block-editor posts with that block and prefers it as Gutenberg’s default block instead of a paragraph.
+**Markdown block (block editor).** Insert a Markdown block, edit source, and preview with the same PHP parser used on publish (`POST /bristlecone-markdown/v1/preview`). Empty unselected blocks show a typography-first placeholder; selected source is a borderless monospace field; unselected blocks with content show the server preview. Saved block markup includes HTML so the content still renders if the plugin is deactivated. An optional setting (off by default) starts new block-editor posts with that block and prefers it as Gutenberg’s default block instead of a paragraph.
 
 **Whole-document Markdown.** Classic Editor, the REST API, and iA Writer’s Publish command send a Markdown body. The plugin converts on save for post types enabled in settings (posts and pages by default; other public types are a checklist, not auto-enabled).
 

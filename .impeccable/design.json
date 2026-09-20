@@ -1,0 +1,59 @@
+{
+  "name": "Bristlecone Markdown",
+  "description": "Typography-first Markdown canvas in the WordPress block editor — inherit the post, hide the form.",
+  "colors": {
+    "transparent": "transparent",
+    "inherit": "inherit",
+    "placeholder": "inherit"
+  },
+  "typography": {
+    "placeholder": {
+      "fontFamily": "inherit",
+      "fontSize": "inherit",
+      "fontWeight": "inherit",
+      "lineHeight": "inherit",
+      "letterSpacing": "inherit",
+      "opacity": 0.62
+    },
+    "source": {
+      "fontFamily": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+      "fontSize": "15px",
+      "fontWeight": 400,
+      "lineHeight": 1.6,
+      "letterSpacing": "normal"
+    },
+    "preview": {
+      "fontFamily": "inherit",
+      "fontSize": "inherit",
+      "lineHeight": "inherit"
+    }
+  },
+  "rounded": {
+    "none": "0"
+  },
+  "spacing": {
+    "source-min-height": "1.8em",
+    "notice-top": "12px",
+    "writing-padding": "0"
+  },
+  "components": {
+    "placeholder": {
+      "backgroundColor": "transparent",
+      "textColor": "inherit",
+      "opacity": 0.62,
+      "padding": "0"
+    },
+    "source": {
+      "backgroundColor": "transparent",
+      "textColor": "inherit",
+      "rounded": "0",
+      "padding": "0"
+    },
+    "preview": {
+      "backgroundColor": "transparent",
+      "textColor": "inherit",
+      "rounded": "0",
+      "padding": "0"
+    }
+  }
+}

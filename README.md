@@ -18,7 +18,7 @@ composer install
 composer test
 ```
 
-The Gutenberg block is plain `wp.*` JavaScript (no build step).
+The Gutenberg block is plain `wp.*` JavaScript (no build step). Editor writing-surface craft notes: `PRODUCT.md`, `DESIGN.md`, `docs/impeccable.md`.
 
 ## WordPress.org
 

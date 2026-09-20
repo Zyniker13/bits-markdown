@@ -5,8 +5,13 @@
 .distignore
 .cursor
 .github
+.impeccable
 .DS_Store
 Thumbs.db
+
+# Agent / design process (not shipped on WordPress.org)
+PRODUCT.md
+DESIGN.md
 
 # Tests and PHPUnit
 tests

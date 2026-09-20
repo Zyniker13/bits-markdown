@@ -1,17 +1,78 @@
+/**
+ * Block editor writing surface for bristlecone/markdown.
+ * Typography-first, minimal chrome. Do not add front-end rules here.
+ *
+ * @see DESIGN.md
+ */
+
+.bristlecone-markdown-placeholder {
+	margin: 0;
+	opacity: 0.62;
+	pointer-events: none;
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+	font-style: inherit;
+	line-height: inherit;
+	letter-spacing: inherit;
+	color: inherit;
+}
+
+.bristlecone-markdown-editor .bristlecone-markdown-source.block-editor-plain-text,
+.bristlecone-markdown-editor textarea.bristlecone-markdown-source,
 .bristlecone-markdown-editor .bristlecone-markdown-source textarea {
+	display: block;
+	width: 100%;
+	max-width: 100%;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+	outline: none;
+	resize: none;
+	overflow: hidden;
+	min-height: 1.8em;
+	color: inherit;
 	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-	font-size: 13px;
-	line-height: 1.5;
-	min-height: 280px;
+	font-size: 15px;
+	line-height: 1.6;
+	tab-size: 4;
 }
 
-.bristlecone-markdown-preview {
-	min-height: 280px;
-	padding: 12px 16px;
-	border: 1px solid #dcdcde;
-	background: #fff;
+.bristlecone-markdown-editor .bristlecone-markdown-source.block-editor-plain-text:focus,
+.bristlecone-markdown-editor textarea.bristlecone-markdown-source:focus,
+.bristlecone-markdown-editor .bristlecone-markdown-source textarea:focus {
+	border: 0;
+	border-color: transparent;
+	background: transparent;
+	box-shadow: none;
+	outline: none;
 }
 
-.bristlecone-markdown-preview > *:first-child {
+.bristlecone-markdown-editor .bristlecone-markdown-preview {
+	min-height: 0;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	box-shadow: none;
+}
+
+.bristlecone-markdown-editor .bristlecone-markdown-preview > *:first-child {
 	margin-top: 0;
+}
+
+.bristlecone-markdown-preview-empty {
+	margin: 0;
+	opacity: 0.62;
+	font-family: inherit;
+	font-size: inherit;
+	line-height: inherit;
+	color: inherit;
+}
+
+.bristlecone-markdown-editor > .components-notice {
+	margin: 12px 0 0;
 }

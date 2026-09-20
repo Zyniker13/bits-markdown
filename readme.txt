@@ -4,7 +4,7 @@ Tags: markdown, editor, writing, comments, gutenberg
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.4
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,7 +18,7 @@ The plugin is developed by [Bristlecone IT Services](https://bristleconeit.com).
 
 = Writing surfaces =
 
-* **Markdown block** in the block editor, with source and preview tabs
+* **Markdown block** in the block editor, with a typography-first empty state, source, and preview
 * **Optional Markdown-first editor** (off by default): new posts start with a Markdown block, and new blocks prefer Markdown instead of a paragraph
 * **Whole-document Markdown** for the Classic Editor, the REST API, and iA Writer’s Publish command
 * **Comment Markdown**, enabled separately
@@ -117,6 +117,9 @@ No. KaTeX and the highlighter are bundled. There is no tracking and no remote co
 
 == Changelog ==
 
+= 1.2.0 =
+* Block editor writing surface: empty blocks show “Write your _Markdown_ **here**…” with no boxed textarea. Source uses a borderless PlainText field (monospace). Unselected blocks with content show the server preview. Front-end styles are unchanged.
+
 = 1.1.1 =
 * Recognize Jetpack document Markdown posts that only have `_wpcom_is_markdown` set (the meta Jetpack actually writes). Those posts now open as Markdown source after Jetpack Markdown is turned off. `_wpcom_markdown` is still recognized.
 
@@ -142,6 +145,9 @@ No. KaTeX and the highlighter are bundled. There is no tracking and no remote co
 * Jetpack Markdown coexistence: skip conversion while that module is active, then adopt existing Markdown posts.
 
 == Upgrade Notice ==
+
+= 1.2.0 =
+Editor-only refresh of the Markdown block (placeholder, borderless source, preview when unselected). Published posts are unchanged.
 
 = 1.1.1 =
 Fixes adoption of existing Jetpack Markdown documents that use `_wpcom_is_markdown`.
