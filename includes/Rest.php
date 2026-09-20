@@ -100,6 +100,8 @@ final class Rest {
 			return $response;
 		}
 
+		Storage::instance()->ensure_native_markdown_flag( (int) $post->ID );
+
 		$data = $response->get_data();
 		if ( ! is_array( $data ) || empty( $data['content'] ) || ! is_array( $data['content'] ) ) {
 			return $response;

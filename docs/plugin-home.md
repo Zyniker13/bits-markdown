@@ -12,7 +12,7 @@ Use this document to generate the public plugin page. It is the source of truth 
 | **Product name** | Bristlecone Markdown |
 | **Slug** | `bristlecone-markdown` |
 | **Vendor** | Bristlecone IT Services |
-| **Version described** | 1.1.0 |
+| **Version described** | 1.1.1 |
 | **License** | GPL-2.0-or-later (GNU GPL v2 or later) |
 | **Price** | Fully free. No paid tier, no phone-home, no account. |
 | **WordPress.org listing** | In submission. Do not claim it is listed until it is. A “Download” control may say it will be available on WordPress.org, with GitHub as the current source. |
@@ -104,7 +104,7 @@ For document-mode posts:
 - Flag meta `_bristlecone_markdown` (legacy `_bits_markdown` is still recognized)
 - YAML front matter in `_bristlecone_markdown_front_matter` when present (legacy `_bits_markdown_front_matter`)
 
-Existing Jetpack Markdown posts that use `_wpcom_markdown` and `post_content_filtered` are adopted automatically once Jetpack Markdown is off.
+Existing Jetpack Markdown posts that use `_wpcom_is_markdown` (or `_wpcom_markdown`) and `post_content_filtered` are adopted automatically once Jetpack Markdown is off.
 
 If you deactivate Bristlecone Markdown, published HTML remains. You cannot edit those posts as Markdown until the plugin is active again.
 
@@ -132,7 +132,7 @@ Gutenberg’s editor is detected separately so the block editor still receives a
 
 ### Jetpack Markdown coexistence
 
-If Jetpack’s Markdown module is still active, Bristlecone Markdown **does not** convert posts or comments, so content is not processed twice. An admin notice offers a one-click control to disable that Jetpack module. After it is off, existing Jetpack Markdown documents (`_wpcom_markdown` and `post_content_filtered`) are adopted.
+If Jetpack’s Markdown module is still active, Bristlecone Markdown **does not** convert posts or comments, so content is not processed twice. An admin notice offers a one-click control to disable that Jetpack module. After it is off, existing Jetpack Markdown documents (`_wpcom_is_markdown` or `_wpcom_markdown`, plus `post_content_filtered`) are adopted.
 
 Gutenberg blocks named `jetpack/markdown` are a separate compatibility path. When Jetpack Markdown is inactive and that block type is not already registered, Bristlecone Markdown registers it as a hidden alias (`inserter` off) so posts do not show a missing-block warning. The editor uses the Bristlecone source/preview UI (attribute `source`). Saving rewrites the block to `bristlecone/markdown` (`markdown` ← `source`, HTML from the server parser). New blocks are still inserted as `bristlecone/markdown` only. This is compatibility, not impersonation of Jetpack.
 
