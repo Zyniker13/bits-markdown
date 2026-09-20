@@ -7,15 +7,3 @@
 *.tgz
 *.zip
 .DS_Store
-
-# impeccable-ignore-start
-# Ephemeral output, runtime state, and per-dev overrides.
-# Shared artifacts stay tracked: config.json, design.json.
-.impeccable/config.local.json
-.impeccable/hook.cache.json
-.impeccable/hook.pending.json
-.impeccable/*.png
-.impeccable/review/
-.impeccable/questions/
-.impeccable/live/
-# impeccable-ignore-end
