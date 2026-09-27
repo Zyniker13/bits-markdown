@@ -4,7 +4,7 @@ Tags: markdown, editor, writing, comments, gutenberg
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 8.4
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,14 +49,14 @@ Fenced code blocks can be highlighted on the server (no extra JavaScript). Theme
 
 If Jetpack Markdown is still active, Bristlecone Markdown **does not** convert posts or comments, so content is not processed twice. An admin notice offers a one-click control to disable the Jetpack Markdown module. Existing Jetpack Markdown posts (`_wpcom_is_markdown` or `_wpcom_markdown`, plus `post_content_filtered`) are adopted automatically afterward.
 
-When that module is off, existing `jetpack/markdown` Gutenberg blocks stay editable (they are not treated as missing blocks). Saving a post rewrites them to `bristlecone/markdown`. The inserter still offers only the Bristlecone Markdown block. An optional Tools converter can rewrite every matching post at once; it is off by default and requires Settings → Bristlecone Markdown → “Enable Jetpack Markdown block converter under Tools”, then Tools → Bristlecone Markdown Converter, then a confirmation checkbox.
+When that module is off, existing `jetpack/markdown` Gutenberg blocks stay editable (they are not treated as missing blocks). Saving a post rewrites them to `bristlecone/markdown`. The inserter still offers only the Bristlecone Markdown block. An optional Tools converter can rewrite every matching post at once; it is off by default and requires Bristlecone → Markdown → “Enable Jetpack Markdown block converter under Tools”, then Tools → Bristlecone Markdown Converter, then a confirmation checkbox.
 
 = Other Markdown blocks =
 
 This plugin does **not** replace every Markdown plugin. It can adopt a few Gutenberg block names so existing posts stay editable:
 
 * `simple-markdown/markdown-block` (attribute `content`) when that plugin is not already registering the block
-* Custom identifiers under Settings → Advanced: one `namespace/block-name|attribute` per line (for example `acme/markdown|content`). If `|attribute` is omitted, Bristlecone tries `source`, then `content`, then `markdown`
+* Custom identifiers under Bristlecone → Markdown (Advanced): one `namespace/block-name|attribute` per line (for example `acme/markdown|content`). If `|attribute` is omitted, Bristlecone tries `source`, then `content`, then `markdown`
 
 Aliases are hidden from the inserter and convert on save. The same Tools checkbox unlocks a scanner that lists unregistered block names containing “markdown” for review. Nothing is rewritten or added to the custom list until you select names and confirm. Names that look like editor comments (for example `markdown-comment`) are flagged and left unchecked.
 
@@ -79,7 +79,7 @@ Footnote IDs are namespaced with the post ID (`bristlecone-markdown-fn-{id}-…`
 
 1. Upload the `bristlecone-markdown` folder to `/wp-content/plugins/`, or install the zip from Plugins → Add New.
 2. Activate **Bristlecone Markdown**.
-3. Open Settings → Bristlecone Markdown to choose post types, comments, code highlighting, math, and whether new block-editor posts should start in Markdown.
+3. Open Bristlecone → Markdown to choose post types, comments, code highlighting, math, and whether new block-editor posts should start in Markdown. (Saved bookmarks to Settings → Bristlecone Markdown / `options-general.php?page=bristlecone-markdown` redirect to the new page.)
 4. If Jetpack is installed, disable Jetpack Markdown when prompted.
 5. Optional: to rewrite every `jetpack/markdown` block in the database, enable the Tools converter in settings, then confirm the run under Tools → Bristlecone Markdown Converter. The same page can convert Simple Markdown / custom identifiers and, after a scan and review, other unregistered blocks whose names contain “markdown”.
 
@@ -95,7 +95,7 @@ Yes. Mixed Gutenberg posts should use the Markdown block. Classic / REST / iA Wr
 
 = Can Markdown be the default in the block editor? =
 
-Yes, optionally. Enable “Default to Markdown for new posts and pages” under Settings → Bristlecone Markdown. New posts of the enabled types that use the block editor then start with a Markdown block, and inserting a new block prefers Markdown instead of a paragraph. Existing content is not rewritten. The Classic Editor is unchanged. The setting is off by default.
+Yes, optionally. Enable “Default to Markdown for new posts and pages” under Bristlecone → Markdown. New posts of the enabled types that use the block editor then start with a Markdown block, and inserting a new block prefers Markdown instead of a paragraph. Existing content is not rewritten. The Classic Editor is unchanged. The setting is off by default.
 
 = What happens to existing Jetpack Markdown blocks? =
 
@@ -103,7 +103,7 @@ When Jetpack Markdown is off, existing `jetpack/markdown` blocks open in the edi
 
 = What about Simple Markdown or other Markdown blocks? =
 
-`simple-markdown/markdown-block` is treated like Jetpack when that plugin is not registering the block (`content` maps to Bristlecone `markdown`). You can list other block names under Settings → Advanced. The Tools scanner can find unregistered blocks whose names contain “markdown”; you choose which to convert. This is compatibility for leftover Gutenberg markup, not a replacement for those plugins.
+`simple-markdown/markdown-block` is treated like Jetpack when that plugin is not registering the block (`content` maps to Bristlecone `markdown`). You can list other block names under Bristlecone → Markdown (Advanced). The Tools scanner can find unregistered blocks whose names contain “markdown”; you choose which to convert. This is compatibility for leftover Gutenberg markup, not a replacement for those plugins.
 
 = Does this phone home? =
 
@@ -120,6 +120,10 @@ New previews and new saves omit the permalink `#` glyph. HTML already stored in 
 3. A published Markdown post on the front end.
 
 == Changelog ==
+
+= 1.3.0 =
+* Settings live under the shared Bristlecone admin menu (Bristlecone → Markdown) instead of Settings → Bristlecone Markdown. The same parent is reused when Bristlecone Admin Styles is active; this plugin creates it when standing alone.
+* Bookmarks to `options-general.php?page=bristlecone-markdown` redirect to `admin.php?page=bristlecone-markdown`.
 
 = 1.2.0 =
 * Block editor writing surface: empty blocks show “Write your _Markdown_ **here**…” with no boxed textarea. Source uses a borderless PlainText field (monospace). Unselected blocks with content show the server preview.
@@ -151,6 +155,9 @@ New previews and new saves omit the permalink `#` glyph. HTML already stored in 
 
 == Upgrade Notice ==
 
+= 1.3.0 =
+Settings moved to Bristlecone → Markdown. Old Settings bookmarks redirect to the new page.
+
 = 1.2.0 =
 Editor writing-surface refresh, plus heading permalinks without a visible `#`. Re-save Markdown posts to refresh stored heading HTML.
 
@@ -158,7 +165,7 @@ Editor writing-surface refresh, plus heading permalinks without a visible `#`. R
 Fixes adoption of existing Jetpack Markdown documents that use `_wpcom_is_markdown`.
 
 = 1.1.0 =
-Optional Markdown-first block editor (off by default). Enable it under Settings → Bristlecone Markdown.
+Optional Markdown-first block editor (off by default). Enable it under Bristlecone → Markdown.
 
 = 1.0.2 =
 Optional Simple Markdown and custom-block compatibility. Tools can scan other Markdown-named blocks; conversion still requires the existing settings unlock and a confirmation step.

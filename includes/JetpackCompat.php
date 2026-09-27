@@ -52,7 +52,7 @@ final class JetpackCompat {
 
 		set_transient( 'bristlecone_markdown_jetpack_disabled_' . get_current_user_id(), '1', MINUTE_IN_SECONDS );
 
-		wp_safe_redirect( admin_url( 'options-general.php?page=bristlecone-markdown' ) );
+		wp_safe_redirect( Settings::settings_url() );
 		exit;
 	}
 

@@ -244,7 +244,7 @@ final class JetpackMarkdownBlock {
 
 		check_admin_referer( self::ACTION_NAME );
 
-		$settings_url = admin_url( 'options-general.php?page=bristlecone-markdown' );
+		$settings_url = Settings::settings_url();
 		$tools_url    = admin_url( 'tools.php?page=' . self::TOOLS_SLUG );
 
 		if ( ! Settings::instance()->block_converter_enabled() ) {
@@ -252,7 +252,7 @@ final class JetpackMarkdownBlock {
 				array(
 					'status'  => 'error',
 					'kind'    => 'error',
-					'message' => __( 'The converter is disabled. Enable it under Settings → Bristlecone Markdown first.', 'bristlecone-markdown' ),
+					'message' => __( 'The converter is disabled. Enable it under Bristlecone → Markdown first.', 'bristlecone-markdown' ),
 				)
 			);
 			wp_safe_redirect( $settings_url );
@@ -443,7 +443,7 @@ final class JetpackMarkdownBlock {
 			<?php endif; ?>
 
 			<p>
-				<a href="<?php echo esc_url( admin_url( 'options-general.php?page=bristlecone-markdown' ) ); ?>">
+				<a href="<?php echo esc_url( Settings::settings_url() ); ?>">
 					<?php echo esc_html__( 'Back to Bristlecone Markdown settings', 'bristlecone-markdown' ); ?>
 				</a>
 			</p>
@@ -569,7 +569,7 @@ final class JetpackMarkdownBlock {
 
 		echo '</tbody></table>';
 		echo '<p><label><input type="checkbox" name="bristlecone_markdown_add_to_list" value="1" /> ';
-		echo esc_html__( 'Also add the selected names to Settings → custom block identifiers (so they become aliases).', 'bristlecone-markdown' );
+		echo esc_html__( 'Also add the selected names to Bristlecone → Markdown → custom block identifiers (so they become aliases).', 'bristlecone-markdown' );
 		echo '</label></p>';
 		echo '<p><label><input type="checkbox" name="bristlecone_markdown_confirm" value="1" required /> ';
 		echo esc_html__( 'I understand this will update matching posts and pages in the database.', 'bristlecone-markdown' );

@@ -11,6 +11,8 @@ final class Settings {
 
 	public const OPTION        = 'bristlecone_markdown_settings';
 	public const LEGACY_OPTION = 'bits_markdown_settings';
+	public const PARENT_SLUG   = 'bristlecone';
+	public const PAGE_SLUG     = 'bristlecone-markdown';
 
 	private static ?self $instance = null;
 
@@ -169,7 +171,24 @@ final class Settings {
 
 	public function register(): void {
 		add_action( 'admin_init', array( $this, 'register_setting' ) );
-		add_action( 'admin_menu', array( $this, 'register_menu' ) );
+		// Redirect old Settings bookmarks before WP 403s an unregistered options page.
+		add_action( 'admin_menu', array( $this, 'redirect_legacy_settings_url' ), 1 );
+		// Priority 10: Admin Styles creates the shared Bristlecone parent at 9.
+		add_action( 'admin_menu', array( $this, 'register_menu' ), 10 );
+	}
+
+	/**
+	 * Admin URL for Bristlecone → Markdown.
+	 */
+	public static function settings_url(): string {
+		return admin_url( 'admin.php?page=' . self::PAGE_SLUG );
+	}
+
+	/**
+	 * Screen id for add_submenu_page( 'bristlecone', …, 'bristlecone-markdown', … ).
+	 */
+	public static function screen_id(): string {
+		return self::PARENT_SLUG . '_page_' . self::PAGE_SLUG;
 	}
 
 	public function register_setting(): void {
@@ -185,14 +204,83 @@ final class Settings {
 		);
 	}
 
+	/**
+	 * Register Markdown under the shared Bristlecone menu.
+	 *
+	 * Parent-guard: create slug `bristlecone` only when missing so this plugin
+	 * can stand alone, or attach when Admin Styles already created the parent.
+	 */
 	public function register_menu(): void {
-		add_options_page(
+		$parent_slug    = self::PARENT_SLUG;
+		$created_parent = false;
+
+		if ( empty( $GLOBALS['admin_page_hooks'][ $parent_slug ] ) ) {
+			add_menu_page(
+				__( 'Bristlecone', 'bristlecone-markdown' ),
+				__( 'Bristlecone', 'bristlecone-markdown' ),
+				'manage_options',
+				$parent_slug,
+				// Page callbacks run after admin chrome is printed, so a
+				// redirect here would be too late. Render Markdown so
+				// ?page=bristlecone is usable if this plugin created the parent.
+				array( $this, 'render_page' ),
+				$this->menu_icon(),
+				58
+			);
+			$created_parent = true;
+		}
+
+		add_submenu_page(
+			$parent_slug,
 			__( 'Bristlecone Markdown', 'bristlecone-markdown' ),
-			__( 'Bristlecone Markdown', 'bristlecone-markdown' ),
+			__( 'Markdown', 'bristlecone-markdown' ),
 			'manage_options',
-			'bristlecone-markdown',
+			self::PAGE_SLUG,
 			array( $this, 'render_page' )
 		);
+
+		// WP copies the parent slug as the first submenu item. Remove that
+		// duplicate “Bristlecone / Bristlecone” row when we created the parent.
+		if ( $created_parent ) {
+			remove_submenu_page( $parent_slug, $parent_slug );
+		}
+	}
+
+	/**
+	 * Bold letter “B” as a custom SVG menu icon (not a Dashicon).
+	 * Same data URI as Bristlecone Admin Styles. WordPress recolors
+	 * fill="black" via admin menu CSS filters.
+	 */
+	private function menu_icon(): string {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" aria-hidden="true"><path fill="black" fill-rule="evenodd" d="M3.75 2.25h7.4c2.72 0 4.7 1.52 4.7 3.92 0 1.42-.74 2.52-1.96 3.12 1.5.62 2.46 1.9 2.46 3.62 0 2.68-2.22 4.34-5.42 4.34H3.75V2.25Zm3.2 2.15v3.15h3.7c1.22 0 1.98-.64 1.98-1.6 0-.94-.76-1.55-1.98-1.55H6.95Zm0 5.3v3.9h4.15c1.42 0 2.28-.76 2.28-1.92 0-1.18-.86-1.98-2.28-1.98H6.95Z"/></svg>';
+
+		return 'data:image/svg+xml;base64,' . base64_encode( $svg );
+	}
+
+	/**
+	 * Send options-general.php?page=bristlecone-markdown to the new admin URL.
+	 *
+	 * Runs on admin_menu (before user_can_access_admin_page) so WordPress does
+	 * not 403 the unregistered Settings child.
+	 */
+	public function redirect_legacy_settings_url(): void {
+		global $pagenow;
+
+		if ( ! is_string( $pagenow ) || 'options-general.php' !== $pagenow ) {
+			return;
+		}
+
+		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( (string) $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( self::PAGE_SLUG !== $page ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		wp_safe_redirect( self::settings_url() );
+		exit;
 	}
 
 	/**

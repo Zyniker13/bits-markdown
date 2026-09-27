@@ -2,7 +2,7 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Bristlecone Markdown 1.0.1\n"
+"Project-Id-Version: Bristlecone Markdown 1.3.0\n"
 "Report-Msgid-Bugs-To: https://github.com/Zyniker13/bits-markdown/issues\n"
 "Last-Translator: Bristlecone IT Services <https://bristleconeit.com>\n"
 "Language-Team: Bristlecone IT Services\n"
@@ -21,6 +21,10 @@ msgstr ""
 #: includes/Settings.php:174
 #: assets/js/block.js:177
 msgid "Bristlecone Markdown"
+msgstr ""
+
+#: includes/Settings.php
+msgid "Bristlecone"
 msgstr ""
 
 #. Plugin URI of the plugin
@@ -171,7 +175,7 @@ msgid "Bristlecone Markdown Converter"
 msgstr ""
 
 #: includes/JetpackMarkdownBlock.php
-msgid "The converter is disabled. Enable it under Settings → Bristlecone Markdown first."
+msgid "The converter is disabled. Enable it under Bristlecone → Markdown first."
 msgstr ""
 
 #: includes/JetpackMarkdownBlock.php
