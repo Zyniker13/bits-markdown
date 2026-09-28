@@ -21,10 +21,10 @@ final class EditorAestheticsTest extends TestCase {
 
 		$this->assertIsString( $plugin );
 		$this->assertIsString( $readme );
-		$this->assertMatchesRegularExpression( '/^\s*\*\s*Version:\s*1\.2\.0$/m', $plugin );
-		$this->assertStringContainsString( "define( 'BRISTLECONE_MARKDOWN_VERSION', '1.2.0' );", $plugin );
-		$this->assertMatchesRegularExpression( '/^Stable tag:\s*1\.2\.0$/m', $readme );
-		$this->assertStringContainsString( '= 1.2.0 =', $readme );
+		$this->assertMatchesRegularExpression( '/^\s*\*\s*Version:\s*1\.3\.0$/m', $plugin );
+		$this->assertStringContainsString( "define( 'BRISTLECONE_MARKDOWN_VERSION', '1.3.0' );", $plugin );
+		$this->assertMatchesRegularExpression( '/^Stable tag:\s*1\.3\.0$/m', $readme );
+		$this->assertStringContainsString( '= 1.3.0 =', $readme );
 	}
 
 	public function test_source_uses_plain_text_and_placeholder(): void {

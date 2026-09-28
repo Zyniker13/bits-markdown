@@ -50,7 +50,9 @@ final class Plugin {
 			$screen->id,
 			array(
 				'plugins',
-				'settings_page_bristlecone-markdown',
+				Settings::screen_id(),
+				'toplevel_page_' . Settings::PARENT_SLUG,
+				'settings_page_' . Settings::PAGE_SLUG,
 				'tools_page_' . JetpackMarkdownBlock::TOOLS_SLUG,
 			),
 			true

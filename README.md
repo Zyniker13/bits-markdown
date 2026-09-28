@@ -28,6 +28,8 @@ Do not include Jetpack in directory tags.
 
 WordPress.org assets (icon, banner, screenshots) belong in the plugin’s SVN `/assets` directory after approval, not in this zip.
 
+Plugin settings are at **Bristlecone → Markdown** (`admin.php?page=bristlecone-markdown`). Older bookmarks under Settings (`options-general.php?page=bristlecone-markdown`) redirect there. The Bristlecone parent menu is shared with Bristlecone Admin Styles when that plugin is active.
+
 The public plugin page is `https://bristleconeit.com/bristlecone-markdown`. Copy and standards notes for that page live in `docs/plugin-home.md` (not shipped in the WordPress.org zip).
 
 ## Storage
